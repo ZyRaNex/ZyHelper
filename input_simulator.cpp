@@ -40,6 +40,18 @@ void InputSimulator::SendKeyOrMouse(wchar_t input)
 	  case 'r':
 		  SendKey(0x52);
 		  break;
+	  case 'a':
+		  SendKey(0x41);
+		  break;
+	  case 's':
+		  SendKey(0x53);
+		  break;
+	  case 'd':
+		  SendKey(0x44);
+		  break;
+	  case 'f':
+		  SendKey(0x46);
+		  break;
 	  case 'L':
 		SendMouse(Left);
 		break;
