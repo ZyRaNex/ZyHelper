@@ -1,0 +1,192 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""winres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DIALOG1 DIALOGEX 0, 0, 555, 302
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "ZyHelperBeta"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    EDITTEXT        IDC_IPHOTKEY,27,30,14,14,ES_AUTOHSCROLL
+    LTEXT           "Barb",IDC_STATIC,6,18,16,8,0,WS_EX_TRANSPARENT
+    CONTROL         "",IDC_IPCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,18,16,10
+    CONTROL         "",IDC_WCCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,18,16,10
+    EDITTEXT        IDC_WCHOTKEY,51,30,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_FALTERCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,75,18,16,10
+    EDITTEXT        IDC_FALTERHOTKEY,75,30,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_BERSERKERCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,99,18,16,10
+    EDITTEXT        IDC_BERSERKERHOTKEY,97,30,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_SPRINTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,123,18,16,10
+    EDITTEXT        IDC_SPRINTHOTKEY,123,30,14,14,ES_AUTOHSCROLL
+    LTEXT           "Monk",IDC_STATIC,3,66,18,8,0,WS_EX_TRANSPARENT
+    LTEXT           "Necro",IDC_STATIC,3,114,20,8,0,WS_EX_TRANSPARENT
+    CONTROL         "",IDC_EPIPHANYCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,66,16,10
+    EDITTEXT        IDC_EPIPHANYHOTKEY,27,78,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_MANTRAHEALINGCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,66,16,10
+    EDITTEXT        IDC_MANTRAHEALINGHOTKEY,51,78,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_SWEEPINGWINDCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,75,66,16,10
+    EDITTEXT        IDC_SWEEPINGWINDHOTKEY,75,78,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_BOHCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,99,66,16,10
+    EDITTEXT        IDC_BOHHOTKEY,99,78,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_MANTRACONVICTIONCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,123,66,16,10
+    EDITTEXT        IDC_MANTRACONVICTIONHOTKEY,123,78,14,14,ES_AUTOHSCROLL
+    CONTROL         IDB_IP,IDC_IP,"Static",SS_BITMAP,27,3,15,14,WS_EX_STATICEDGE
+    CONTROL         IDB_WC,IDC_WC,"Static",SS_BITMAP,51,3,13,12
+    CONTROL         IDB_FALTER,IDC_FALTER,"Static",SS_BITMAP,75,3,13,12
+    CONTROL         IDB_BERSERKER,IDC_BERSERKER,"Static",SS_BITMAP,99,3,13,12
+    CONTROL         IDB_SPRINT,IDC_SPRINT,"Static",SS_BITMAP,123,3,13,12
+    CONTROL         IDB_EPIPHANY,IDC_EPIPHANY,"Static",SS_BITMAP,27,51,13,12
+    CONTROL         IDB_MANTRAOFHEALING,IDC_MANTRAOFHEALING,"Static",SS_BITMAP,51,51,13,12
+    CONTROL         IDB_SWEEPINGWIND,IDC_SWEEPINGWIND,"Static",SS_BITMAP,75,51,13,12
+    CONTROL         IDB_BOH,IDC_BOH,"Static",SS_BITMAP,99,51,13,12
+    CONTROL         IDB_MANTRAOFCONVICTION,IDC_MANTRAOFCONVICTION,"Static",SS_BITMAP,123,51,13,12
+    CONTROL         "",IDC_LANDOFTHEDEADCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,27,114,16,10
+    EDITTEXT        IDC_LANDOFTHEDEADHOTKEY,27,126,14,14,ES_AUTOHSCROLL
+    CONTROL         "",IDC_BONEARMORCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,51,114,16,10
+    EDITTEXT        IDC_BONEARMORHOTKEY,51,126,14,14,ES_AUTOHSCROLL
+    CONTROL         IDB_LOTD,IDC_LOTD,"Static",SS_BITMAP,27,99,13,12
+    CONTROL         IDB_BONEARMOR,IDC_BONEARMOR,"Static",SS_BITMAP,51,99,13,12
+    CONTROL         "",IDC_ACTIVE,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,0,6,16,10
+    LTEXT           "Active",IDC_STATIC,0,0,21,8
+    LTEXT           "Version 1.0.2",IDC_STATIC,510,294,44,8
+    CONTROL         "",IDC_POTIONCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,162,18,16,10
+    EDITTEXT        IDC_POTIONTHOTKEY,162,30,14,14,ES_AUTOHSCROLL
+    CONTROL         IDB_POTION,IDC_SPRINT2,"Static",SS_BITMAP,162,3,13,12
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_DIALOG1, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 548
+        VERTGUIDE, 108
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 292
+        HORZGUIDE, 7
+        HORZGUIDE, 18
+        HORZGUIDE, 30
+        HORZGUIDE, 51
+        HORZGUIDE, 59
+        HORZGUIDE, 71
+        HORZGUIDE, 83
+        HORZGUIDE, 123
+        HORZGUIDE, 196
+        HORZGUIDE, 275
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_DIALOG1 AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_IP                  BITMAP                  "C:\\Users\\Someone\\source\\repos\\ZyHelperBeta\\ZyHelperBeta\\SkillPictures\\Ignore_Pain.bmp"
+
+IDB_SPRINT              BITMAP                  "SkillPictures\\Sprint.bmp"
+
+IDB_FALTER              BITMAP                  "SkillPictures\\Threatening_Shout.bmp"
+
+IDB_WC                  BITMAP                  "SkillPictures\\War_Cry.bmp"
+
+IDB_BERSERKER           BITMAP                  "SkillPictures\\Wrath_of_the_Berserker.bmp"
+
+IDB_BOH                 BITMAP                  "SkillPictures\\Breath_of_Heaven.bmp"
+
+IDB_EPIPHANY            BITMAP                  "SkillPictures\\Epiphany.bmp"
+
+IDB_MANTRAOFCONVICTION  BITMAP                  "SkillPictures\\Mantra_of_Conviction.bmp"
+
+IDB_MANTRAOFHEALING     BITMAP                  "SkillPictures\\Mantra_of_Healing.bmp"
+
+IDB_SWEEPINGWIND        BITMAP                  "SkillPictures\\Sweeping_Wind.bmp"
+
+IDB_BONEARMOR           BITMAP                  "SkillPictures\\BoneArmorNIcon.bmp"
+
+IDB_LOTD                BITMAP                  "SkillPictures\\IconLandoftheDead.bmp"
+
+IDB_POTION              BITMAP                  "SkillPictures\\Bottomless_Potion_of_Kulle-Aid.bmp"
+
+#endif    // Deutsch (Deutschland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
