@@ -19,6 +19,7 @@ DWORD CDiabloCalcFancyDlg::StartTcpConnection()
 	tcp_connection.Init();
 	tcp_connection.Listen();
 	tcp_connection.Exit();
+	Sleep(1);
 	return 0;
 }
 
@@ -154,7 +155,8 @@ DWORD CDiabloCalcFancyDlg::DoLogic()
 			//Mantra of healing
 			bool MantraOfHealingOnCooldown = tcp_connection.MantraOfHealingOnCooldown();
 			bool EnoughSpirit = tcp_connection.EnoughSpirit();
-			if (!MantraOfHealingOnCooldown && EnoughSpirit && MantraHealingCheck)
+			bool ShiftPressed = GetAsyncKeyState(VK_SHIFT);
+			if (!MantraOfHealingOnCooldown && EnoughSpirit && MantraHealingCheck && ShiftPressed)
 			{
 				input_simulator.SendKeyOrMouse(MantraHealingHotkey);
 				Sleep(100);
@@ -223,8 +225,8 @@ CDiabloCalcFancyDlg::~CDiabloCalcFancyDlg()
 {
 #ifdef DEBUG
 	FreeConsole();
-#endif
 	TerminateThread(hThread[0], 0);
+#endif
 	TerminateThread(hThread[1], 0);
 	TerminateThread(hThread[2], 0);
 }
@@ -242,9 +244,12 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	//freopen("CONOUT$", "w", stdout);
 	FILE *stream;
 	freopen_s(&stream, "CONOUT$", "w", stdout);
-#endif
 
 	hThread[0] = CreateThread(NULL,0,StaticPrint,(void*)this,0,&dwThreadID[0]);
+
+#endif
+
+
 	hThread[1] = CreateThread(NULL,0,StaticStartTcpConnection,(void*)this,0,&dwThreadID[1]);
 	hThread[2] = CreateThread(NULL,0,StaticDoLogic,(void*)this,0,&dwThreadID[2]);
 

@@ -1,6 +1,7 @@
-﻿  input_simulator.cpp
+﻿  main.cpp
+  _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
   Code wird generiert.
-  2 of 303 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
+  2 of 301 functions ( 0.7%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
     1 functions had inline decision re-evaluated but remain unchanged
   Codegenerierung ist abgeschlossen.
