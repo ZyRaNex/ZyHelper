@@ -156,7 +156,8 @@ DWORD CDiabloCalcFancyDlg::DoLogic()
 			bool MantraOfHealingOnCooldown = tcp_connection.MantraOfHealingOnCooldown();
 			bool EnoughSpirit = tcp_connection.EnoughSpirit();
 			bool ShiftPressed = GetAsyncKeyState(VK_SHIFT);
-			if (!MantraOfHealingOnCooldown && EnoughSpirit && MantraHealingCheck && ShiftPressed)
+			bool SpacePressed = GetAsyncKeyState(VK_SPACE);
+			if (!MantraOfHealingOnCooldown && EnoughSpirit && MantraHealingCheck && (ShiftPressed || SpacePressed))
 			{
 				input_simulator.SendKeyOrMouse(MantraHealingHotkey);
 				Sleep(100);
