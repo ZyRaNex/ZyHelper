@@ -62,15 +62,24 @@ DWORD CDiabloCalcFancyDlg::Print()
 
 DWORD CDiabloCalcFancyDlg::DoLogic()
 {
+	
+
 	DWORD WarCryDuration = GetTickCount();
 	DWORD BoHDuration = GetTickCount();
 	DWORD ConvictionDuration = GetTickCount();
+	DWORD ActiveDuration = GetTickCount();
 
 	while (true)
 	{
+		if (GetAsyncKeyState(VK_F10) && (GetTickCount() - 500 >= ActiveDuration))
+		{
+			ActiveDuration = GetTickCount();
+			Active = !Active;
+		}
+
 		if (!tcp_connection.IsReady()) continue;
 
-		if (tcp_connection.IsActive())
+		if (tcp_connection.IsActive() && Active)
 		{
 			m_ctlACTIVE.SetCheck(BST_CHECKED);
 		}
@@ -235,6 +244,7 @@ CDiabloCalcFancyDlg::~CDiabloCalcFancyDlg()
 BOOL CDiabloCalcFancyDlg::OnInitDialog()
 {
 	CDialog::OnInitDialog();
+	Active = true;
 
 #ifdef DEBUG
 	if (!AllocConsole())

@@ -81,6 +81,8 @@ public:
 	HANDLE hThread[3];
 	DWORD dwThreadID[3];
 
+	bool Active;
+
 	bool IpCheck;
 	bool WcCheck;
 	bool FalterCheck;
