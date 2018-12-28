@@ -7,8 +7,10 @@
 #include <afxwin.h>
 
 #include "resource.h"
+#include "wiz_macro.h"
 #include "tcp_connection.h"
 #include "input_simulator.h"
+
 
 class CDiabloCalcFancy : public CWinApp {
 public:
@@ -19,6 +21,7 @@ class CDiabloCalcFancyDlg : public CDialog {
 public:
 	enum { IDD = IDD_DIALOG1 };
 	CButton m_ctlACTIVE;
+	CButton m_ctlMACROACTIVE;
 
 	CButton	m_ctlIPCHECK;
 	CButton m_ctlWCCHECK;
@@ -33,6 +36,10 @@ public:
 	CButton m_ctlLANDOFTHEDEADCHECK;
 	CButton m_ctlBONEARMORCHECK;
 	CButton m_ctlPOTIONCHECK;
+	CButton m_ctlMACROCHECK;
+	CButton m_ctlBLACKHOLECHECK;
+	CButton m_ctlSTORMARMORCHECK;
+	CButton m_ctlMAGICWEAPONCHECK;
 
 	CEdit m_ctlIPHOTKEY;
 	CEdit m_ctlWCHOTKEY;
@@ -47,26 +54,51 @@ public:
 	CEdit m_ctlLANDOFTHEDEADHOTKEY;
 	CEdit m_ctlBONEARMORHOTKEY;
 	CEdit m_ctlPOTIONHOTKEY;
+	CEdit m_ctlWAVEOFFORCEHOTKEY;
+	CEdit m_ctlELECTROCUTEHOTKEY;
+	CEdit m_ctlMETEORHOTKEY;
+	CEdit m_ctlDISINTEGRATEHOTKEY;
+	CEdit m_ctlBLACKHOLEHOTKEY;
+	CEdit m_ctlSTORMARMORHOTKEY;
+	CEdit m_ctlMAGICWEAPONHOTKEY;
+
+	CEdit m_ctlUPPERBOUND;
+	CEdit m_ctlLOWERBOUND;
+	CEdit m_ctlTIME;
+	CEdit m_ctlCOE;
+
 
 	CDiabloCalcFancyDlg();
 	static DWORD WINAPI StaticStartTcpConnection(void* Param)
 	{
 		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
-		return This->StartTcpConnection();
+		return This->StartTcpConnectionThread();
 	}
 	static DWORD WINAPI StaticPrint(void* Param)
 	{
 		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
-		return This->Print();
+		return This->PrintThread();
 	}
 	static DWORD WINAPI StaticDoLogic(void* Param)
 	{
 		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
-		return This->DoLogic();
+		return This->DoLogicThread();
 	}
-	DWORD StartTcpConnection();
-	DWORD Print();
-	DWORD DoLogic();
+	static DWORD WINAPI StaticCoeReader(void* Param)
+	{
+		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
+		return This->CoeReaderThread();
+	}
+	static DWORD WINAPI StaticWizMacro(void* Param)
+	{
+		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
+		return This->WizMacroThread();
+	}
+	DWORD StartTcpConnectionThread();
+	DWORD PrintThread();
+	DWORD DoLogicThread();
+	DWORD CoeReaderThread();
+	DWORD WizMacroThread();
 	~CDiabloCalcFancyDlg();
 
 protected:
@@ -77,9 +109,10 @@ protected:
 public:
 	TCPConnection tcp_connection;
 	InputSimulator input_simulator;
+	WizMacro wiz_macro;
 
-	HANDLE hThread[3];
-	DWORD dwThreadID[3];
+	HANDLE hThread[5];
+	DWORD dwThreadID[5];
 
 	bool Active;
 
@@ -96,6 +129,11 @@ public:
 	bool LotdCheck;
 	bool BoneArmorCheck;
 	bool PotionCheck;
+	bool MacroCheck;
+	bool BlackholeCheck;
+	bool StormArmorCheck;
+	bool MagicWeaponCheck;
+	
 
 	wchar_t IpHotkey;
 	wchar_t WcHotkey;
@@ -110,6 +148,13 @@ public:
 	wchar_t LotdHotkey;
 	wchar_t BoneArmorHotkey;
 	wchar_t PotionHotkey;
+	wchar_t WaveOfForceHotkey;
+	wchar_t ElectrocuteHotkey;
+	wchar_t MeteorHotkey;
+	wchar_t DisintegrateHotkey;
+	wchar_t BlackholeHotkey;
+	wchar_t StormArmorHotkey;
+	wchar_t MagicWeaponHotkey;
 
 	void Update();
 };

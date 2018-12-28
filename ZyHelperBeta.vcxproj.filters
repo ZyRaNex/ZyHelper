@@ -24,6 +24,9 @@
     <ClCompile Include="main.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="wiz_macro.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="resource.h">
@@ -42,6 +45,9 @@
       <Filter>Headerdateien</Filter>
     </ClInclude>
     <ClInclude Include="Debug.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="wiz_macro.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
   </ItemGroup>
@@ -97,6 +103,30 @@
       <Filter>Ressourcendateien</Filter>
     </Image>
     <Image Include="SkillPictures\Bottomless_Potion_of_Kulle-Aid.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="skillpictures\bitmap1.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\BlackHoleIcon.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\IconDisintegrate.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\IconElectrocute.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\IconMeteor.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\IconWaveForce.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\Magic_Weapon.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\Storm_Armor2.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
   </ItemGroup>

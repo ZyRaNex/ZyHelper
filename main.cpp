@@ -1,6 +1,7 @@
 #include <afxwin.h>
 #include <iostream>
 
+
 #include "Main.h"
 
 #include "tcp_connection.h"
@@ -14,19 +15,21 @@ CDiabloCalcFancyDlg::CDiabloCalcFancyDlg() :CDialog(CDiabloCalcFancyDlg::IDD)
 
 }
 
-DWORD CDiabloCalcFancyDlg::StartTcpConnection()
+DWORD CDiabloCalcFancyDlg::StartTcpConnectionThread()
 {
 	tcp_connection.Init();
 	tcp_connection.Listen();
 	tcp_connection.Exit();
-	Sleep(1);
+	Sleep(10);
 	return 0;
 }
 
-DWORD CDiabloCalcFancyDlg::Print()
+DWORD CDiabloCalcFancyDlg::PrintThread()
 {
 	while (true)
 	{
+		Sleep(1000);
+
 		if (!tcp_connection.IsReady()) continue;
 
 		for (int i = 0; i < 8; i++)
@@ -53,28 +56,58 @@ DWORD CDiabloCalcFancyDlg::Print()
 		{
 			DEBUG_MSG(tcp_connection.ElementAt(i, 5) << " ");
 		}
+		DEBUG_MSG(" ");
+		for (int i = 0; i < 8; i++)
+		{
+			DEBUG_MSG(tcp_connection.ElementAt(i, 6) << " ");
+		}
 
 		DEBUG_MSG(endl);
-		Sleep(1000);
 	}
 	return 0;
 }
 
-DWORD CDiabloCalcFancyDlg::DoLogic()
+DWORD CDiabloCalcFancyDlg::DoLogicThread()
 {
-	
-
 	DWORD WarCryDuration = GetTickCount();
 	DWORD BoHDuration = GetTickCount();
 	DWORD ConvictionDuration = GetTickCount();
 	DWORD ActiveDuration = GetTickCount();
+	DWORD ResetDuration = GetTickCount();
+	DWORD AutoMacroDuration = GetTickCount();
 
 	while (true)
 	{
+		Sleep(10);
 		if (GetAsyncKeyState(VK_F10) && (GetTickCount() - 500 >= ActiveDuration))
 		{
 			ActiveDuration = GetTickCount();
 			Active = !Active;
+		}
+
+		if (GetAsyncKeyState(input_simulator.CharToVK('8')) && (GetTickCount() - 500 >= AutoMacroDuration))
+		{
+			AutoMacroDuration = GetTickCount();
+
+			if (wiz_macro.AutoMacro)
+			{
+				wiz_macro.AutoMacro = false;
+				m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
+			}
+			else
+			{
+				input_simulator.SendKeyDown(ElectrocuteHotkey);
+				wiz_macro.AutoMacro = true;
+				m_ctlMACROACTIVE.SetCheck(BST_CHECKED);
+			}
+		}
+
+
+		if (GetAsyncKeyState(input_simulator.CharToVK('6')) && (GetTickCount() - 500 >= ResetDuration))
+		{
+			ResetDuration = GetTickCount();
+			wiz_macro.LowerBound = 32000;
+			wiz_macro.UpperBound = 32000;
 		}
 
 		if (!tcp_connection.IsReady()) continue;
@@ -200,6 +233,29 @@ DWORD CDiabloCalcFancyDlg::DoLogic()
 			}
 		}
 
+		if (tcp_connection.ImWizard())
+		{
+			//Storm Armor
+			bool StormArmorOnCooldown = tcp_connection.StormArmorOnCooldown();
+			bool StormArmorBuffActive = tcp_connection.StormArmorBuffActive();
+
+			if (!StormArmorOnCooldown && !StormArmorBuffActive && StormArmorCheck)
+			{
+				input_simulator.SendKeyOrMouse(StormArmorHotkey);
+				Sleep(100);
+			}
+
+			//Magic Weapon
+			bool MagicWeaponOnCooldown = tcp_connection.MagicWeaponOnCooldown();
+			bool MagicWeaponBuffActive = tcp_connection.MagicWeaponBuffActive();
+
+			if (!MagicWeaponOnCooldown && !MagicWeaponBuffActive && MagicWeaponCheck)
+			{
+				input_simulator.SendKeyOrMouse(MagicWeaponHotkey);
+				Sleep(100);
+			}
+		}
+
 		if (tcp_connection.ImNecro())
 		{
 			//Land of the Dead
@@ -226,7 +282,89 @@ DWORD CDiabloCalcFancyDlg::DoLogic()
 				Sleep(100);
 			}
 		}
-		Sleep(1);
+		
+	}
+	return 0;
+}
+
+DWORD CDiabloCalcFancyDlg::CoeReaderThread()
+{
+	CString OutputTextUpperBound;
+	CString OutputTextLowerBound;
+	CString OutputTextTime;
+	CString OutputTextCoe;
+
+	while (true)
+	{
+		Sleep(127);
+		if (!tcp_connection.IsReady())
+		{
+			Sleep(100);
+			continue;
+		}
+		if (!tcp_connection.IsActive() || !Active)
+		{
+			Sleep(100);
+			continue;
+		}
+		if (!tcp_connection.ImWizard())
+		{
+			Sleep(1000);
+			continue;
+		}
+		if (!MacroCheck)
+		{
+			Sleep(100);
+			continue;
+		}
+
+		wiz_macro.GetCoe(&tcp_connection);
+
+		OutputTextUpperBound.Format(_T("%d"), wiz_macro.UpperBound);
+		OutputTextLowerBound.Format(_T("%d"), wiz_macro.LowerBound);
+		OutputTextTime.Format(_T("%d"), wiz_macro.AdjustedTime);
+		OutputTextCoe.Format(_T("%d %d %d %d"), tcp_connection.ConventionLight(), tcp_connection.ConventionArcane(), tcp_connection.ConventionCold(), tcp_connection.ConventionFire());
+
+		m_ctlUPPERBOUND.SetSel(0, -1);
+		m_ctlUPPERBOUND.ReplaceSel(OutputTextUpperBound);
+		m_ctlLOWERBOUND.SetSel(0, -1);
+		m_ctlLOWERBOUND.ReplaceSel(OutputTextLowerBound);
+		m_ctlTIME.SetSel(0, -1);
+		m_ctlTIME.ReplaceSel(OutputTextTime);
+		m_ctlCOE.SetSel(0, -1);
+		m_ctlCOE.ReplaceSel(OutputTextCoe);
+
+	}
+	return 0;
+}
+
+DWORD CDiabloCalcFancyDlg::WizMacroThread()
+{
+	while (true)
+	{
+		Sleep(10);
+		if (!tcp_connection.IsReady())
+		{
+			Sleep(100);
+			continue;
+		}
+		if (!tcp_connection.IsActive() || !Active)
+		{
+			Sleep(100);
+			continue;
+		}
+		if (!tcp_connection.ImWizard())
+		{
+			Sleep(1000);
+			continue;
+		}
+		if (!MacroCheck)
+		{
+			Sleep(100);
+			continue;
+		}
+
+		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
 	}
 	return 0;
 }
@@ -239,6 +377,8 @@ CDiabloCalcFancyDlg::~CDiabloCalcFancyDlg()
 #endif
 	TerminateThread(hThread[1], 0);
 	TerminateThread(hThread[2], 0);
+	TerminateThread(hThread[3], 0);
+	TerminateThread(hThread[4], 0);
 }
 
 BOOL CDiabloCalcFancyDlg::OnInitDialog()
@@ -257,13 +397,24 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	freopen_s(&stream, "CONOUT$", "w", stdout);
 
 	hThread[0] = CreateThread(NULL,0,StaticPrint,(void*)this,0,&dwThreadID[0]);
-
+	if (!hThread[0])
+	{
+		::MessageBox(NULL, _T("Failed to create the print thread"),
+			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+	}
 #endif
 
 
-	hThread[1] = CreateThread(NULL,0,StaticStartTcpConnection,(void*)this,0,&dwThreadID[1]);
-	hThread[2] = CreateThread(NULL,0,StaticDoLogic,(void*)this,0,&dwThreadID[2]);
+	hThread[1] = CreateThread(NULL, 0, StaticStartTcpConnection, (void*)this, 0, &dwThreadID[1]);
+	hThread[2] = CreateThread(NULL, 0, StaticDoLogic, (void*)this, 0, &dwThreadID[2]);
+	hThread[3] = CreateThread(NULL, 0, StaticCoeReader, (void*)this, 0, &dwThreadID[3]);
+	hThread[4] = CreateThread(NULL, 0, StaticWizMacro, (void*)this, 0, &dwThreadID[4]);
 
+	if (!hThread[1] || !hThread[2] || !hThread[3] || !hThread[4])
+	{
+		::MessageBox(NULL, _T("Failed to create a thread"),
+			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+	}
 
 	m_ctlIPCHECK.SetCheck(BST_CHECKED);
 	m_ctlWCCHECK.SetCheck(BST_CHECKED);
@@ -278,6 +429,11 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlLANDOFTHEDEADCHECK.SetCheck(BST_CHECKED);
 	m_ctlBONEARMORCHECK.SetCheck(BST_UNCHECKED);
 	m_ctlPOTIONCHECK.SetCheck(BST_CHECKED);
+	m_ctlMACROCHECK.SetCheck(BST_CHECKED);
+	m_ctlBLACKHOLECHECK.SetCheck(BST_CHECKED);
+	m_ctlSTORMARMORCHECK.SetCheck(BST_UNCHECKED);
+	m_ctlMAGICWEAPONCHECK.SetCheck(BST_UNCHECKED);
+	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
 	m_ctlIPHOTKEY.SetWindowText(_T("R"));
 	m_ctlWCHOTKEY.SetWindowText(_T("4"));
@@ -292,6 +448,13 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlLANDOFTHEDEADHOTKEY.SetWindowText(_T("1"));
 	m_ctlBONEARMORHOTKEY.SetWindowText(_T("R"));
 	m_ctlPOTIONHOTKEY.SetWindowText(_T("q"));
+	m_ctlWAVEOFFORCEHOTKEY.SetWindowText(_T("1"));
+	m_ctlELECTROCUTEHOTKEY.SetWindowText(_T("2"));
+	m_ctlMETEORHOTKEY.SetWindowText(_T("3"));
+	m_ctlDISINTEGRATEHOTKEY.SetWindowText(_T("4"));
+	m_ctlBLACKHOLEHOTKEY.SetWindowText(_T("R"));
+	m_ctlSTORMARMORHOTKEY.SetWindowText(_T("L"));
+	m_ctlMAGICWEAPONHOTKEY.SetWindowText(_T("R"));
 
 	return TRUE;
 }
@@ -321,6 +484,10 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_LANDOFTHEDEADCHECK, Update)
 	ON_BN_CLICKED(IDC_BONEARMORCHECK, Update)
 	ON_BN_CLICKED(IDC_POTIONCHECK, Update)
+	ON_BN_CLICKED(IDC_MACROCHECK, Update)
+	ON_BN_CLICKED(IDC_BLACKHOLECHECK, Update)
+	ON_BN_CLICKED(IDC_STORMARMORCHECK, Update)
+	ON_BN_CLICKED(IDC_MAGICWEAPONCHECK, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -335,6 +502,13 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_LANDOFTHEDEADHOTKEY, Update)
 	ON_EN_CHANGE(IDC_BONEARMORHOTKEY, Update)
 	ON_EN_CHANGE(IDC_POTIONTHOTKEY, Update)
+	ON_EN_CHANGE(IDC_WAVEOFFORCEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_ELECTROCUTEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_METEORHOTKEY, Update)
+	ON_EN_CHANGE(IDC_DISINTEGRATEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_BLACKHOLEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_STORMARMORHOTKEY, Update)
+	ON_EN_CHANGE(IDC_MAGICWEAPONHOTKEY, Update)
 
 END_MESSAGE_MAP()
 
@@ -343,6 +517,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_ACTIVE, m_ctlACTIVE);
+	DDX_Control(pDX, IDC_MACROACTIVE, m_ctlMACROACTIVE);
 
 	DDX_Control(pDX, IDC_IPCHECK, m_ctlIPCHECK);
 	DDX_Control(pDX, IDC_WCCHECK, m_ctlWCCHECK);
@@ -357,6 +532,10 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LANDOFTHEDEADCHECK, m_ctlLANDOFTHEDEADCHECK);
 	DDX_Control(pDX, IDC_BONEARMORCHECK, m_ctlBONEARMORCHECK);
 	DDX_Control(pDX, IDC_POTIONCHECK, m_ctlPOTIONCHECK);
+	DDX_Control(pDX, IDC_MACROCHECK, m_ctlMACROCHECK);
+	DDX_Control(pDX, IDC_BLACKHOLECHECK, m_ctlBLACKHOLECHECK);
+	DDX_Control(pDX, IDC_STORMARMORCHECK, m_ctlSTORMARMORCHECK);
+	DDX_Control(pDX, IDC_MAGICWEAPONCHECK, m_ctlMAGICWEAPONCHECK);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -371,6 +550,19 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LANDOFTHEDEADHOTKEY, m_ctlLANDOFTHEDEADHOTKEY);
 	DDX_Control(pDX, IDC_BONEARMORHOTKEY, m_ctlBONEARMORHOTKEY);
 	DDX_Control(pDX, IDC_POTIONTHOTKEY, m_ctlPOTIONHOTKEY);
+	DDX_Control(pDX, IDC_WAVEOFFORCEHOTKEY, m_ctlWAVEOFFORCEHOTKEY);
+	DDX_Control(pDX, IDC_ELECTROCUTEHOTKEY, m_ctlELECTROCUTEHOTKEY);
+	DDX_Control(pDX, IDC_METEORHOTKEY, m_ctlMETEORHOTKEY);
+	DDX_Control(pDX, IDC_DISINTEGRATEHOTKEY, m_ctlDISINTEGRATEHOTKEY);
+	DDX_Control(pDX, IDC_BLACKHOLEHOTKEY, m_ctlBLACKHOLEHOTKEY);
+	DDX_Control(pDX, IDC_STORMARMORHOTKEY, m_ctlSTORMARMORHOTKEY);
+	DDX_Control(pDX, IDC_MAGICWEAPONHOTKEY, m_ctlMAGICWEAPONHOTKEY);
+
+	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
+	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
+	DDX_Control(pDX, IDC_TIME, m_ctlTIME);
+	DDX_Control(pDX, IDC_COE, m_ctlCOE);
+
 }
 
 
@@ -379,11 +571,31 @@ void CDiabloCalcFancyDlg::Update()
 	//Reset
 	CString Blanc;
 	Blanc.Format(_T(""));
-
 	int len;
-
 	CString strText;
 	LPTSTR buffer;
+
+
+
+	IpCheck = m_ctlIPCHECK.GetCheck();
+	WcCheck = m_ctlWCCHECK.GetCheck();
+	FalterCheck = m_ctlFALTERCHECK.GetCheck();
+	BerserkerCheck = m_ctlBERSERKERCHECK.GetCheck();
+	SprintCheck = m_ctlSPRINTCHECK.GetCheck();
+	EpiphanyCheck = m_ctlEPIPHANYCHECK.GetCheck();
+	MantraHealingCheck = m_ctlMANTRAHEALINGCHECK.GetCheck();
+	SweepingWindCheck = m_ctlSWEEPINGWINDCHECK.GetCheck();
+	BohCheck = m_ctlBOHCHECK.GetCheck();
+	MantraConvictionCheck = m_ctlMANTRACONVICTIONCHECK.GetCheck();
+	LotdCheck = m_ctlLANDOFTHEDEADCHECK.GetCheck();
+	BoneArmorCheck = m_ctlBONEARMORCHECK.GetCheck();
+	PotionCheck = m_ctlPOTIONCHECK.GetCheck();
+	MacroCheck = m_ctlMACROCHECK.GetCheck();
+	BlackholeCheck = m_ctlBLACKHOLECHECK.GetCheck();
+	StormArmorCheck = m_ctlSTORMARMORCHECK.GetCheck();
+	MagicWeaponCheck = m_ctlMAGICWEAPONCHECK.GetCheck();
+
+	wiz_macro.BlackholeCheck = BlackholeCheck;
 
 	len = m_ctlIPHOTKEY.LineLength(m_ctlIPHOTKEY.LineIndex(0));
 	if (len > 0)
@@ -554,19 +766,103 @@ void CDiabloCalcFancyDlg::Update()
 		PotionHotkey = ' ';
 	}
 
-	IpCheck = m_ctlIPCHECK.GetCheck();
-	WcCheck = m_ctlWCCHECK.GetCheck();
-	FalterCheck = m_ctlFALTERCHECK.GetCheck();
-	BerserkerCheck = m_ctlBERSERKERCHECK.GetCheck();
-	SprintCheck = m_ctlSPRINTCHECK.GetCheck();
-	EpiphanyCheck = m_ctlEPIPHANYCHECK.GetCheck();
-	MantraHealingCheck = m_ctlMANTRAHEALINGCHECK.GetCheck();
-	SweepingWindCheck = m_ctlSWEEPINGWINDCHECK.GetCheck();
-	BohCheck = m_ctlBOHCHECK.GetCheck();
-	MantraConvictionCheck = m_ctlMANTRACONVICTIONCHECK.GetCheck();
-	LotdCheck = m_ctlLANDOFTHEDEADCHECK.GetCheck();
-	BoneArmorCheck = m_ctlBONEARMORCHECK.GetCheck();
-	PotionCheck = m_ctlPOTIONCHECK.GetCheck();
+	len = m_ctlWAVEOFFORCEHOTKEY.LineLength(m_ctlWAVEOFFORCEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlWAVEOFFORCEHOTKEY.GetLine(0, buffer, len);
+		WaveOfForceHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		WaveOfForceHotkey = ' ';
+	}
+
+	len = m_ctlELECTROCUTEHOTKEY.LineLength(m_ctlELECTROCUTEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlELECTROCUTEHOTKEY.GetLine(0, buffer, len);
+		ElectrocuteHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ElectrocuteHotkey = ' ';
+	}
+
+	len = m_ctlMETEORHOTKEY.LineLength(m_ctlMETEORHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlMETEORHOTKEY.GetLine(0, buffer, len);
+		MeteorHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		MeteorHotkey = ' ';
+	}
+
+	len = m_ctlDISINTEGRATEHOTKEY.LineLength(m_ctlDISINTEGRATEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlDISINTEGRATEHOTKEY.GetLine(0, buffer, len);
+		DisintegrateHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		DisintegrateHotkey = ' ';
+	}
+
+	len = m_ctlBLACKHOLEHOTKEY.LineLength(m_ctlBLACKHOLEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlBLACKHOLEHOTKEY.GetLine(0, buffer, len);
+		BlackholeHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		BlackholeHotkey = ' ';
+	}
+
+	len = m_ctlSTORMARMORHOTKEY.LineLength(m_ctlSTORMARMORHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlSTORMARMORHOTKEY.GetLine(0, buffer, len);
+		StormArmorHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		StormArmorHotkey = ' ';
+	}
+
+	len = m_ctlMAGICWEAPONHOTKEY.LineLength(m_ctlMAGICWEAPONHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlMAGICWEAPONHOTKEY.GetLine(0, buffer, len);
+		MagicWeaponHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		MagicWeaponHotkey = ' ';
+	}
+
+
+	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
+	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
+	wiz_macro.MeteorHotkey = MeteorHotkey;
+	wiz_macro.DisintegrateHotkey = DisintegrateHotkey;
+	wiz_macro.BlackholeHotkey = BlackholeHotkey;
 
 	DEBUG_MSG("Info Updated");
 }

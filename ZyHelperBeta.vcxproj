@@ -133,6 +133,7 @@
     <ClCompile Include="input_simulator.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="tcp_connection.cpp" />
+    <ClCompile Include="wiz_macro.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Debug.h" />
@@ -141,6 +142,7 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="tcp_connection.h" />
+    <ClInclude Include="wiz_macro.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ZyHelperBeta.rc" />
@@ -148,16 +150,24 @@
   <ItemGroup>
     <Image Include="bitmap1.bmp" />
     <Image Include="bitmap2.bmp" />
+    <Image Include="skillpictures\bitmap1.bmp" />
+    <Image Include="SkillPictures\BlackHoleIcon.bmp" />
     <Image Include="SkillPictures\BoneArmorNIcon.bmp" />
     <Image Include="SkillPictures\Bottomless_Potion_of_Kulle-Aid.bmp" />
     <Image Include="SkillPictures\Breath_of_Heaven.bmp" />
     <Image Include="SkillPictures\Epiphany.bmp" />
+    <Image Include="SkillPictures\IconDisintegrate.bmp" />
+    <Image Include="SkillPictures\IconElectrocute.bmp" />
     <Image Include="SkillPictures\IconLandoftheDead.bmp" />
+    <Image Include="SkillPictures\IconMeteor.bmp" />
+    <Image Include="SkillPictures\IconWaveForce.bmp" />
     <Image Include="SkillPictures\Ignore_Pain.bmp" />
     <Image Include="SkillPictures\IP.bmp" />
+    <Image Include="SkillPictures\Magic_Weapon.bmp" />
     <Image Include="SkillPictures\Mantra_of_Conviction.bmp" />
     <Image Include="SkillPictures\Mantra_of_Healing.bmp" />
     <Image Include="SkillPictures\Sprint.bmp" />
+    <Image Include="SkillPictures\Storm_Armor2.bmp" />
     <Image Include="SkillPictures\Sweeping_Wind.bmp" />
     <Image Include="SkillPictures\Threatening_Shout.bmp" />
     <Image Include="SkillPictures\War_Cry.bmp" />

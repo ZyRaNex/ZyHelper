@@ -16,6 +16,13 @@
 #define IDB_BONEARMOR                   117
 #define IDB_LOTD                        118
 #define IDB_POTION                      119
+#define IDB_BLACKHOLE                   121
+#define IDB_DISINTEGRATE                122
+#define IDB_ELECTROCUTE                 123
+#define IDB_METEOR                      124
+#define IDB_WAVEOFFORCE                 125
+#define IDB_MAGICWEAPON                 126
+#define IDB_STORMARMOR                  127
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -54,17 +61,40 @@
 #define IDC_BONEARMOR                   1042
 #define IDC_ACTIVE                      1043
 #define IDC_POTIONCHECK                 1044
-#define IDC_SPRINTHOTKEY2               1045
 #define IDC_POTIONTHOTKEY               1045
 #define IDC_SPRINT2                     1046
+#define IDC_UPPERBOUND                  1047
+#define IDC_LOWERBOUND                  1048
+#define IDC_TIME                        1049
+#define IDC_COE                         1050
+#define IDC_WAVEOFFORCE                 1051
+#define IDC_ELECTROCUTE                 1052
+#define IDC_METEOR                      1053
+#define IDC_DISINTEGRATE                1054
+#define IDC_BLACKHOLE                   1055
+#define IDC_STORMARMOR                  1056
+#define IDC_MAGICWEAPON                 1057
+#define IDC_BLACKHOLECHECK              1058
+#define IDC_STORMARMORCHECK             1059
+#define IDC_MAGICWEAPONCHECK            1060
+#define IDC_MACROCHECK                  1061
+#define IDC_WAVEOFFORCEHOTKEY           1062
+#define IDC_ELECTROCUTEHOTKEY           1063
+#define IDC_METEORHOTKEY                1064
+#define IDC_DISINTEGRATEHOTKEY          1065
+#define IDC_BLACKHOLEHOTKEY             1066
+#define IDC_STORMARMORHOTKEY            1067
+#define IDC_MAGICWEAPONHOTKEY           1068
+#define IDC_ACTIVE2                     1070
+#define IDC_MACROACTIVE                 1070
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        120
+#define _APS_NEXT_RESOURCE_VALUE        128
 #define _APS_NEXT_COMMAND_VALUE         40001
-#define _APS_NEXT_CONTROL_VALUE         1044
+#define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

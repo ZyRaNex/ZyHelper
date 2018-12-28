@@ -3,6 +3,7 @@
 #ifndef TCP_CONNECTION_H_
 #define TCP_CONNECTION_H_
 
+#include <Windows.h>
 #include <string>
 #include <mutex>
 
@@ -63,6 +64,16 @@ public:
 	bool Range25Enemies10() { return ElementAt(1, 5); };
 	bool UsePotion() { return ElementAt(2, 5); };
 	bool PotionIsOnCooldown() { return ElementAt(3, 5); };
+	bool ConventionLight() { return ElementAt(4, 5); };
+	bool ConventionArcane() { return ElementAt(5, 5); };
+	bool ConventionCold() { return ElementAt(6, 5); };
+	bool ConventionFire() { return ElementAt(7, 5); };
+
+	bool BlackholeBuffActive() { return ElementAt(1, 6); };
+	bool StormArmorOnCooldown() { return ElementAt(2, 6); };
+	bool StormArmorBuffActive() { return ElementAt(3, 6); };
+	bool MagicWeaponOnCooldown() { return ElementAt(4, 6); };
+	bool MagicWeaponBuffActive() { return ElementAt(5, 6); };
 
 	bool ElementAt(unsigned  i, unsigned j);
 	string content;
