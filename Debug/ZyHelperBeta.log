@@ -1,3 +1,7 @@
-﻿  main.cpp
+﻿  input_simulator.cpp
+  main.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+  tcp_connection.cpp
+  wiz_macro.cpp
+  Code wird generiert...
   ZyHelperBeta.vcxproj -> C:\Users\Someone\source\repos\ZyHelperBeta\Debug\ZyHelperBeta.exe

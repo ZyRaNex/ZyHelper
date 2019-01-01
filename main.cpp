@@ -75,6 +75,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 	DWORD ActiveDuration = GetTickCount();
 	DWORD ResetDuration = GetTickCount();
 	DWORD AutoMacroDuration = GetTickCount();
+	DWORD EpiphanyDuration = GetTickCount();
 
 	while (true)
 	{
@@ -84,24 +85,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			ActiveDuration = GetTickCount();
 			Active = !Active;
 		}
-
-		if (GetAsyncKeyState(input_simulator.CharToVK('8')) && (GetTickCount() - 500 >= AutoMacroDuration))
-		{
-			AutoMacroDuration = GetTickCount();
-
-			if (wiz_macro.AutoMacro)
-			{
-				wiz_macro.AutoMacro = false;
-				m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
-			}
-			else
-			{
-				input_simulator.SendKeyDown(ElectrocuteHotkey);
-				wiz_macro.AutoMacro = true;
-				m_ctlMACROACTIVE.SetCheck(BST_CHECKED);
-			}
-		}
-
 
 		if (GetAsyncKeyState(input_simulator.CharToVK('6')) && (GetTickCount() - 500 >= ResetDuration))
 		{
@@ -121,8 +104,34 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			m_ctlACTIVE.SetCheck(BST_UNCHECKED);
 			continue;
 		}
-		
-		
+
+		HWND handle = ::GetForegroundWindow();
+		int capacity = ::GetWindowTextLength(handle) * 2;
+
+		wchar_t NewName[128];
+		::GetWindowText(handle, NewName, 128);
+
+
+		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+
+
+		if (GetAsyncKeyState(input_simulator.CharToVK('8')) && (GetTickCount() - 500 >= AutoMacroDuration))
+		{
+			AutoMacroDuration = GetTickCount();
+
+			if (wiz_macro.AutoMacro)
+			{
+				wiz_macro.AutoMacro = false;
+				m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
+			}
+			else
+			{
+				input_simulator.SendKeyDown(ElectrocuteHotkey);
+				wiz_macro.AutoMacro = true;
+				m_ctlMACROACTIVE.SetCheck(BST_CHECKED);
+			}
+		}
+
 		bool UsePotion = tcp_connection.UsePotion();
 		bool PotionIsOnCooldown = tcp_connection.PotionIsOnCooldown();
 		if (UsePotion && !PotionIsOnCooldown && PotionCheck)
@@ -188,9 +197,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			//Epiphany
 			bool EpiphanyOnCooldown = tcp_connection.EpiphanyOnCooldown();
 			bool EpiphanyBuffActive = tcp_connection.EpiphanyBuffActive();
-			if (!EpiphanyOnCooldown && !EpiphanyBuffActive && EpiphanyCheck)
+			if (!EpiphanyOnCooldown && (!EpiphanyBuffActive || (GetTickCount() - 14500 >= EpiphanyDuration)) && EpiphanyCheck)
 			{
 				input_simulator.SendKeyOrMouse(EpiphanyHotkey);
+				EpiphanyDuration = GetTickCount();
 				Sleep(100);
 			}
 
