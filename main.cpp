@@ -8,8 +8,6 @@
 #include "input_simulator.h"
 #include "Debug.h"
 
-using namespace std;
-
 CDiabloCalcFancyDlg::CDiabloCalcFancyDlg() :CDialog(CDiabloCalcFancyDlg::IDD) 
 {
 
@@ -17,13 +15,13 @@ CDiabloCalcFancyDlg::CDiabloCalcFancyDlg() :CDialog(CDiabloCalcFancyDlg::IDD)
 
 DWORD CDiabloCalcFancyDlg::StartTcpConnectionThread()
 {
-	DEBUG_MSG("tcp start" << endl);
+	DEBUG_MSG("tcp start" << std::endl);
 	tcp_connection.Init();
-	DEBUG_MSG("tcp init" << endl);
+	DEBUG_MSG("tcp init" << std::endl);
 	tcp_connection.Listen();
-	DEBUG_MSG("tcp listen" << endl);
+	DEBUG_MSG("tcp listen" << std::endl);
 	tcp_connection.Exit();
-	DEBUG_MSG("tcp start" << endl);
+	DEBUG_MSG("tcp start" << std::endl);
 	Sleep(10);
 	return 0;
 }
@@ -66,7 +64,7 @@ DWORD CDiabloCalcFancyDlg::PrintThread()
 			DEBUG_MSG(tcp_connection.ElementAt(i, 6) << " ");
 		}
 
-		DEBUG_MSG(endl);
+		DEBUG_MSG(std::endl);
 	}
 	return 0;
 }
@@ -399,6 +397,26 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 	return 0;
 }
 
+DWORD CDiabloCalcFancyDlg::GenerateInput()
+{
+	while (true)
+	{
+		Sleep(10);
+		if (!tcp_connection.IsReady())
+		{
+			Sleep(100);
+			continue;
+		}
+		if (!tcp_connection.IsActive() || !Active)
+		{
+			Sleep(100);
+			continue;
+		}
+		input_simulator.GenerateInput();
+	}
+	return 0;
+}
+
 CDiabloCalcFancyDlg::~CDiabloCalcFancyDlg() 
 {
 #ifdef DEBUG
@@ -439,6 +457,7 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	hThread[2] = CreateThread(NULL, 0, StaticDoLogic, (void*)this, 0, &dwThreadID[2]);
 	hThread[3] = CreateThread(NULL, 0, StaticCoeReader, (void*)this, 0, &dwThreadID[3]);
 	hThread[4] = CreateThread(NULL, 0, StaticWizMacro, (void*)this, 0, &dwThreadID[4]);
+	hThread[5] = CreateThread(NULL, 0, StaticGenerateInput, (void*)this, 0, &dwThreadID[5]);
 
 	if (!hThread[1] || !hThread[2] || !hThread[3] || !hThread[4])
 	{
@@ -894,6 +913,6 @@ void CDiabloCalcFancyDlg::Update()
 	wiz_macro.DisintegrateHotkey = DisintegrateHotkey;
 	wiz_macro.BlackholeHotkey = BlackholeHotkey;
 
-	DEBUG_MSG("Info Updated" << endl);
+	DEBUG_MSG("Info Updated" << std::endl);
 }
 

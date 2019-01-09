@@ -8,9 +8,6 @@
 #include "Debug.h"
 
 
-using namespace std;
-
-
 
 TCPConnection::TCPConnection()
 {
@@ -31,7 +28,7 @@ int TCPConnection::Init()
 			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
-	DEBUG_MSG("WSAStartup" << endl);
+	DEBUG_MSG("WSAStartup" << std::endl);
 
 	// Socket erstellen
 	acceptSocket = socket(AF_INET, SOCK_STREAM, 0);
@@ -41,7 +38,7 @@ int TCPConnection::Init()
 			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
-	DEBUG_MSG("accepted socket" << endl);
+	DEBUG_MSG("accepted socket" << std::endl);
 
 	// Socket binden
 	memset(&addr, 0, sizeof(SOCKADDR_IN));
@@ -57,7 +54,7 @@ int TCPConnection::Init()
 			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 		return 1;
 	}
-	DEBUG_MSG("bound socket" << endl);
+	DEBUG_MSG("bound socket" << std::endl);
 	return 0;
 
 }
@@ -74,7 +71,7 @@ int TCPConnection::Listen()
 				_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 			return 1;
 		}
-		DEBUG_MSG("started listening" << endl);
+		DEBUG_MSG("started listening" << std::endl);
 
 		// Verbindung annehmen
 		connectedSocket = accept(acceptSocket, NULL, NULL);
@@ -84,7 +81,7 @@ int TCPConnection::Listen()
 				_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 			return 1;
 		}
-		DEBUG_MSG("accepted the connection" << endl);
+		DEBUG_MSG("accepted the connection" << std::endl);
 
 		StartupTime = GetTickCount();
 
@@ -100,13 +97,14 @@ int TCPConnection::Listen()
 			//cout <<"recv:" << content <<" " << error_code<< endl;
 			if (error_code == 0)
 			{
+				DEBUG_MSG("terminated" << std::endl);
 				MessageBox(NULL, _T("terminated"),
 					_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
-				break;
 				break;
 			}
 			if (error_code == SOCKET_ERROR) 
 			{
+				DEBUG_MSG("error recieved a socket error" << std::endl);
 				MessageBox(NULL, _T("error recieved a socket error"),
 					_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 				break;
@@ -114,6 +112,7 @@ int TCPConnection::Listen()
 			text[error_code] = '\0';
 			Sleep(1);
 		}
+		DEBUG_MSG("Socket Error" << std::endl);
 		MessageBox(NULL, _T("Socket Error"),
 			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 	}
@@ -129,7 +128,7 @@ int TCPConnection::Exit()
 
 bool TCPConnection::ElementAt(unsigned  i, unsigned j)
 {
-	string copy;
+	std::string copy;
 	bool result;
 	//if (i < content.length()) result = content.at(i);
 	tcpmutex.lock();

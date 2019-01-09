@@ -7,8 +7,6 @@
 #include <string>
 #include <mutex>
 
-using namespace std;
-
 #define PORT_STR "2206"
 
 #pragma comment (lib, "Ws2_32.lib")
@@ -78,8 +76,8 @@ public:
 	bool NecroInIPRange() { return ElementAt(7, 6); };
 
 	bool ElementAt(unsigned  i, unsigned j);
-	string content;
-	mutex tcpmutex;
+	std::string content;
+	std::mutex tcpmutex;
 
 private:
 	
