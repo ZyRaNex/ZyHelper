@@ -189,7 +189,7 @@ void InputSimulator::GenerateInput()
 	inputwaiting = !InputQueue.empty();
 	inputmutex.unlock();
 
-	if (inputwaiting)
+	while(inputwaiting)
 	{
 		Input data;
 		inputmutex.lock();
@@ -410,6 +410,10 @@ void InputSimulator::GenerateInput()
 			}
 			break;
 		}
+
+		inputmutex.lock();
+		inputwaiting = !InputQueue.empty();
+		inputmutex.unlock();
 	}
 }
 

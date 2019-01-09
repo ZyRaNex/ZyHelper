@@ -307,9 +307,9 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
 			input_simulator->SendKeyDown(DisintegrateHotkey);
-			Sleep(400);
-			input_simulator->SendKeyUp(DisintegrateHotkey);
+			Sleep(500);
 			input_simulator->SendKeyDown(WaveOfForceHotkey);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
 			Sleep(100);
 			input_simulator->SendKeyUp(WaveOfForceHotkey);
 		}

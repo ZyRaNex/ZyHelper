@@ -132,11 +132,8 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 
 		HWND handle = ::GetForegroundWindow();
 		int capacity = ::GetWindowTextLength(handle) * 2;
-
 		wchar_t NewName[128];
 		::GetWindowText(handle, NewName, 128);
-
-
 		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 
 
@@ -412,6 +409,11 @@ DWORD CDiabloCalcFancyDlg::GenerateInput()
 			Sleep(100);
 			continue;
 		}
+		HWND handle = ::GetForegroundWindow();
+		int capacity = ::GetWindowTextLength(handle) * 2;
+		wchar_t NewName[128];
+		::GetWindowText(handle, NewName, 128);
+		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 		input_simulator.GenerateInput();
 	}
 	return 0;
