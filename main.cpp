@@ -17,9 +17,13 @@ CDiabloCalcFancyDlg::CDiabloCalcFancyDlg() :CDialog(CDiabloCalcFancyDlg::IDD)
 
 DWORD CDiabloCalcFancyDlg::StartTcpConnectionThread()
 {
+	DEBUG_MSG("tcp start" << endl);
 	tcp_connection.Init();
+	DEBUG_MSG("tcp init" << endl);
 	tcp_connection.Listen();
+	DEBUG_MSG("tcp listen" << endl);
 	tcp_connection.Exit();
+	DEBUG_MSG("tcp start" << endl);
 	Sleep(10);
 	return 0;
 }
@@ -84,6 +88,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		{
 			ActiveDuration = GetTickCount();
 			Active = !Active;
+
+			wiz_macro.AutoMacro = false;
+			input_simulator.SendKeyUp(ElectrocuteHotkey);
+			m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 		}
 
 		if (GetAsyncKeyState(input_simulator.CharToVK('6')) && (GetTickCount() - 500 >= ResetDuration))
@@ -93,6 +101,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			wiz_macro.UpperBound = 32000;
 		}
 
+		
 		if (!tcp_connection.IsReady()) continue;
 
 		if (tcp_connection.IsActive() && Active)
@@ -105,6 +114,24 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			continue;
 		}
 
+		if (GetAsyncKeyState(input_simulator.CharToVK('8')) && (GetTickCount() - 500 >= AutoMacroDuration))
+		{
+			AutoMacroDuration = GetTickCount();
+
+			if (wiz_macro.AutoMacro)
+			{
+				wiz_macro.AutoMacro = false;
+				input_simulator.SendKeyUp(ElectrocuteHotkey);
+				m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
+			}
+			else
+			{
+				input_simulator.SendKeyDown(ElectrocuteHotkey);
+				wiz_macro.AutoMacro = true;
+				m_ctlMACROACTIVE.SetCheck(BST_CHECKED);
+			}
+		}
+
 		HWND handle = ::GetForegroundWindow();
 		int capacity = ::GetWindowTextLength(handle) * 2;
 
@@ -115,22 +142,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 
 
-		if (GetAsyncKeyState(input_simulator.CharToVK('8')) && (GetTickCount() - 500 >= AutoMacroDuration))
-		{
-			AutoMacroDuration = GetTickCount();
-
-			if (wiz_macro.AutoMacro)
-			{
-				wiz_macro.AutoMacro = false;
-				m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
-			}
-			else
-			{
-				input_simulator.SendKeyDown(ElectrocuteHotkey);
-				wiz_macro.AutoMacro = true;
-				m_ctlMACROACTIVE.SetCheck(BST_CHECKED);
-			}
-		}
+		
 
 		bool UsePotion = tcp_connection.UsePotion();
 		bool PotionIsOnCooldown = tcp_connection.PotionIsOnCooldown();
@@ -145,7 +157,11 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			//Ignore Pain
 			bool IPWizInRange = tcp_connection.WizInRange();
 			bool IPOnCooldown = tcp_connection.IPOnCooldown();
-			if (IPWizInRange && !IPOnCooldown && IpCheck)
+			bool BossIsSpawned = tcp_connection.BossIsSpawned();
+			bool NecroInIPRange = tcp_connection.NecroInIPRange();
+
+			if (!BossIsSpawned && IPWizInRange && !IPOnCooldown && IpCheck ||
+				 BossIsSpawned && NecroInIPRange && !IPOnCooldown && IpCheck)
 			{
 				input_simulator.SendKeyOrMouse(IpHotkey);
 				Sleep(100);
@@ -153,10 +169,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 
 			//War Cry
 			bool WarCryOnCooldown = tcp_connection.WarCryOnCooldown();
-			bool NecroInRange = tcp_connection.NecroInRange();;
+			bool NecroInWCRange = tcp_connection.NecroInWCRange();
 
 			if (((!WarCryOnCooldown && (GetTickCount() - 10000 >= WarCryDuration)) ||
-				(!WarCryOnCooldown && NecroInRange)) && WcCheck)
+				(!WarCryOnCooldown && NecroInWCRange)) && WcCheck)
 			{
 				input_simulator.SendKeyOrMouse(WcHotkey);
 				WarCryDuration = GetTickCount();
@@ -282,10 +298,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool BoneArmorAlmostRunningOut = tcp_connection.BoneArmorAlmostRunningOut();
 			bool BoneArmorOnCooldown = tcp_connection.BoneArmorOnCooldown();
 			bool Range25Enemies1 = tcp_connection.Range25Enemies1();
-			bool Range25Enemies10 = tcp_connection.Range25Enemies10();
+			bool Range25Enemies5 = tcp_connection.Range25Enemies5();
 
 			if (((BoneArmorAlmostRunningOut && Range25Enemies1) || 
-				(!BoneArmorAlmostRunningOut && Range25Enemies10)) && 
+				(!BoneArmorAlmostRunningOut && Range25Enemies5)) && 
 				!BoneArmorOnCooldown && BoneArmorCheck)
 			{
 				input_simulator.SendKeyOrMouse(BoneArmorHotkey);
@@ -355,21 +371,25 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 		Sleep(10);
 		if (!tcp_connection.IsReady())
 		{
+			wiz_macro.Stop(&input_simulator);
 			Sleep(100);
 			continue;
 		}
 		if (!tcp_connection.IsActive() || !Active)
 		{
+			wiz_macro.Stop(&input_simulator);
 			Sleep(100);
 			continue;
 		}
 		if (!tcp_connection.ImWizard())
 		{
+			wiz_macro.Stop(&input_simulator);
 			Sleep(1000);
 			continue;
 		}
 		if (!MacroCheck)
 		{
+			wiz_macro.Stop(&input_simulator);
 			Sleep(100);
 			continue;
 		}
@@ -874,6 +894,6 @@ void CDiabloCalcFancyDlg::Update()
 	wiz_macro.DisintegrateHotkey = DisintegrateHotkey;
 	wiz_macro.BlackholeHotkey = BlackholeHotkey;
 
-	DEBUG_MSG("Info Updated");
+	DEBUG_MSG("Info Updated" << endl);
 }
 

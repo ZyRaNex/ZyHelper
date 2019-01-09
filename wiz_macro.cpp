@@ -13,7 +13,7 @@ WizMacro::WizMacro()
 	TimeShift = 0;
 	AdjustedTime = 0;
 	BlackholeCheck = false;
-	KeyIsPressed = false;
+	MacroIsRunning = false;
 	DooingArcane = false;
 	SavedBlackHole = false;
 	AutoMacro = false;
@@ -131,167 +131,199 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		return;
 	}
 
-	if (!KeyIsPressed && GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+	if (BlackholeCheck)
 	{
-		input_simulator->SendKeyDown(ElectrocuteHotkey);
-		KeyIsPressed = true;
-	}
-
-	if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-	{
-		KeyIsPressed = false;
-		input_simulator->SendKeyUp(ElectrocuteHotkey);
-		return;
-	}
-
-	DWORD Convention = AdjustedTime;
-	DooingArcane = false;
-	SavedBlackHole = false;
-
-	if (Convention > 1150 && Convention < 1900)
-	{
-		DooingArcane = true;
-		input_simulator->SendKey(WaveOfForceHotkey);
-
-		if(tcp_connection->BlackholeBuffActive())
+		if(GetAsyncKeyState(input_simulator->CharToVK('5')))
 		{
-			SavedBlackHole = true;
-			//got blackhole from ES so dont use it
-		}
-		else
-		{
-			if (BlackholeCheck)
+			if (!MacroIsRunning)//just started
 			{
-				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				input_simulator->SendKeyDown(ElectrocuteHotkey);
 			}
 		}
-		Sleep(200);
-		input_simulator->SendKeyDown(ElectrocuteHotkey);
-		Sleep(1400);
-		input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-		Sleep(1200);
-
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
-		}
-
-		if (SavedBlackHole)
-		{
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-		}
-
-		input_simulator->SendKeyDown(DisintegrateHotkey);
-		Sleep(400);
-		input_simulator->SendKeyUp(DisintegrateHotkey);
-
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
-		}
-
-		if (SavedBlackHole && BlackholeCheck)
-		{
-			Sleep(300);
-			input_simulator->SendKey(WaveOfForceHotkey);
-			input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
-			input_simulator->SendKeyDown(ElectrocuteHotkey);
-		}
 		else
 		{
+			if (!AutoMacro)
+			{
+				if (MacroIsRunning)//just stopped
+				{
+					input_simulator->SendKeyUp(ElectrocuteHotkey);
+					MacroIsRunning = false;
+					return;
+				}
+				else
+				{
+					return;
+				}
+			}
+		}
+
+		MacroIsRunning = true;
+
+		DWORD Convention = AdjustedTime;
+		DooingArcane = false;
+		SavedBlackHole = false;
+	
+		if (Convention > 1150 && Convention < 1900)
+		{
+			DooingArcane = true;
+			input_simulator->SendKey(WaveOfForceHotkey);
+
+			if (tcp_connection->BlackholeBuffActive())
+			{
+				SavedBlackHole = true;
+				//got blackhole from ES so dont use it
+			}
+			else
+			{
+				if (BlackholeCheck)
+				{
+					input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				}
+			}
+			Sleep(200);
+			input_simulator->SendKeyDown(ElectrocuteHotkey);
+			Sleep(1400);
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
+
+			if (SavedBlackHole)
+			{
+				input_simulator->SendKeyUp(ElectrocuteHotkey);
+			}
+
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
+
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
+
+			if (SavedBlackHole && BlackholeCheck)
+			{
+				Sleep(300);
+				input_simulator->SendKey(WaveOfForceHotkey);
+				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				input_simulator->SendKeyDown(ElectrocuteHotkey);
+			}
+			else
+			{
+				input_simulator->SendKeyDown(WaveOfForceHotkey);
+				Sleep(100);
+				input_simulator->SendKeyUp(WaveOfForceHotkey);
+				Sleep(200);
+			}
+			Sleep(1500);
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
 			input_simulator->SendKeyDown(WaveOfForceHotkey);
 			Sleep(100);
 			input_simulator->SendKeyUp(WaveOfForceHotkey);
-			Sleep(200);
 		}
-		Sleep(1500);
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+		if (Convention > 4000 && Convention < 7000 && !DooingArcane)
 		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
-		}
-		input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-		Sleep(1200);
-		input_simulator->SendKeyDown(DisintegrateHotkey);
-		Sleep(400);
-		input_simulator->SendKeyUp(DisintegrateHotkey);
-		input_simulator->SendKeyDown(WaveOfForceHotkey);
-		Sleep(100);
-		input_simulator->SendKeyUp(WaveOfForceHotkey);
-	}
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
 
-	if (Convention > 4000 && Convention < 7000 && !DooingArcane)
-	{
-		input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-		Sleep(1200);
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
+			input_simulator->SendKeyDown(WaveOfForceHotkey);
+			Sleep(100);
+			input_simulator->SendKeyUp(WaveOfForceHotkey);
 		}
+		else if (Convention > 9300 && Convention < 10300)
+		{
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
+			input_simulator->SendKeyDown(WaveOfForceHotkey);
+			Sleep(100);
+			input_simulator->SendKeyUp(WaveOfForceHotkey);
+		}
+		else if (Convention > 12200 && Convention < 13200)
+		{
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
+			input_simulator->SendKeyDown(WaveOfForceHotkey);
+			Sleep(100);
+			input_simulator->SendKeyUp(WaveOfForceHotkey);
+		}
+		else if (Convention > 15100)
+		{
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			{
+				Stop(input_simulator);
+				return;
+			}
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
+			input_simulator->SendKeyUp(ElectrocuteHotkey);
+		}
+	}
+	else
+	{
+		if (GetAsyncKeyState(input_simulator->CharToVK('5')))
+		{
+			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+			Sleep(1200);
+			input_simulator->SendKeyDown(DisintegrateHotkey);
+			Sleep(400);
+			input_simulator->SendKeyUp(DisintegrateHotkey);
+			input_simulator->SendKeyDown(WaveOfForceHotkey);
+			Sleep(100);
+			input_simulator->SendKeyUp(WaveOfForceHotkey);
+		}
+	}
+}
 
-		input_simulator->SendKeyDown(DisintegrateHotkey);
-		Sleep(400);
-		input_simulator->SendKeyUp(DisintegrateHotkey);
-		input_simulator->SendKeyDown(WaveOfForceHotkey);
-		Sleep(100);
-		input_simulator->SendKeyUp(WaveOfForceHotkey);
-	}
-	else if (Convention > 9300 && Convention < 10300)
+void WizMacro::Stop(InputSimulator* input_simulator)
+{
+	if (MacroIsRunning)
 	{
-		input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-		Sleep(1200);
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
-		}
-		input_simulator->SendKeyDown(DisintegrateHotkey);
-		Sleep(400);
-		input_simulator->SendKeyUp(DisintegrateHotkey);
-		input_simulator->SendKeyDown(WaveOfForceHotkey);
-		Sleep(100);
-		input_simulator->SendKeyUp(WaveOfForceHotkey);
-	}
-	else if (Convention > 12200 && Convention < 13200)
-	{
-		input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-		Sleep(1200);
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
-		}
-		input_simulator->SendKeyDown(DisintegrateHotkey);
-		Sleep(400);
-		input_simulator->SendKeyUp(DisintegrateHotkey);
-		input_simulator->SendKeyDown(WaveOfForceHotkey);
-		Sleep(100);
-		input_simulator->SendKeyUp(WaveOfForceHotkey);
-	}
-	else if (Convention > 15100)
-	{
-		input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-		Sleep(1200);
-		if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
-		{
-			KeyIsPressed = false;
-			input_simulator->SendKeyUp(ElectrocuteHotkey);
-			return;
-		}
-		input_simulator->SendKeyDown(DisintegrateHotkey);
-		Sleep(400);
-		input_simulator->SendKeyUp(DisintegrateHotkey);
 		input_simulator->SendKeyUp(ElectrocuteHotkey);
+		MacroIsRunning = false;	
 	}
+	return;
 }
 
 WizMacro::~WizMacro()

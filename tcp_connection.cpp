@@ -18,6 +18,10 @@ TCPConnection::TCPConnection()
 
 int TCPConnection::Init()
 {
+	FILE *stream;
+	freopen_s(&stream, "CONOUT$", "w", stdout);
+
+
 	// Winsock starten
 	WSADATA wsa;
 	error_code = WSAStartup(MAKEWORD(2, 0), &wsa);

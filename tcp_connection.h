@@ -32,7 +32,7 @@ public:
 	bool IPWizInRange() { return ElementAt(1, 1); };
 	bool IPOnCooldown() { return ElementAt(2, 1); };
 	bool WarCryOnCooldown() { return ElementAt(3, 1); };
-	bool NecroInRange() { return ElementAt(4, 1); };
+	bool NecroInWCRange() { return ElementAt(4, 1); };
 	bool IsActive() { return ElementAt(5, 1); };
 	bool FalterOnCooldown() { return ElementAt(6, 1); };
 	bool WizInRange() { return ElementAt(7, 1); };
@@ -61,7 +61,7 @@ public:
 	bool BoneArmorOnCooldown() { return ElementAt(6, 4); };
 	bool Range25Enemies1() { return ElementAt(7, 4); };
 
-	bool Range25Enemies10() { return ElementAt(1, 5); };
+	bool Range25Enemies5() { return ElementAt(1, 5); };
 	bool UsePotion() { return ElementAt(2, 5); };
 	bool PotionIsOnCooldown() { return ElementAt(3, 5); };
 	bool ConventionLight() { return ElementAt(4, 5); };
@@ -74,6 +74,8 @@ public:
 	bool StormArmorBuffActive() { return ElementAt(3, 6); };
 	bool MagicWeaponOnCooldown() { return ElementAt(4, 6); };
 	bool MagicWeaponBuffActive() { return ElementAt(5, 6); };
+	bool BossIsSpawned() { return ElementAt(6, 6); };
+	bool NecroInIPRange() { return ElementAt(7, 6); };
 
 	bool ElementAt(unsigned  i, unsigned j);
 	string content;

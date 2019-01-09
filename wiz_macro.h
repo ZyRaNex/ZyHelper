@@ -12,6 +12,7 @@ public:
 	WizMacro();
 	void GetCoe(TCPConnection* tcp_connection);
 	void DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_connection);
+	void Stop(InputSimulator* input_simulator);
 	~WizMacro();
 
 	DWORD LowerBound;
@@ -26,7 +27,7 @@ public:
 	wchar_t BlackholeHotkey;
 
 	bool BlackholeCheck;
-	bool KeyIsPressed;
+	bool MacroIsRunning;
 
 	bool DooingArcane;
 	bool SavedBlackHole;
