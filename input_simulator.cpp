@@ -9,6 +9,7 @@ InputSimulator::InputSimulator()
 {
 }
 
+
 int InputSimulator::CharToVK(wchar_t input)
 {
 	switch (input)
@@ -70,16 +71,16 @@ int InputSimulator::CharToVK(wchar_t input)
 
 void InputSimulator::SendKeyOrMouse(wchar_t input)
 {
-	switch (input) 
+	switch (input)
 	{
-	  case 'L':
+	case 'L':
 		SendMouse(Left);
 		break;
-	  case 'R':
-	 	SendMouse(Right);
+	case 'R':
+		SendMouse(Right);
 		break;
-	  default:
-		  SendKey(input);
+	default:
+		SendKey(input);
 		break;
 	}
 }
@@ -102,318 +103,213 @@ void InputSimulator::SendKeyOrMouseWithoutMove(wchar_t input)
 
 void InputSimulator::SendKey(int key)
 {
-	Input input;
-	input.VkKey = key;
-	input.type = VkKey;
+	INPUT ip;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
 
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+	ip.ki.wVk = key;
+	ip.ki.dwFlags = 0;
+	SendInput(1, &ip, sizeof(INPUT));
+
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT));
 }
 
 void InputSimulator::SendKey(wchar_t key)
 {
-	Input input;
-	input.key = key;
-	input.type = Key;
-
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+	SendKey(CharToVK(key));
 }
 
 void InputSimulator::SendKeyDown(int key)
 {
-	Input input;
-	input.VkKey = key;
-	input.type = VkKeyDown;
+	INPUT ip;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
 
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+	ip.ki.wVk = key;
+	ip.ki.dwFlags = 0;
+	SendInput(1, &ip, sizeof(INPUT));
 }
 
 void InputSimulator::SendKeyDown(wchar_t key)
 {
-	Input input;
-	input.key = key;
-	input.type = KeyDown;
-
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+	SendKeyDown(CharToVK(key));
 }
 
 void InputSimulator::SendKeyUp(int key)
 {
-	Input input;
-	input.VkKey = key;
-	input.type = VkKeyUp;
+	INPUT ip;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
 
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+	ip.ki.wVk = key;
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT));
 }
 
 void InputSimulator::SendKeyUp(wchar_t key)
 {
-	Input input;
-	input.key = key;
-	input.type = KeyUp;
+	SendKeyUp(CharToVK(key));
+}
 
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+void SendKeyUp(int key)
+{
+	INPUT ip;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0; // hardware scan code for key
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
+
+	ip.ki.wVk = key;
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT));
 }
 
 void InputSimulator::SendMouse(MouseClick Click)
 {
-	Input input;
-	input.type = Mouse;
-	input.Click = Click;
+	INPUT ip;
 
-	inputmutex.lock();
-	InputQueue.push(input);
-	inputmutex.unlock();
+	if (Click == Left)//hold force stand still
+	{
+		SendKeyDown(VK_SHIFT);
+	}
+
+	ZeroMemory(&ip, sizeof(ip));
+
+	POINT CursorPos;
+	GetCursorPos(&CursorPos);
+
+	Sleep(1);
+
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = (700 + 1) * (65535 / GetSystemMetrics(SM_CXSCREEN));
+	ip.mi.dy = (500 + 1) * (65535 / GetSystemMetrics(SM_CYSCREEN));
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+	ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+	SendInput(1, &ip, sizeof(INPUT));
+
+	Sleep(1);
+
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = 0;
+	ip.mi.dy = 0;
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+
+	if (Click == Left)
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	}
+	else
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+	}
+	SendInput(1, &ip, sizeof(INPUT));
+
+
+	Sleep(1);
+
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = 0;
+	ip.mi.dy = 0;
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+	if (Click == Left)
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	}
+	else
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+	}
+	SendInput(1, &ip, sizeof(INPUT));
+	// Set up a generic keyboard event.
+
+	Sleep(1);
+
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = (CursorPos.x + 3) * (65535 / GetSystemMetrics(SM_CXSCREEN));
+	ip.mi.dy = (CursorPos.y + 5) * (65535 / GetSystemMetrics(SM_CYSCREEN));
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+	ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+	SendInput(1, &ip, sizeof(INPUT));
+
+	Sleep(1);
+
+	if (Click == Left)//hold force stand still
+	{
+		SendKeyUp(VK_SHIFT);
+	}
 }
 
 void InputSimulator::SendMouseWithoutMove(MouseClick Click)
 {
-	
-}
+	INPUT ip;
 
-void InputSimulator::GenerateInput()
-{
-	bool inputwaiting = false;
-	inputmutex.lock();
-	inputwaiting = !InputQueue.empty();
-	inputmutex.unlock();
-
-	while(inputwaiting)
+	if (Click == Left)//hold force stand still
 	{
-		Input data;
-		inputmutex.lock();
-		data = InputQueue.front();
-		InputQueue.pop();
-		inputmutex.unlock();
-
-		DEBUG_MSG("Sending Input " << data.type << " " << data.key << " " << data.VkKey << std::endl);
-		INPUT ip;
-		ip.ki.wScan = 0; // hardware scan code for key
-		ip.ki.time = 0;
-		ip.ki.dwExtraInfo = 0;
-		ip.ki.dwFlags = 0;
-
-		switch(data.type)
-		{
-		case Key:
-			ip.type = INPUT_KEYBOARD;
-			ip.ki.wVk = CharToVK(data.key);
-			SendInput(1, &ip, sizeof(INPUT));
-			ip.ki.dwFlags = KEYEVENTF_KEYUP;
-			SendInput(1, &ip, sizeof(INPUT));
-			break;
-
-		case VkKey:
-			ip.type = INPUT_KEYBOARD;
-			ip.ki.wVk = data.VkKey;
-			SendInput(1, &ip, sizeof(INPUT));
-			ip.ki.dwFlags = KEYEVENTF_KEYUP;
-			SendInput(1, &ip, sizeof(INPUT));
-			break;
-
-		case KeyDown:
-			ip.type = INPUT_KEYBOARD;
-			ip.ki.wVk = CharToVK(data.key);
-			SendInput(1, &ip, sizeof(INPUT));
-			break;
-
-		case VkKeyDown:
-			ip.type = INPUT_KEYBOARD;
-			ip.ki.wVk = data.VkKey;
-			SendInput(1, &ip, sizeof(INPUT));
-			break;
-
-		case KeyUp:
-			ip.type = INPUT_KEYBOARD;
-			ip.ki.wVk = CharToVK(data.key);
-			ip.ki.dwFlags = KEYEVENTF_KEYUP;
-			SendInput(1, &ip, sizeof(INPUT));
-			break;
-
-		case VkKeyUp:
-			ip.type = INPUT_KEYBOARD;
-			ip.ki.wVk = data.VkKey;
-			ip.ki.dwFlags = KEYEVENTF_KEYUP;
-			SendInput(1, &ip, sizeof(INPUT));
-			break;
-
-		case Mouse:
-			if (data.Click == Left)
-			{
-				INPUT ipShift;
-				ipShift.ki.wScan = 0;
-				ipShift.ki.time = 0;
-				ipShift.ki.dwExtraInfo = 0;
-				ipShift.ki.dwFlags = 0;
-				ipShift.type = INPUT_KEYBOARD;
-				ipShift.ki.wVk = VK_SHIFT;
-				SendInput(1, &ipShift, sizeof(INPUT));
-			}
-
-			ZeroMemory(&ip, sizeof(ip));
-
-			POINT CursorPos;
-			GetCursorPos(&CursorPos);
-
-			Sleep(1);
-
-			ip.type = INPUT_MOUSE;
-			ip.mi.dx = (700 + 1) * (65535 / GetSystemMetrics(SM_CXSCREEN));
-			ip.mi.dy = (500 + 1) * (65535 / GetSystemMetrics(SM_CYSCREEN));
-			ip.mi.mouseData = 0;
-			ip.mi.time = 0;
-			ip.mi.dwExtraInfo = 0;
-			ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-			SendInput(1, &ip, sizeof(INPUT));
-
-			Sleep(1);
-
-			ip.type = INPUT_MOUSE;
-			ip.mi.dx = 0;
-			ip.mi.dy = 0;
-			ip.mi.mouseData = 0;
-			ip.mi.time = 0;
-			ip.mi.dwExtraInfo = 0;
-
-			if (data.Click == Left)
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-			}
-			else
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-			}
-			SendInput(1, &ip, sizeof(INPUT));
+		SendKeyDown(VK_SHIFT);
+	}
 
 
-			Sleep(1);
+	ZeroMemory(&ip, sizeof(ip));
 
-			ip.type = INPUT_MOUSE;
-			ip.mi.dx = 0;
-			ip.mi.dy = 0;
-			ip.mi.mouseData = 0;
-			ip.mi.time = 0;
-			ip.mi.dwExtraInfo = 0;
-			if (data.Click == Left)
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_LEFTUP;
-			}
-			else
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
-			}
-			SendInput(1, &ip, sizeof(INPUT));
+	Sleep(1);
 
-			Sleep(1);
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = 0;
+	ip.mi.dy = 0;
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
 
-			ip.type = INPUT_MOUSE;
-			ip.mi.dx = (CursorPos.x + 3) * (65535 / GetSystemMetrics(SM_CXSCREEN));
-			ip.mi.dy = (CursorPos.y + 5) * (65535 / GetSystemMetrics(SM_CYSCREEN));
-			ip.mi.mouseData = 0;
-			ip.mi.time = 0;
-			ip.mi.dwExtraInfo = 0;
-			ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-			SendInput(1, &ip, sizeof(INPUT));
-
-			Sleep(1);
-
-			if (data.Click == Left)
-			{
-				INPUT ipShift;
-				ipShift.ki.wScan = 0;
-				ipShift.ki.time = 0;
-				ipShift.ki.dwExtraInfo = 0;
-				ipShift.type = INPUT_KEYBOARD;
-				ipShift.ki.dwFlags = KEYEVENTF_KEYUP;
-				ipShift.ki.wVk = VK_SHIFT;
-				SendInput(1, &ipShift, sizeof(INPUT));
-			}
-			break;
-		case MouseWithoutMove:
-			INPUT ip;
-
-			if (data.Click == Left)
-			{
-				INPUT ipShift;
-				ipShift.ki.wScan = 0;
-				ipShift.ki.time = 0;
-				ipShift.ki.dwExtraInfo = 0;
-				ipShift.ki.dwFlags = 0;
-				ipShift.type = INPUT_KEYBOARD;
-				ipShift.ki.wVk = VK_SHIFT;
-				SendInput(1, &ipShift, sizeof(INPUT));
-			}
+	if (Click == Left)
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+	}
+	else
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+	}
+	SendInput(1, &ip, sizeof(INPUT));
 
 
-			ZeroMemory(&ip, sizeof(ip));
+	Sleep(1);
 
-			Sleep(1);
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = 0;
+	ip.mi.dy = 0;
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+	if (Click == Left)
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+	}
+	else
+	{
+		ip.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+	}
+	SendInput(1, &ip, sizeof(INPUT));
+	// Set up a generic keyboard event.
 
-			ip.type = INPUT_MOUSE;
-			ip.mi.dx = 0;
-			ip.mi.dy = 0;
-			ip.mi.mouseData = 0;
-			ip.mi.time = 0;
-			ip.mi.dwExtraInfo = 0;
+	Sleep(1);
 
-			if (data.Click == Left)
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
-			}
-			else
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
-			}
-			SendInput(1, &ip, sizeof(INPUT));
-
-			Sleep(1);
-
-			ip.type = INPUT_MOUSE;
-			ip.mi.dx = 0;
-			ip.mi.dy = 0;
-			ip.mi.mouseData = 0;
-			ip.mi.time = 0;
-			ip.mi.dwExtraInfo = 0;
-			if (data.Click == Left)
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_LEFTUP;
-			}
-			else
-			{
-				ip.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
-			}
-			SendInput(1, &ip, sizeof(INPUT));
-
-			Sleep(1);
-
-			if (data.Click == Left)
-			{
-				INPUT ipShift;
-				ipShift.ki.wScan = 0;
-				ipShift.ki.time = 0;
-				ipShift.ki.dwExtraInfo = 0;
-				ipShift.type = INPUT_KEYBOARD;
-				ipShift.ki.dwFlags = KEYEVENTF_KEYUP;
-				ipShift.ki.wVk = VK_SHIFT;
-				SendInput(1, &ipShift, sizeof(INPUT));
-			}
-			break;
-		}
-
-		inputmutex.lock();
-		inputwaiting = !InputQueue.empty();
-		inputmutex.unlock();
+	if (Click == Left)//hold force stand still
+	{
+		SendKeyUp(VK_SHIFT);
 	}
 }
 

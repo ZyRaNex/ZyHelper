@@ -388,33 +388,12 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 			Sleep(100);
 			continue;
 		}
-
-		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
-	}
-	return 0;
-}
-
-DWORD CDiabloCalcFancyDlg::GenerateInput()
-{
-	while (true)
-	{
-		Sleep(10);
-		if (!tcp_connection.IsReady())
-		{
-			Sleep(100);
-			continue;
-		}
-		if (!tcp_connection.IsActive() || !Active)
-		{
-			Sleep(100);
-			continue;
-		}
 		HWND handle = ::GetForegroundWindow();
 		int capacity = ::GetWindowTextLength(handle) * 2;
 		wchar_t NewName[128];
 		::GetWindowText(handle, NewName, 128);
 		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
-		input_simulator.GenerateInput();
+		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
 	}
 	return 0;
 }
@@ -459,7 +438,6 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	hThread[2] = CreateThread(NULL, 0, StaticDoLogic, (void*)this, 0, &dwThreadID[2]);
 	hThread[3] = CreateThread(NULL, 0, StaticCoeReader, (void*)this, 0, &dwThreadID[3]);
 	hThread[4] = CreateThread(NULL, 0, StaticWizMacro, (void*)this, 0, &dwThreadID[4]);
-	hThread[5] = CreateThread(NULL, 0, StaticGenerateInput, (void*)this, 0, &dwThreadID[5]);
 
 	if (!hThread[1] || !hThread[2] || !hThread[3] || !hThread[4])
 	{

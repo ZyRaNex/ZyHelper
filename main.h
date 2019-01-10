@@ -94,17 +94,11 @@ public:
 		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
 		return This->WizMacroThread();
 	}
-	static DWORD WINAPI StaticGenerateInput(void* Param)
-	{
-		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
-		return This->GenerateInput();
-	}
 	DWORD StartTcpConnectionThread();
 	DWORD PrintThread();
 	DWORD DoLogicThread();
 	DWORD CoeReaderThread();
 	DWORD WizMacroThread();
-	DWORD GenerateInput();
 	~CDiabloCalcFancyDlg();
 
 protected:
