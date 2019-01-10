@@ -61,6 +61,9 @@ public:
 	CEdit m_ctlBLACKHOLEHOTKEY;
 	CEdit m_ctlSTORMARMORHOTKEY;
 	CEdit m_ctlMAGICWEAPONHOTKEY;
+	CEdit m_ctlMACROHOTKEY;
+	CEdit m_ctlTIMINGKEY;
+	CEdit m_ctlTOGGLEKEY;
 
 	CEdit m_ctlUPPERBOUND;
 	CEdit m_ctlLOWERBOUND;
@@ -111,9 +114,13 @@ public:
 	InputSimulator input_simulator;
 	WizMacro wiz_macro;
 
-	HANDLE hThread[6];
-	DWORD dwThreadID[6];
+	HANDLE hThread[5];
+	DWORD dwThreadID[5];
 
+	const std::wstring InitChecks = _T("11110100001011000");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568");
+	int ChecksLength = InitChecks.size();
+	int HotkeysLength = InitHotkeys.size();
 	bool Active;
 
 	bool IpCheck;
@@ -155,6 +162,9 @@ public:
 	wchar_t BlackholeHotkey;
 	wchar_t StormArmorHotkey;
 	wchar_t MagicWeaponHotkey;
+	wchar_t MacroHotkey;
+	wchar_t TimingKey;
+	wchar_t ToggleKey;
 
 	void Update();
 };

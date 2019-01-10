@@ -1,6 +1,6 @@
 #include <afxwin.h>
 #include <iostream>
-
+#include <fstream>
 
 #include "Main.h"
 
@@ -92,7 +92,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 		}
 
-		if (GetAsyncKeyState(input_simulator.CharToVK('6')) && (GetTickCount() - 500 >= ResetDuration))
+		if (GetAsyncKeyState(input_simulator.CharToVK(TimingKey)) && (GetTickCount() - 500 >= ResetDuration))
 		{
 			ResetDuration = GetTickCount();
 			wiz_macro.LowerBound = 32000;
@@ -112,7 +112,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			continue;
 		}
 
-		if (GetAsyncKeyState(input_simulator.CharToVK('8')) && (GetTickCount() - 500 >= AutoMacroDuration))
+		if (GetAsyncKeyState(input_simulator.CharToVK(ToggleKey)) && (GetTickCount() - 500 >= AutoMacroDuration))
 		{
 			AutoMacroDuration = GetTickCount();
 
@@ -445,46 +445,162 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 	}
 
-	m_ctlIPCHECK.SetCheck(BST_CHECKED);
-	m_ctlWCCHECK.SetCheck(BST_CHECKED);
-	m_ctlFALTERCHECK.SetCheck(BST_CHECKED);
-	m_ctlBERSERKERCHECK.SetCheck(BST_CHECKED);
-	m_ctlSPRINTCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlEPIPHANYCHECK.SetCheck(BST_CHECKED);
-	m_ctlMANTRAHEALINGCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlSWEEPINGWINDCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlBOHCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlMANTRACONVICTIONCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlLANDOFTHEDEADCHECK.SetCheck(BST_CHECKED);
-	m_ctlBONEARMORCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlPOTIONCHECK.SetCheck(BST_CHECKED);
-	m_ctlMACROCHECK.SetCheck(BST_CHECKED);
-	m_ctlBLACKHOLECHECK.SetCheck(BST_CHECKED);
-	m_ctlSTORMARMORCHECK.SetCheck(BST_UNCHECKED);
-	m_ctlMAGICWEAPONCHECK.SetCheck(BST_UNCHECKED);
+
+
+	std::wfstream file;
+	file.open(_T("config.cfg"), std::ios_base::out | std::ios_base::in);
+	if (file.is_open())//file exists
+	{
+		DEBUG_MSG("config file exists" << std::endl);
+	}
+	else
+	{//create new file
+		file.clear();
+		file.open(_T("config.cfg"), std::ios_base::out);
+
+		DEBUG_MSG("creating new config file" << std::endl);
+		file << InitChecks << std::endl;
+		file << InitHotkeys << std::endl;
+
+		file.close();
+		file.open(_T("config.cfg"), std::ios_base::out | std::ios_base::in);
+		if (!file.is_open())//file exists
+		{
+			DEBUG_MSG("couldnt create file" << std::endl);
+		}
+	}
+
+	std::wstring checks;
+	std::wstring hotkeys;
+	if (file.is_open())
+	{
+		file.seekg(0);
+		getline(file, checks);
+		getline(file, hotkeys);
+		file.close();
+	}
+
+
+	if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
+	{
+		DEBUG_MSG("couldnt read config file" << std::endl);
+		file.clear();
+		file.open(_T("config.cfg"), std::ios_base::out);
+
+		DEBUG_MSG("creating new config file" << std::endl);
+		file << InitChecks << std::endl;
+		file << InitHotkeys << std::endl;
+
+		file.close();
+		file.open(_T("config.cfg"), std::ios_base::out | std::ios_base::in);
+		if (!file.is_open())//file exists
+		{
+			DEBUG_MSG("couldnt create file" << std::endl);
+		}
+
+		if (file.is_open())
+		{
+			file.seekg(0);
+			getline(file, checks);
+			getline(file, hotkeys);
+			file.close();
+		}
+
+		if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
+		{
+			DEBUG_MSG("still wrong" << std::endl);
+			::MessageBox(NULL, _T("couldnt read config"),
+				_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+		}
+	}
+
+	if (checks[0] == '1'){m_ctlIPCHECK.SetCheck(BST_CHECKED);}
+	else m_ctlIPCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[1] == '1') { m_ctlWCCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlWCCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[2] == '1') { m_ctlFALTERCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlFALTERCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[3] == '1') { m_ctlBERSERKERCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlBERSERKERCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[4] == '1') { m_ctlSPRINTCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlSPRINTCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[5] == '1') { m_ctlEPIPHANYCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlEPIPHANYCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[6] == '1') { m_ctlMANTRAHEALINGCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlMANTRAHEALINGCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[7] == '1') { m_ctlSWEEPINGWINDCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlSWEEPINGWINDCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[8] == '1') { m_ctlBOHCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlBOHCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[9] == '1') { m_ctlMANTRACONVICTIONCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlMANTRACONVICTIONCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[10] == '1') { m_ctlLANDOFTHEDEADCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlLANDOFTHEDEADCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[11] == '1') { m_ctlBONEARMORCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlBONEARMORCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[12] == '1') { m_ctlPOTIONCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlPOTIONCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[13] == '1') { m_ctlMACROCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlMACROCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[14] == '1') { m_ctlBLACKHOLECHECK.SetCheck(BST_CHECKED); }
+	else m_ctlBLACKHOLECHECK.SetCheck(BST_UNCHECKED);
+	if (checks[15] == '1') { m_ctlSTORMARMORCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlSTORMARMORCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[16] == '1') { m_ctlMAGICWEAPONCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlMAGICWEAPONCHECK.SetCheck(BST_UNCHECKED);
+
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
-	m_ctlIPHOTKEY.SetWindowText(_T("R"));
-	m_ctlWCHOTKEY.SetWindowText(_T("4"));
-	m_ctlFALTERHOTKEY.SetWindowText(_T("L"));
-	m_ctlBERSERKERHOTKEY.SetWindowText(_T("1"));
-	m_ctlSPRINTHOTKEY.SetWindowText(_T("1"));
-	m_ctlEPIPHANYHOTKEY.SetWindowText(_T("R"));
-	m_ctlMANTRAHEALINGHOTKEY.SetWindowText(_T("4"));
-	m_ctlSWEEPINGWINDHOTKEY.SetWindowText(_T("4"));
-	m_ctlBOHHOTKEY.SetWindowText(_T("2"));
-	m_ctlMANTRACONVICTIONHOTKEY.SetWindowText(_T("1"));
-	m_ctlLANDOFTHEDEADHOTKEY.SetWindowText(_T("1"));
-	m_ctlBONEARMORHOTKEY.SetWindowText(_T("R"));
-	m_ctlPOTIONHOTKEY.SetWindowText(_T("q"));
-	m_ctlWAVEOFFORCEHOTKEY.SetWindowText(_T("1"));
-	m_ctlELECTROCUTEHOTKEY.SetWindowText(_T("2"));
-	m_ctlMETEORHOTKEY.SetWindowText(_T("3"));
-	m_ctlDISINTEGRATEHOTKEY.SetWindowText(_T("4"));
-	m_ctlBLACKHOLEHOTKEY.SetWindowText(_T("R"));
-	m_ctlSTORMARMORHOTKEY.SetWindowText(_T("L"));
-	m_ctlMAGICWEAPONHOTKEY.SetWindowText(_T("R"));
+	wchar_t str[2];
+	str[1] = L'\0';
 
+
+	str[0] = hotkeys[0];
+	m_ctlIPHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[1];
+	m_ctlWCHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[2];
+	m_ctlFALTERHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[3];
+	m_ctlBERSERKERHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[4];
+	m_ctlSPRINTHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[5];
+	m_ctlEPIPHANYHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[6];
+	m_ctlMANTRAHEALINGHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[7];
+	m_ctlSWEEPINGWINDHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[8];
+	m_ctlBOHHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[9];
+	m_ctlMANTRACONVICTIONHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[10];
+	m_ctlLANDOFTHEDEADHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[11];
+	m_ctlBONEARMORHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[12];
+	m_ctlPOTIONHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[13];
+	m_ctlWAVEOFFORCEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[14];
+	m_ctlELECTROCUTEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[15];
+	m_ctlMETEORHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[16];
+	m_ctlDISINTEGRATEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[17];
+	m_ctlBLACKHOLEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[18];
+	m_ctlSTORMARMORHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[19];
+	m_ctlMAGICWEAPONHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[20];
+	m_ctlMACROHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[21];
+	m_ctlTIMINGKEY.SetWindowText(str);
+	str[0] = hotkeys[22];
+	m_ctlTOGGLEKEY.SetWindowText(str);
 	return TRUE;
 }
 
@@ -538,6 +654,9 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_BLACKHOLEHOTKEY, Update)
 	ON_EN_CHANGE(IDC_STORMARMORHOTKEY, Update)
 	ON_EN_CHANGE(IDC_MAGICWEAPONHOTKEY, Update)
+	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
+	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
+	ON_EN_CHANGE(IDC_TOGGLEKEY, Update)
 
 END_MESSAGE_MAP()
 
@@ -586,6 +705,9 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BLACKHOLEHOTKEY, m_ctlBLACKHOLEHOTKEY);
 	DDX_Control(pDX, IDC_STORMARMORHOTKEY, m_ctlSTORMARMORHOTKEY);
 	DDX_Control(pDX, IDC_MAGICWEAPONHOTKEY, m_ctlMAGICWEAPONHOTKEY);
+	DDX_Control(pDX, IDC_MACROHOTKEY, m_ctlMACROHOTKEY);
+	DDX_Control(pDX, IDC_TIMINGKEY, m_ctlTIMINGKEY);
+	DDX_Control(pDX, IDC_TOGGLEKEY, m_ctlTOGGLEKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
@@ -886,13 +1008,146 @@ void CDiabloCalcFancyDlg::Update()
 		MagicWeaponHotkey = ' ';
 	}
 
+	len = m_ctlMACROHOTKEY.LineLength(m_ctlMACROHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlMACROHOTKEY.GetLine(0, buffer, len);
+		MacroHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		MacroHotkey = ' ';
+	}
+
+	len = m_ctlTIMINGKEY.LineLength(m_ctlTIMINGKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlTIMINGKEY.GetLine(0, buffer, len);
+		TimingKey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		TimingKey = ' ';
+	}
+
+	len = m_ctlTOGGLEKEY.LineLength(m_ctlTOGGLEKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlTOGGLEKEY.GetLine(0, buffer, len);
+		ToggleKey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ToggleKey = ' ';
+	}
 
 	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
 	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
 	wiz_macro.MeteorHotkey = MeteorHotkey;
 	wiz_macro.DisintegrateHotkey = DisintegrateHotkey;
 	wiz_macro.BlackholeHotkey = BlackholeHotkey;
+	wiz_macro.MacroHotkey = MacroHotkey;
+
+
+	std::wstring checks;
+	std::wstring hotkeys;
+
+	if (IpCheck) checks += '1';
+	else checks += '0';
+	if (WcCheck) checks += '1';
+	else checks += '0';
+	if (FalterCheck) checks += '1';
+	else checks += '0';
+	if (BerserkerCheck) checks += '1';
+	else checks += '0';
+	if (SprintCheck) checks += '1';
+	else checks += '0';
+	if (EpiphanyCheck) checks += '1';
+	else checks += '0';
+	if (MantraHealingCheck) checks += '1';
+	else checks += '0';
+	if (SweepingWindCheck) checks += '1';
+	else checks += '0';
+	if (BohCheck) checks += '1';
+	else checks += '0';
+	if (MantraConvictionCheck) checks += '1';
+	else checks += '0';
+	if (LotdCheck) checks += '1';
+	else checks += '0';
+	if (BoneArmorCheck) checks += '1';
+	else checks += '0';
+	if (PotionCheck) checks += '1';
+	else checks += '0';
+	if (MacroCheck) checks += '1';
+	else checks += '0';
+	if (BlackholeCheck) checks += '1';
+	else checks += '0';
+	if (StormArmorCheck) checks += '1';
+	else checks += '0';
+	if (MagicWeaponCheck) checks += '1';
+	else checks += '0';
+	
+	hotkeys += IpHotkey;
+	hotkeys += WcHotkey;
+	hotkeys += FalterHotkey;
+	hotkeys += BerserkerHotkey;
+	hotkeys += SprintHotkey;
+	hotkeys += EpiphanyHotkey;
+	hotkeys += MantraHealingHotkey;
+	hotkeys += SweepingWindHotkey;
+	hotkeys += BohHotkey;
+	hotkeys += MantraConvictionHotkey;
+	hotkeys += LotdHotkey;
+	hotkeys += BoneArmorHotkey;
+	hotkeys += PotionHotkey;
+	hotkeys += WaveOfForceHotkey;
+	hotkeys += ElectrocuteHotkey;
+	hotkeys += MeteorHotkey;
+	hotkeys += DisintegrateHotkey;
+	hotkeys += BlackholeHotkey;
+	hotkeys += StormArmorHotkey;
+	hotkeys += MagicWeaponHotkey;
+	hotkeys += MacroHotkey;
+	hotkeys += TimingKey;
+	hotkeys += ToggleKey;
+
+	std::wofstream file;
+	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);
+	file << checks << std::endl;
+	file << hotkeys << std::endl;
+	file.close();
 
 	DEBUG_MSG("Info Updated" << std::endl);
+
+	if (WaveOfForceHotkey == 'L' || WaveOfForceHotkey == 'R')
+	{
+		::MessageBox(NULL, _T("WARNING atm WaveOfForce cant be on the mouse"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	if (ElectrocuteHotkey == 'L' || ElectrocuteHotkey == 'R')
+	{
+		::MessageBox(NULL, _T("WARNING atm Electrocute cant be on the mouse"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	if (DisintegrateHotkey == 'L' || DisintegrateHotkey == 'R')
+	{
+		::MessageBox(NULL, _T("WARNING atm Disintegrate cant be on the mouse"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	if (WaveOfForceHotkey == MacroHotkey || ElectrocuteHotkey == MacroHotkey || MeteorHotkey == MacroHotkey || DisintegrateHotkey == MacroHotkey)
+	{
+		::MessageBox(NULL, _T("WARNING cant have macro key the same as a skill"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
 }
 

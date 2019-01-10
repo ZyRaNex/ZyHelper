@@ -85,8 +85,11 @@
 #define IDC_BLACKHOLEHOTKEY             1066
 #define IDC_STORMARMORHOTKEY            1067
 #define IDC_MAGICWEAPONHOTKEY           1068
-#define IDC_ACTIVE2                     1070
+#define IDC_MACROHOTKEY                 1069
 #define IDC_MACROACTIVE                 1070
+#define IDC_TIMINGKEY                   1071
+#define IDC_TIMINGKEY2                  1072
+#define IDC_TOGGLEKEY                   1072
 
 // Next default values for new objects
 // 

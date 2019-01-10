@@ -25,6 +25,7 @@ public:
 	wchar_t MeteorHotkey;
 	wchar_t DisintegrateHotkey;
 	wchar_t BlackholeHotkey;
+	wchar_t MacroHotkey;
 
 	bool BlackholeCheck;
 	bool MacroIsRunning;

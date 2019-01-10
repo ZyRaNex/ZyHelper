@@ -112,28 +112,9 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 
 void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_connection)
 {
-	if (WaveOfForceHotkey == 'L' || WaveOfForceHotkey == 'R')
-	{
-		MessageBox(NULL, _T("WARNING atm WaveOfForce cant be on the mouse"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
-	if (ElectrocuteHotkey == 'L' || ElectrocuteHotkey == 'R')
-	{
-		MessageBox(NULL, _T("WARNING atm Electrocute cant be on the mouse"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
-	if (DisintegrateHotkey == 'L' || DisintegrateHotkey == 'R')
-	{
-		MessageBox(NULL, _T("WARNING atm Disintegrate cant be on the mouse"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
-
 	if (BlackholeCheck)
 	{
-		if(GetAsyncKeyState(input_simulator->CharToVK('5')))
+		if(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
 		{
 			if (!MacroIsRunning)//just started
 			{
@@ -186,7 +167,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
 
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -201,7 +182,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			Sleep(400);
 			input_simulator->SendKeyUp(DisintegrateHotkey);
 
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -222,7 +203,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				Sleep(200);
 			}
 			Sleep(1500);
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -240,7 +221,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -257,7 +238,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -273,7 +254,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -289,7 +270,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK('5')) && !AutoMacro)
+			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -302,7 +283,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 	}
 	else
 	{
-		if (GetAsyncKeyState(input_simulator->CharToVK('5')))
+		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
