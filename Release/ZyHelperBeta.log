@@ -1,8 +1,9 @@
-﻿  main.cpp
+﻿  input_simulator.cpp
+  main.cpp
   _WIN32_WINNT not defined. Defaulting to _WIN32_WINNT_MAXVER (see WinSDKVer.h)
+  tcp_connection.cpp
+  wiz_macro.cpp
   Code wird generiert.
-  1 of 761 functions ( 0.1%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    0 functions had inline decision re-evaluated but remain unchanged
+  All 761 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
   Codegenerierung ist abgeschlossen.
   ZyHelperBeta.vcxproj -> C:\Users\Someone\source\repos\ZyHelperBeta\Release\ZyHelperBeta.exe
