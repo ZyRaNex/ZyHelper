@@ -112,6 +112,31 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 
 void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_connection)
 {
+	if (WaveOfForceHotkey == 'L' || WaveOfForceHotkey == 'R')
+	{
+		::MessageBox(NULL, _T("WARNING atm WaveOfForce cant be on the mouse"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	if (ElectrocuteHotkey == 'L' || ElectrocuteHotkey == 'R')
+	{
+		::MessageBox(NULL, _T("WARNING atm Electrocute cant be on the mouse"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	if (DisintegrateHotkey == 'L' || DisintegrateHotkey == 'R')
+	{
+		::MessageBox(NULL, _T("WARNING atm Disintegrate cant be on the mouse"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+	if (WaveOfForceHotkey == MacroHotkey || ElectrocuteHotkey == MacroHotkey || MeteorHotkey == MacroHotkey || DisintegrateHotkey == MacroHotkey)
+	{
+		::MessageBox(NULL, _T("WARNING cant have macro key the same as a skill"),
+			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+
 	if (BlackholeCheck)
 	{
 		if(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))

@@ -1,6 +1,20 @@
 #include <afxwin.h>
 #include <iostream>
 #include <fstream>
+#include <windows.h>
+#include <winsock2.h>
+#include <iphlpapi.h>
+#include <icmpapi.h>
+#include <ws2tcpip.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <iostream>
+
+// Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
+#pragma comment (lib, "Ws2_32.lib")
+#pragma comment (lib, "Mswsock.lib")
+#pragma comment (lib, "AdvApi32.lib")
+#pragma comment(lib, "iphlpapi.lib")
 
 #include "Main.h"
 
@@ -434,6 +448,112 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 #endif
 
 
+
+
+	//log
+	HANDLE hIcmpFile;
+	unsigned long ipaddr = INADDR_NONE;
+	DWORD dwRetVal = 0;
+	char SendData[32] = "ping";
+	LPVOID ReplyBuffer = NULL;
+	DWORD ReplySize = 0;
+	InetPton(AF_INET, L"45.62.238.41", &ipaddr);
+	hIcmpFile = IcmpCreateFile();
+	if (hIcmpFile == INVALID_HANDLE_VALUE) 
+	{
+		DEBUG_MSG("IcmpCreateFile failed");
+		return 1;
+	}
+
+	ReplySize = sizeof(ICMP_ECHO_REPLY) + sizeof(SendData);
+	ReplyBuffer = (VOID*)malloc(ReplySize);
+	if (ReplyBuffer == NULL) 
+	{
+		DEBUG_MSG("malloc failed");
+		return 1;
+	}
+
+
+	dwRetVal = IcmpSendEcho(hIcmpFile, ipaddr, SendData, sizeof(SendData),
+		NULL, ReplyBuffer, ReplySize, 1000);
+	free(ReplyBuffer);
+
+	if (dwRetVal != 0) 
+	{
+		DEBUG_MSG("creating log" << std::endl);
+		//ping worked lets log
+		char SendBuf[256];
+		int BufLen = 256;
+
+		wchar_t localeName[LOCALE_NAME_MAX_LENGTH] = { 0 };
+		int ret = GetUserDefaultLocaleName(localeName, (sizeof(localeName) / sizeof(*(localeName))));
+		if (ret == 0)
+		{
+			DEBUG_MSG("Cannot retrieve the default locale name." << std::endl);
+		}
+
+		size_t i;
+		wcstombs_s(&i, SendBuf, 256, localeName, sizeof(SendBuf));
+
+		sprintf_s(SendBuf, 256, "%s ", SendBuf);
+
+		SYSTEMTIME st;
+		GetSystemTime(&st);
+
+		sprintf_s(SendBuf, 256,
+			"%s %d-%02d-%02d %02d:%02d:%02d.%03d", SendBuf,
+			st.wYear,
+			st.wMonth,
+			st.wDay,
+			st.wHour,
+			st.wMinute,
+			st.wSecond,
+			st.wMilliseconds);
+
+		sprintf_s(SendBuf, 256, "%s\n", SendBuf);
+
+		WSADATA wsadata;
+		int error = WSAStartup(0x0202, &wsadata);
+		if (error == 1) return 1;
+		std::cout << "WSA started";
+		SOCKET logsocket;
+		sockaddr_in target;
+		target.sin_family = AF_INET;
+		target.sin_port = htons(2207);
+
+		InetPton(AF_INET, L"45.62.238.41", &target.sin_addr.s_addr);
+
+		logsocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+		if (logsocket == INVALID_SOCKET)
+		{
+			DEBUG_MSG("socket error log" << std::endl);
+		}
+
+		if (connect(logsocket, (sockaddr*)&target, sizeof(target)) != 0)
+		{
+			DEBUG_MSG("connect error log" << std::endl);
+		}
+
+		send(logsocket, SendBuf, strlen(SendBuf), 0);
+		closesocket(logsocket);
+	}
+	else 
+	{
+		//ping didnt work
+		DEBUG_MSG("couldnt connect to server");
+	}
+
+
+
+
+
+
+
+
+
+	
+
+
 	hThread[1] = CreateThread(NULL, 0, StaticStartTcpConnection, (void*)this, 0, &dwThreadID[1]);
 	hThread[2] = CreateThread(NULL, 0, StaticDoLogic, (void*)this, 0, &dwThreadID[2]);
 	hThread[3] = CreateThread(NULL, 0, StaticCoeReader, (void*)this, 0, &dwThreadID[3]);
@@ -481,7 +601,7 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	}
 
 
-	if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
+ 	if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
 	{
 		DEBUG_MSG("couldnt read config file" << std::endl);
 		file.clear();
@@ -1124,30 +1244,5 @@ void CDiabloCalcFancyDlg::Update()
 	file.close();
 
 	DEBUG_MSG("Info Updated" << std::endl);
-
-	if (WaveOfForceHotkey == 'L' || WaveOfForceHotkey == 'R')
-	{
-		::MessageBox(NULL, _T("WARNING atm WaveOfForce cant be on the mouse"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
-	if (ElectrocuteHotkey == 'L' || ElectrocuteHotkey == 'R')
-	{
-		::MessageBox(NULL, _T("WARNING atm Electrocute cant be on the mouse"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
-	if (DisintegrateHotkey == 'L' || DisintegrateHotkey == 'R')
-	{
-		::MessageBox(NULL, _T("WARNING atm Disintegrate cant be on the mouse"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
-	if (WaveOfForceHotkey == MacroHotkey || ElectrocuteHotkey == MacroHotkey || MeteorHotkey == MacroHotkey || DisintegrateHotkey == MacroHotkey)
-	{
-		::MessageBox(NULL, _T("WARNING cant have macro key the same as a skill"),
-			_T("WARNING"), MB_OK | MB_ICONEXCLAMATION);
-		return;
-	}
 }
 
