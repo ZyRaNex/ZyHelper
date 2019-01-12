@@ -129,5 +129,14 @@
     <Image Include="SkillPictures\Storm_Armor2.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
+    <Image Include="SkillPictures\IconPreperation.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\IconRainVengeance.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\Vengeance.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
   </ItemGroup>
 </Project>

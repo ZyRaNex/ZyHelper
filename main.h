@@ -40,6 +40,9 @@ public:
 	CButton m_ctlBLACKHOLECHECK;
 	CButton m_ctlSTORMARMORCHECK;
 	CButton m_ctlMAGICWEAPONCHECK;
+	CButton m_ctlVENGEANCECHECK;
+	CButton m_ctlRAINOFVENGEANCECHECK;
+	CButton m_ctlPREPARATIONCHECK;
 
 	CEdit m_ctlIPHOTKEY;
 	CEdit m_ctlWCHOTKEY;
@@ -64,6 +67,9 @@ public:
 	CEdit m_ctlMACROHOTKEY;
 	CEdit m_ctlTIMINGKEY;
 	CEdit m_ctlTOGGLEKEY;
+	CEdit m_ctlVENGEANCEHOTKEY;
+	CEdit m_ctlRAINOFVENGEANCEHOTKEY;
+	CEdit m_ctlPREPARATIONHOTKEY;
 
 	CEdit m_ctlUPPERBOUND;
 	CEdit m_ctlLOWERBOUND;
@@ -117,8 +123,8 @@ public:
 	HANDLE hThread[5];
 	DWORD dwThreadID[5];
 
-	const std::wstring InitChecks = _T("11110100001011000");
-	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568");
+	const std::wstring InitChecks = _T("11110100001011000110");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R42");
 	int ChecksLength = InitChecks.size();
 	int HotkeysLength = InitHotkeys.size();
 	bool Active;
@@ -140,7 +146,10 @@ public:
 	bool BlackholeCheck;
 	bool StormArmorCheck;
 	bool MagicWeaponCheck;
-	
+	bool VengeanceCheck;
+	bool RainOfVengeanceCheck;
+	bool PreparationCheck;
+
 
 	wchar_t IpHotkey;
 	wchar_t WcHotkey;
@@ -165,6 +174,9 @@ public:
 	wchar_t MacroHotkey;
 	wchar_t TimingKey;
 	wchar_t ToggleKey;
+	wchar_t VengeanceHotkey;
+	wchar_t RainOfVengeanceHotkey;
+	wchar_t PreparationHotkey;
 
 	void Update();
 };

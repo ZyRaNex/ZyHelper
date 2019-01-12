@@ -130,7 +130,6 @@ bool TCPConnection::ElementAt(unsigned  i, unsigned j)
 {
 	std::string copy;
 	bool result;
-	//if (i < content.length()) result = content.at(i);
 	tcpmutex.lock();
 	if (content.length() >= j)
 	{
@@ -143,9 +142,7 @@ bool TCPConnection::ElementAt(unsigned  i, unsigned j)
 	}
 	tcpmutex.unlock();
 
-
 	result = (copy.at(j) & (1 << i))!=0;
-
 
 	return result;
 }

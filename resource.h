@@ -23,6 +23,9 @@
 #define IDB_WAVEOFFORCE                 125
 #define IDB_MAGICWEAPON                 126
 #define IDB_STORMARMOR                  127
+#define IDB_PREPARATION                 129
+#define IDB_RAINOFVENGEANCE             130
+#define IDB_VENGEANCE                   131
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -88,14 +91,23 @@
 #define IDC_MACROHOTKEY                 1069
 #define IDC_MACROACTIVE                 1070
 #define IDC_TIMINGKEY                   1071
-#define IDC_TIMINGKEY2                  1072
 #define IDC_TOGGLEKEY                   1072
+#define IDC_VENGEANCE                   1073
+#define IDC_RAINOFVENGEANCE             1074
+#define IDC_PREPARATION                 1075
+#define IDC_VENGEANCECHECK              1076
+#define IDC_RAINOFVENGEANCECHECK        1077
+#define IDC_PREPARATIONCHECK            1078
+#define IDC_VENGEANCEHOTKEY             1079
+#define IDC_RAINOFVENGEANCEHOTKEY       1080
+#define IDC_IPHOTKEY4                   1081
+#define IDC_PREPARATIONHOTKEY           1081
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        128
+#define _APS_NEXT_RESOURCE_VALUE        132
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101

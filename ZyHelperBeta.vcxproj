@@ -160,6 +160,8 @@
     <Image Include="SkillPictures\IconElectrocute.bmp" />
     <Image Include="SkillPictures\IconLandoftheDead.bmp" />
     <Image Include="SkillPictures\IconMeteor.bmp" />
+    <Image Include="SkillPictures\IconPreperation.bmp" />
+    <Image Include="SkillPictures\IconRainVengeance.bmp" />
     <Image Include="SkillPictures\IconWaveForce.bmp" />
     <Image Include="SkillPictures\Ignore_Pain.bmp" />
     <Image Include="SkillPictures\IP.bmp" />
@@ -170,6 +172,7 @@
     <Image Include="SkillPictures\Storm_Armor2.bmp" />
     <Image Include="SkillPictures\Sweeping_Wind.bmp" />
     <Image Include="SkillPictures\Threatening_Shout.bmp" />
+    <Image Include="SkillPictures\Vengeance.bmp" />
     <Image Include="SkillPictures\War_Cry.bmp" />
     <Image Include="SkillPictures\Wrath_of_the_Berserker.bmp" />
   </ItemGroup>

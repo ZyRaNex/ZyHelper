@@ -50,32 +50,42 @@ DWORD CDiabloCalcFancyDlg::PrintThread()
 
 		for (int i = 0; i < 8; i++)
 		{
-			DEBUG_MSG(tcp_connection.ElementAt(i, 1) << " ");
+			DEBUG_MSG(tcp_connection.ElementAt(i, 0));
 		}
 		DEBUG_MSG(" ");
 		for (int i = 0; i < 8; i++)
 		{
-			DEBUG_MSG(tcp_connection.ElementAt(i, 2) << " ");
+			DEBUG_MSG(tcp_connection.ElementAt(i, 1));
 		}
 		DEBUG_MSG(" ");
 		for (int i = 0; i < 8; i++)
 		{
-			DEBUG_MSG(tcp_connection.ElementAt(i, 3) << " ");
+			DEBUG_MSG(tcp_connection.ElementAt(i, 2));
 		}
 		DEBUG_MSG(" ");
 		for (int i = 0; i < 8; i++)
 		{
-			DEBUG_MSG(tcp_connection.ElementAt(i, 4) << " ");
+			DEBUG_MSG(tcp_connection.ElementAt(i, 3));
 		}
 		DEBUG_MSG(" ");
 		for (int i = 0; i < 8; i++)
 		{
-			DEBUG_MSG(tcp_connection.ElementAt(i, 5) << " ");
+			DEBUG_MSG(tcp_connection.ElementAt(i, 4));
 		}
 		DEBUG_MSG(" ");
 		for (int i = 0; i < 8; i++)
 		{
-			DEBUG_MSG(tcp_connection.ElementAt(i, 6) << " ");
+			DEBUG_MSG(tcp_connection.ElementAt(i, 5));
+		}
+		DEBUG_MSG(" ");
+		for (int i = 0; i < 8; i++)
+		{
+			DEBUG_MSG(tcp_connection.ElementAt(i, 6));
+		}
+		DEBUG_MSG(" ");
+		for (int i = 0; i < 8; i++)
+		{
+			DEBUG_MSG(tcp_connection.ElementAt(i, 7));
 		}
 
 		DEBUG_MSG(std::endl);
@@ -317,7 +327,39 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 				Sleep(100);
 			}
 		}
-		
+
+		if (tcp_connection.ImDh())
+		{
+			//Vengeance
+			bool VengeanceOnCooldown = tcp_connection.VengeanceOnCooldown();
+			bool VengeanceBuffActive = tcp_connection.VengeanceBuffActive();
+
+			if (!VengeanceOnCooldown && !VengeanceBuffActive && VengeanceCheck)
+			{
+				input_simulator.SendKeyOrMouse(VengeanceHotkey);
+				Sleep(100);
+			}
+
+			//Rain of Vengeance
+			bool RainOfVengeanceOnCooldown = tcp_connection.RainOfVengeanceOnCooldown();
+			bool NatBuffActive = tcp_connection.NatBuffActive();
+
+			if (!RainOfVengeanceOnCooldown && !NatBuffActive && RainOfVengeanceCheck)
+			{
+				input_simulator.SendKeyOrMouse(RainOfVengeanceHotkey);
+				Sleep(100);
+			}
+
+			//Preparation
+			bool PreparationOnCooldown = tcp_connection.PreparationOnCooldown();
+			bool PreparationDisciplineThreshold = tcp_connection.PreparationDisciplineThreshold();
+
+			if (!PreparationOnCooldown && !PreparationDisciplineThreshold && PreparationCheck)
+			{
+				input_simulator.SendKeyOrMouse(PreparationHotkey);
+				Sleep(100);
+			}
+		}
 	}
 	return 0;
 }
@@ -543,17 +585,6 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 		DEBUG_MSG("couldnt connect to server");
 	}
 
-
-
-
-
-
-
-
-
-	
-
-
 	hThread[1] = CreateThread(NULL, 0, StaticStartTcpConnection, (void*)this, 0, &dwThreadID[1]);
 	hThread[2] = CreateThread(NULL, 0, StaticDoLogic, (void*)this, 0, &dwThreadID[2]);
 	hThread[3] = CreateThread(NULL, 0, StaticCoeReader, (void*)this, 0, &dwThreadID[3]);
@@ -668,6 +699,13 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	else m_ctlSTORMARMORCHECK.SetCheck(BST_UNCHECKED);
 	if (checks[16] == '1') { m_ctlMAGICWEAPONCHECK.SetCheck(BST_CHECKED); }
 	else m_ctlMAGICWEAPONCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[17] == '1') { m_ctlVENGEANCECHECK.SetCheck(BST_CHECKED); }
+	else m_ctlVENGEANCECHECK.SetCheck(BST_UNCHECKED);
+	if (checks[18] == '1') { m_ctlRAINOFVENGEANCECHECK.SetCheck(BST_CHECKED); }
+	else m_ctlRAINOFVENGEANCECHECK.SetCheck(BST_UNCHECKED);
+	if (checks[19] == '1') { m_ctlPREPARATIONCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlPREPARATIONCHECK.SetCheck(BST_UNCHECKED);
+
 
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
@@ -721,6 +759,12 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlTIMINGKEY.SetWindowText(str);
 	str[0] = hotkeys[22];
 	m_ctlTOGGLEKEY.SetWindowText(str);
+	str[0] = hotkeys[23];
+	m_ctlVENGEANCEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[24];
+	m_ctlRAINOFVENGEANCEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[25];
+	m_ctlPREPARATIONHOTKEY.SetWindowText(str);
 	return TRUE;
 }
 
@@ -753,6 +797,9 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_BLACKHOLECHECK, Update)
 	ON_BN_CLICKED(IDC_STORMARMORCHECK, Update)
 	ON_BN_CLICKED(IDC_MAGICWEAPONCHECK, Update)
+	ON_BN_CLICKED(IDC_VENGEANCECHECK, Update)
+	ON_BN_CLICKED(IDC_RAINOFVENGEANCECHECK, Update)
+	ON_BN_CLICKED(IDC_PREPARATIONCHECK, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -774,6 +821,10 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_BLACKHOLEHOTKEY, Update)
 	ON_EN_CHANGE(IDC_STORMARMORHOTKEY, Update)
 	ON_EN_CHANGE(IDC_MAGICWEAPONHOTKEY, Update)
+	ON_EN_CHANGE(IDC_VENGEANCEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_RAINOFVENGEANCEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_PREPARATIONHOTKEY, Update)
+
 	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
 	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
 	ON_EN_CHANGE(IDC_TOGGLEKEY, Update)
@@ -804,6 +855,9 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BLACKHOLECHECK, m_ctlBLACKHOLECHECK);
 	DDX_Control(pDX, IDC_STORMARMORCHECK, m_ctlSTORMARMORCHECK);
 	DDX_Control(pDX, IDC_MAGICWEAPONCHECK, m_ctlMAGICWEAPONCHECK);
+	DDX_Control(pDX, IDC_VENGEANCECHECK, m_ctlVENGEANCECHECK);
+	DDX_Control(pDX, IDC_RAINOFVENGEANCECHECK, m_ctlRAINOFVENGEANCECHECK);
+	DDX_Control(pDX, IDC_PREPARATIONCHECK, m_ctlPREPARATIONCHECK);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -828,6 +882,9 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_MACROHOTKEY, m_ctlMACROHOTKEY);
 	DDX_Control(pDX, IDC_TIMINGKEY, m_ctlTIMINGKEY);
 	DDX_Control(pDX, IDC_TOGGLEKEY, m_ctlTOGGLEKEY);
+	DDX_Control(pDX, IDC_VENGEANCEHOTKEY, m_ctlVENGEANCEHOTKEY);
+	DDX_Control(pDX, IDC_RAINOFVENGEANCEHOTKEY, m_ctlRAINOFVENGEANCEHOTKEY);
+	DDX_Control(pDX, IDC_PREPARATIONHOTKEY, m_ctlPREPARATIONHOTKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
@@ -865,6 +922,9 @@ void CDiabloCalcFancyDlg::Update()
 	BlackholeCheck = m_ctlBLACKHOLECHECK.GetCheck();
 	StormArmorCheck = m_ctlSTORMARMORCHECK.GetCheck();
 	MagicWeaponCheck = m_ctlMAGICWEAPONCHECK.GetCheck();
+	VengeanceCheck = m_ctlVENGEANCECHECK.GetCheck();
+	RainOfVengeanceCheck = m_ctlRAINOFVENGEANCECHECK.GetCheck();
+	PreparationCheck = m_ctlPREPARATIONCHECK.GetCheck();
 
 	wiz_macro.BlackholeCheck = BlackholeCheck;
 
@@ -1167,6 +1227,45 @@ void CDiabloCalcFancyDlg::Update()
 		ToggleKey = ' ';
 	}
 
+	len = m_ctlVENGEANCEHOTKEY.LineLength(m_ctlVENGEANCEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlVENGEANCEHOTKEY.GetLine(0, buffer, len);
+		VengeanceHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		VengeanceHotkey = ' ';
+	}
+
+	len = m_ctlRAINOFVENGEANCEHOTKEY.LineLength(m_ctlRAINOFVENGEANCEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlRAINOFVENGEANCEHOTKEY.GetLine(0, buffer, len);
+		RainOfVengeanceHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		RainOfVengeanceHotkey = ' ';
+	}
+
+	len = m_ctlPREPARATIONHOTKEY.LineLength(m_ctlPREPARATIONHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlPREPARATIONHOTKEY.GetLine(0, buffer, len);
+		PreparationHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		PreparationHotkey = ' ';
+	}
+
 	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
 	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
 	wiz_macro.MeteorHotkey = MeteorHotkey;
@@ -1212,7 +1311,13 @@ void CDiabloCalcFancyDlg::Update()
 	else checks += '0';
 	if (MagicWeaponCheck) checks += '1';
 	else checks += '0';
-	
+	if (VengeanceCheck) checks += '1';
+	else checks += '0';
+	if (RainOfVengeanceCheck) checks += '1';
+	else checks += '0';
+	if (PreparationCheck) checks += '1';
+	else checks += '0';
+
 	hotkeys += IpHotkey;
 	hotkeys += WcHotkey;
 	hotkeys += FalterHotkey;
@@ -1236,6 +1341,9 @@ void CDiabloCalcFancyDlg::Update()
 	hotkeys += MacroHotkey;
 	hotkeys += TimingKey;
 	hotkeys += ToggleKey;
+	hotkeys += VengeanceHotkey;
+	hotkeys += RainOfVengeanceHotkey;
+	hotkeys += PreparationHotkey;
 
 	std::wofstream file;
 	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);
