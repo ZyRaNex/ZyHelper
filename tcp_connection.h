@@ -27,7 +27,47 @@ public:
 	DWORD StartupTime;
 	~TCPConnection();
 
-	bool IPWizInRange() { return ElementAt(1, 0); };
+	//bool () { return ElementAt(, 4); };
+
+
+	bool Active() { return ElementAt(1, 0); };
+	bool ImBarb() { return ElementAt(2, 0); };
+	bool ImMonk() { return ElementAt(3, 0); };
+	bool ImWizard() { return ElementAt(4, 0); };
+	bool ImNecro() { return ElementAt(5, 0); };
+	bool ImDh() { return ElementAt(6, 0); };
+	bool ImSader() { return ElementAt(7, 0); };
+
+	bool ConventionLight() { return ElementAt(1, 1); };
+	bool ConventionArcane() { return ElementAt(2, 1); };
+	bool ConventionCold() { return ElementAt(3, 1); };
+	bool ConventionFire() { return ElementAt(4, 1); };
+	bool BlackholeBuffActive() { return ElementAt(5, 1); };
+
+	bool CastIp() { return ElementAt(1, 3); };
+	bool WarCryOnCooldown() { return ElementAt(2, 3); };
+	bool NecroInWCRange() { return ElementAt(3, 3); };
+	bool CastFalter() { return ElementAt(4, 3); };
+	bool CastBerserker() { return ElementAt(5, 3); };
+	bool CastSprint() { return ElementAt(6, 3); };
+	bool EpiphanyOnCooldown() { return ElementAt(7, 3); };
+	
+	bool EpiphanyBuffActive() { return ElementAt(1, 4); };
+	bool CastMantraHealing() { return ElementAt(2, 4); };
+	bool CastSweepingWind() { return ElementAt(3, 4); };
+	bool BohOnCooldown() { return ElementAt(4, 4); };
+	bool CastMantraConviction() { return ElementAt(5, 4); };
+	bool CastLotd() { return ElementAt(6, 4); };
+	bool CastBoneArmor() { return ElementAt(7, 4); };
+
+	bool CastPotion() { return ElementAt(1, 5); };
+	bool CastStormArmor() { return ElementAt(2, 5); };
+	bool CastMagicWeapon() { return ElementAt(3, 5); };
+	bool CastVengeance() { return ElementAt(4, 5); };
+	bool CastRainOfVengeance() { return ElementAt(5, 5); };
+	bool CastPreparation() { return ElementAt(6, 5); };
+
+	/*bool IPWizInRange() { return ElementAt(1, 0); };
 	bool IPOnCooldown() { return ElementAt(2, 0); };
 	bool WarCryOnCooldown() { return ElementAt(3, 0); };
 	bool NecroInWCRange() { return ElementAt(4, 0); };
@@ -83,7 +123,7 @@ public:
 	bool RainOfVengeanceOnCooldown() { return ElementAt(6, 6); };
 	bool PreparationOnCooldown() { return ElementAt(7, 6); };
 
-	bool PreparationDisciplineThreshold() { return ElementAt(1, 7); };
+	bool PreparationDisciplineThreshold() { return ElementAt(1, 7); };*/
 
 		
 

@@ -126,7 +126,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		
 		if (!tcp_connection.IsReady()) continue;
 
-		if (tcp_connection.IsActive() && Active)
+		if (tcp_connection.Active() && Active)
 		{
 			m_ctlACTIVE.SetCheck(BST_CHECKED);
 		}
@@ -160,12 +160,8 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		::GetWindowText(handle, NewName, 128);
 		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 
-
-		
-
-		bool UsePotion = tcp_connection.UsePotion();
-		bool PotionIsOnCooldown = tcp_connection.PotionIsOnCooldown();
-		if (UsePotion && !PotionIsOnCooldown && PotionCheck)
+		bool CastPotion = tcp_connection.CastPotion();
+		if (CastPotion && PotionCheck)
 		{
 			input_simulator.SendKeyOrMouse(PotionHotkey);
 			Sleep(100);
@@ -174,13 +170,9 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		if (tcp_connection.ImBarb())
 		{
 			//Ignore Pain
-			bool IPWizInRange = tcp_connection.WizInRange();
-			bool IPOnCooldown = tcp_connection.IPOnCooldown();
-			bool BossIsSpawned = tcp_connection.BossIsSpawned();
-			bool NecroInIPRange = tcp_connection.NecroInIPRange();
+			bool CastIp = tcp_connection.CastIp();
 
-			if (!BossIsSpawned && IPWizInRange && !IPOnCooldown && IpCheck ||
-				 BossIsSpawned && NecroInIPRange && !IPOnCooldown && IpCheck)
+			if (CastIp && IpCheck)
 			{
 				input_simulator.SendKeyOrMouse(IpHotkey);
 				Sleep(100);
@@ -199,28 +191,24 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			}
 
 			//Falter
-			bool FalterOnCooldown = tcp_connection.FalterOnCooldown();
-			bool WizInRange = tcp_connection.WizInRange();
-			if (WizInRange && !FalterOnCooldown && FalterCheck)
+			bool CastFalter = tcp_connection.CastFalter();
+			if (CastFalter && FalterCheck)
 			{
 				input_simulator.SendKeyOrMouse(FalterHotkey);
 				Sleep(100);
 			}
 
 			//Berserker
-			bool BerserkerOnCooldown = tcp_connection.BerserkerOnCooldown();
-			bool BerserkerBuffActive = tcp_connection.BerserkerBuffActive();
-			if (!BerserkerOnCooldown && !BerserkerBuffActive && BerserkerCheck)
+			bool CastBerserker = tcp_connection.CastBerserker();
+			if (CastBerserker && BerserkerCheck)
 			{
 				input_simulator.SendKeyOrMouse(BerserkerHotkey);
 				Sleep(100);
 			}
 
 			//Sprint
-			bool SprintOnCooldown = tcp_connection.SprintOnCooldown();
-			bool EnoughFury = tcp_connection.EnoughFury();
-			bool SprintBuffActive = tcp_connection.SprintBuffActive();
-			if (!SprintOnCooldown && EnoughFury && !SprintBuffActive && SprintCheck)
+			bool CastSprint = tcp_connection.CastSprint();
+			if (CastSprint && SprintCheck)
 			{
 				input_simulator.SendKeyOrMouse(SprintHotkey);
 				Sleep(100);
@@ -240,20 +228,18 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			}
 
 			//Mantra of healing
-			bool MantraOfHealingOnCooldown = tcp_connection.MantraOfHealingOnCooldown();
-			bool EnoughSpirit = tcp_connection.EnoughSpirit();
+			bool CastMantraHealing = tcp_connection.CastMantraHealing();
 			bool ShiftPressed = GetAsyncKeyState(VK_SHIFT);
 			bool SpacePressed = GetAsyncKeyState(VK_SPACE);
-			if (!MantraOfHealingOnCooldown && EnoughSpirit && MantraHealingCheck && (ShiftPressed || SpacePressed))
+			if (CastMantraHealing && MantraHealingCheck && (ShiftPressed || SpacePressed))
 			{
 				input_simulator.SendKeyOrMouse(MantraHealingHotkey);
 				Sleep(100);
 			}
 
 			//Sweeping Wind
-			bool RecastSweepingWind = tcp_connection.RecastSweepingWind();
-			EnoughSpirit = tcp_connection.EnoughSpirit();
-			if (RecastSweepingWind && EnoughSpirit && SweepingWindCheck)
+			bool CastSweepingWind = tcp_connection.CastSweepingWind();
+			if (CastSweepingWind && SweepingWindCheck)
 			{
 				input_simulator.SendKeyOrMouse(SweepingWindHotkey);
 				Sleep(100);
@@ -269,8 +255,8 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			}
 
 			//Mantra of Conviction
-			EnoughSpirit = tcp_connection.EnoughSpirit();
-			if (EnoughSpirit && (GetTickCount() - 3000 >= ConvictionDuration) && MantraConvictionCheck)
+			bool CastMantraConviction = tcp_connection.CastMantraConviction();
+			if (CastMantraConviction && (GetTickCount() - 3000 >= ConvictionDuration) && MantraConvictionCheck)
 			{
 				input_simulator.SendKeyOrMouse(MantraConvictionHotkey);
 				ConvictionDuration = GetTickCount();
@@ -278,52 +264,40 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			}
 		}
 
-		if (tcp_connection.ImWizard())
-		{
-			//Storm Armor
-			bool StormArmorOnCooldown = tcp_connection.StormArmorOnCooldown();
-			bool StormArmorBuffActive = tcp_connection.StormArmorBuffActive();
-
-			if (!StormArmorOnCooldown && !StormArmorBuffActive && StormArmorCheck)
-			{
-				input_simulator.SendKeyOrMouse(StormArmorHotkey);
-				Sleep(100);
-			}
-
-			//Magic Weapon
-			bool MagicWeaponOnCooldown = tcp_connection.MagicWeaponOnCooldown();
-			bool MagicWeaponBuffActive = tcp_connection.MagicWeaponBuffActive();
-
-			if (!MagicWeaponOnCooldown && !MagicWeaponBuffActive && MagicWeaponCheck)
-			{
-				input_simulator.SendKeyOrMouse(MagicWeaponHotkey);
-				Sleep(100);
-			}
-		}
-
 		if (tcp_connection.ImNecro())
 		{
 			//Land of the Dead
-			bool LotDOnCooldown = tcp_connection.LotDOnCooldown();
-			bool LotDBuffActive = tcp_connection.LotDBuffActive();
-
-			if (!LotDOnCooldown && !LotDBuffActive && LotdCheck)
+			bool CastLotd = tcp_connection.CastLotd();
+			if (CastLotd && LotdCheck)
 			{
 				input_simulator.SendKeyOrMouse(LotdHotkey);
 				Sleep(100);
 			}
 
 			//Bone Armor
-			bool BoneArmorAlmostRunningOut = tcp_connection.BoneArmorAlmostRunningOut();
-			bool BoneArmorOnCooldown = tcp_connection.BoneArmorOnCooldown();
-			bool Range25Enemies1 = tcp_connection.Range25Enemies1();
-			bool Range25Enemies5 = tcp_connection.Range25Enemies5();
-
-			if (((BoneArmorAlmostRunningOut && Range25Enemies1) || 
-				(!BoneArmorAlmostRunningOut && Range25Enemies5)) && 
-				!BoneArmorOnCooldown && BoneArmorCheck)
+			bool CastBoneArmor = tcp_connection.CastBoneArmor();
+			if (CastBoneArmor && BoneArmorCheck)
 			{
 				input_simulator.SendKeyOrMouse(BoneArmorHotkey);
+				Sleep(100);
+			}
+		}
+
+		if (tcp_connection.ImWizard())
+		{
+			//Storm Armor
+			bool CastStormArmor = tcp_connection.CastStormArmor();
+			if (CastStormArmor && StormArmorCheck)
+			{
+				input_simulator.SendKeyOrMouse(StormArmorHotkey);
+				Sleep(100);
+			}
+
+			//Magic Weapon
+			bool CastMagicWeapon = tcp_connection.CastMagicWeapon();
+			if (CastMagicWeapon && MagicWeaponCheck)
+			{
+				input_simulator.SendKeyOrMouse(MagicWeaponHotkey);
 				Sleep(100);
 			}
 		}
@@ -331,30 +305,24 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		if (tcp_connection.ImDh())
 		{
 			//Vengeance
-			bool VengeanceOnCooldown = tcp_connection.VengeanceOnCooldown();
-			bool VengeanceBuffActive = tcp_connection.VengeanceBuffActive();
-
-			if (!VengeanceOnCooldown && !VengeanceBuffActive && VengeanceCheck)
+			bool CastVengeance = tcp_connection.CastVengeance();
+			if (CastVengeance && VengeanceCheck)
 			{
 				input_simulator.SendKeyOrMouse(VengeanceHotkey);
 				Sleep(100);
 			}
 
 			//Rain of Vengeance
-			bool RainOfVengeanceOnCooldown = tcp_connection.RainOfVengeanceOnCooldown();
-			bool NatBuffActive = tcp_connection.NatBuffActive();
-
-			if (!RainOfVengeanceOnCooldown && !NatBuffActive && RainOfVengeanceCheck)
+			bool CastRainOfFengeance = tcp_connection.CastRainOfVengeance();
+			if (CastRainOfFengeance && RainOfVengeanceCheck)
 			{
 				input_simulator.SendKeyOrMouse(RainOfVengeanceHotkey);
 				Sleep(100);
 			}
 
 			//Preparation
-			bool PreparationOnCooldown = tcp_connection.PreparationOnCooldown();
-			bool PreparationDisciplineThreshold = tcp_connection.PreparationDisciplineThreshold();
-
-			if (!PreparationOnCooldown && !PreparationDisciplineThreshold && PreparationCheck)
+			bool CastPreparation = tcp_connection.CastPreparation();
+			if (CastPreparation && PreparationCheck)
 			{
 				input_simulator.SendKeyOrMouse(PreparationHotkey);
 				Sleep(100);
@@ -379,7 +347,7 @@ DWORD CDiabloCalcFancyDlg::CoeReaderThread()
 			Sleep(100);
 			continue;
 		}
-		if (!tcp_connection.IsActive() || !Active)
+		if (!tcp_connection.Active() || !Active)
 		{
 			Sleep(100);
 			continue;
@@ -426,7 +394,7 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 			Sleep(100);
 			continue;
 		}
-		if (!tcp_connection.IsActive() || !Active)
+		if (!tcp_connection.Active() || !Active)
 		{
 			wiz_macro.Stop(&input_simulator);
 			Sleep(100);
