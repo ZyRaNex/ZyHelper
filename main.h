@@ -123,8 +123,8 @@ public:
 	HANDLE hThread[5];
 	DWORD dwThreadID[5];
 
-	const std::wstring InitChecks = _T("11110100001011000110");
-	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R42");
+	const std::wstring InitChecks = _T("11110100001011000101");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R44");
 	int ChecksLength = InitChecks.size();
 	int HotkeysLength = InitHotkeys.size();
 	bool Active;

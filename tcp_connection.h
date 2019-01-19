@@ -45,14 +45,14 @@ public:
 	bool BlackholeBuffActive() { return ElementAt(5, 1); };
 
 	bool CastIp() { return ElementAt(1, 3); };
-	bool WarCryOnCooldown() { return ElementAt(2, 3); };
-	bool NecroInWCRange() { return ElementAt(3, 3); };
+	//bool WarCryOnCooldown() { return ElementAt(2, 3); };
+	//bool NecroInWCRange() { return ElementAt(3, 3); };
 	bool CastFalter() { return ElementAt(4, 3); };
 	bool CastBerserker() { return ElementAt(5, 3); };
 	bool CastSprint() { return ElementAt(6, 3); };
 	bool CastEpiphany() { return ElementAt(7, 3); };
 	
-	//bool EpiphanyBuffActive() { return ElementAt(1, 4); };
+	bool CastWc() { return ElementAt(1, 4); };
 	bool CastMantraHealing() { return ElementAt(2, 4); };
 	bool CastSweepingWind() { return ElementAt(3, 4); };
 	bool BohOnCooldown() { return ElementAt(4, 4); };

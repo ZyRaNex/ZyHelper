@@ -95,7 +95,6 @@ DWORD CDiabloCalcFancyDlg::PrintThread()
 
 DWORD CDiabloCalcFancyDlg::DoLogicThread()
 {
-	DWORD WarCryDuration = GetTickCount();
 	DWORD BoHDuration = GetTickCount();
 	DWORD ConvictionDuration = GetTickCount();
 	DWORD ActiveDuration = GetTickCount();
@@ -170,7 +169,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		{
 			//Ignore Pain
 			bool CastIp = tcp_connection.CastIp();
-
 			if (CastIp && IpCheck)
 			{
 				input_simulator.SendKeyOrMouse(IpHotkey);
@@ -178,14 +176,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			}
 
 			//War Cry
-			bool WarCryOnCooldown = tcp_connection.WarCryOnCooldown();
-			bool NecroInWCRange = tcp_connection.NecroInWCRange();
-
-			if (((!WarCryOnCooldown && (GetTickCount() - 10000 >= WarCryDuration)) ||
-				(!WarCryOnCooldown && NecroInWCRange)) && WcCheck)
+			bool CastWc = tcp_connection.CastWc();
+			if (CastWc && WcCheck)
 			{
 				input_simulator.SendKeyOrMouse(WcHotkey);
-				WarCryDuration = GetTickCount();
 				Sleep(100);
 			}
 
