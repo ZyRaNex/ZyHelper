@@ -101,7 +101,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 	DWORD ActiveDuration = GetTickCount();
 	DWORD ResetDuration = GetTickCount();
 	DWORD AutoMacroDuration = GetTickCount();
-	DWORD EpiphanyDuration = GetTickCount();
 
 	while (true)
 	{
@@ -136,6 +135,12 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			continue;
 		}
 
+		HWND handle = ::GetForegroundWindow();
+		int capacity = ::GetWindowTextLength(handle) * 2;
+		wchar_t NewName[128];
+		::GetWindowText(handle, NewName, 128);
+		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+
 		if (GetAsyncKeyState(input_simulator.CharToVK(ToggleKey)) && (GetTickCount() - 500 >= AutoMacroDuration))
 		{
 			AutoMacroDuration = GetTickCount();
@@ -153,12 +158,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 				m_ctlMACROACTIVE.SetCheck(BST_CHECKED);
 			}
 		}
-
-		HWND handle = ::GetForegroundWindow();
-		int capacity = ::GetWindowTextLength(handle) * 2;
-		wchar_t NewName[128];
-		::GetWindowText(handle, NewName, 128);
-		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 
 		bool CastPotion = tcp_connection.CastPotion();
 		if (CastPotion && PotionCheck)
@@ -218,12 +217,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		if (tcp_connection.ImMonk())
 		{
 			//Epiphany
-			bool EpiphanyOnCooldown = tcp_connection.EpiphanyOnCooldown();
-			bool EpiphanyBuffActive = tcp_connection.EpiphanyBuffActive();
-			if (!EpiphanyOnCooldown && (!EpiphanyBuffActive || (GetTickCount() - 14500 >= EpiphanyDuration)) && EpiphanyCheck)
+			bool CastEpiphany = tcp_connection.CastEpiphany();
+			if (CastEpiphany && EpiphanyCheck)
 			{
 				input_simulator.SendKeyOrMouse(EpiphanyHotkey);
-				EpiphanyDuration = GetTickCount();
 				Sleep(100);
 			}
 
@@ -388,6 +385,12 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 	while (true)
 	{
 		Sleep(10);
+		HWND handle = ::GetForegroundWindow();
+		int capacity = ::GetWindowTextLength(handle) * 2;
+		wchar_t NewName[128];
+		::GetWindowText(handle, NewName, 128);
+		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
 		if (!tcp_connection.IsReady())
 		{
 			wiz_macro.Stop(&input_simulator);
@@ -412,12 +415,6 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 			Sleep(100);
 			continue;
 		}
-		HWND handle = ::GetForegroundWindow();
-		int capacity = ::GetWindowTextLength(handle) * 2;
-		wchar_t NewName[128];
-		::GetWindowText(handle, NewName, 128);
-		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
-		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
 	}
 	return 0;
 }
@@ -860,7 +857,6 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_COE, m_ctlCOE);
 
 }
-
 
 void CDiabloCalcFancyDlg::Update()
 {

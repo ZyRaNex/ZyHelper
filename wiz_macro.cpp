@@ -318,6 +318,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			input_simulator->SendKeyUp(DisintegrateHotkey);
 			Sleep(100);
 			input_simulator->SendKeyUp(WaveOfForceHotkey);
+			Sleep(800);
 		}
 	}
 }
