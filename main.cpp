@@ -121,7 +121,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			wiz_macro.UpperBound = 32000;
 		}
 
-		
 		if (!tcp_connection.IsReady()) continue;
 
 		if (tcp_connection.Active() && Active)
