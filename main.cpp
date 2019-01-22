@@ -238,7 +238,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 
 			//Breath of Heaven
 			bool BohOnCooldown = tcp_connection.BohOnCooldown();
-			if (!BohOnCooldown && (GetTickCount() - 3000 >= BoHDuration) && BohCheck)
+			if (!BohOnCooldown /*&& (GetTickCount() - 3000 >= BoHDuration)*/ && BohCheck)
 			{
 				input_simulator.SendKeyOrMouse(BohHotkey);
 				BoHDuration = GetTickCount();
@@ -249,7 +249,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastMantraConviction = tcp_connection.CastMantraConviction();
 			if (CastMantraConviction && (GetTickCount() - 3000 >= ConvictionDuration) && MantraConvictionCheck)
 			{
-				input_simulator.SendKeyOrMouse(MantraConvictionHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(MantraConvictionHotkey);
 				ConvictionDuration = GetTickCount();
 				Sleep(100);
 			}
@@ -384,7 +384,7 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 		wchar_t NewName[128];
 		::GetWindowText(handle, NewName, 128);
 		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
-		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
+		
 		if (!tcp_connection.IsReady())
 		{
 			wiz_macro.Stop(&input_simulator);
@@ -409,6 +409,7 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 			Sleep(100);
 			continue;
 		}
+		wiz_macro.DoMacro(&input_simulator, &tcp_connection);
 	}
 	return 0;
 }
