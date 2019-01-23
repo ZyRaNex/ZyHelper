@@ -95,7 +95,6 @@ DWORD CDiabloCalcFancyDlg::PrintThread()
 
 DWORD CDiabloCalcFancyDlg::DoLogicThread()
 {
-	DWORD BoHDuration = GetTickCount();
 	DWORD ConvictionDuration = GetTickCount();
 	DWORD ActiveDuration = GetTickCount();
 	DWORD ResetDuration = GetTickCount();
@@ -236,11 +235,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			}
 
 			//Breath of Heaven
-			bool BohOnCooldown = tcp_connection.BohOnCooldown();
-			if (!BohOnCooldown /*&& (GetTickCount() - 3000 >= BoHDuration)*/ && BohCheck)
+			bool CastBoh = tcp_connection.CastBoh();
+			if (CastBoh && BohCheck)
 			{
 				input_simulator.SendKeyOrMouse(BohHotkey);
-				BoHDuration = GetTickCount();
 				Sleep(100);
 			}
 

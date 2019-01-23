@@ -55,7 +55,7 @@ public:
 	bool CastWc() { return ElementAt(1, 4); };
 	bool CastMantraHealing() { return ElementAt(2, 4); };
 	bool CastSweepingWind() { return ElementAt(3, 4); };
-	bool BohOnCooldown() { return ElementAt(4, 4); };
+	bool CastBoh() { return ElementAt(4, 4); };
 	bool CastMantraConviction() { return ElementAt(5, 4); };
 	bool CastLotd() { return ElementAt(6, 4); };
 	bool CastBoneArmor() { return ElementAt(7, 4); };
