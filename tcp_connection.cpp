@@ -85,6 +85,7 @@ int TCPConnection::Listen()
 
 		StartupTime = GetTickCount();
 
+		Running = true;
 		// Daten austauschen
 		while (error_code != SOCKET_ERROR)
 		{
@@ -100,6 +101,7 @@ int TCPConnection::Listen()
 				DEBUG_MSG("terminated" << std::endl);
 				MessageBox(NULL, _T("terminated"),
 					_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+				Running = false;
 				break;
 			}
 			if (error_code == SOCKET_ERROR) 
@@ -107,6 +109,7 @@ int TCPConnection::Listen()
 				DEBUG_MSG("error recieved a socket error" << std::endl);
 				MessageBox(NULL, _T("error recieved a socket error"),
 					_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+				Running = false;
 				break;
 			}
 			text[error_code] = '\0';
@@ -115,6 +118,7 @@ int TCPConnection::Listen()
 		DEBUG_MSG("Socket Error" << std::endl);
 		MessageBox(NULL, _T("Socket Error"),
 			_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+		Running = false;
 	}
 }
 
@@ -149,6 +153,7 @@ bool TCPConnection::ElementAt(unsigned  i, unsigned j)
 
 bool TCPConnection::IsReady()
 {
+	if (!Running) return false;
 	if (GetTickCount() - 5000 < StartupTime) return false;
 
 	tcpmutex.lock();

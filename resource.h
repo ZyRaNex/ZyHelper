@@ -62,7 +62,7 @@
 #define IDC_MANTRAOFCONVICTION          1040
 #define IDC_LOTD                        1041
 #define IDC_BONEARMOR                   1042
-#define IDC_ACTIVE                      1043
+#define IDC_ACTIVERUNNING               1043
 #define IDC_POTIONCHECK                 1044
 #define IDC_POTIONTHOTKEY               1045
 #define IDC_SPRINT2                     1046
@@ -100,8 +100,8 @@
 #define IDC_PREPARATIONCHECK            1078
 #define IDC_VENGEANCEHOTKEY             1079
 #define IDC_RAINOFVENGEANCEHOTKEY       1080
-#define IDC_IPHOTKEY4                   1081
 #define IDC_PREPARATIONHOTKEY           1081
+#define IDC_ACTIVE                      1082
 
 // Next default values for new objects
 // 

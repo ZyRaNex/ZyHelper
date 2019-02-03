@@ -120,15 +120,23 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			wiz_macro.UpperBound = 32000;
 		}
 
-		if (!tcp_connection.IsReady()) continue;
-
-		if (tcp_connection.Active() && Active)
+		if (tcp_connection.IsReady())
 		{
 			m_ctlACTIVE.SetCheck(BST_CHECKED);
 		}
 		else
 		{
 			m_ctlACTIVE.SetCheck(BST_UNCHECKED);
+			continue;
+		}
+
+		if (tcp_connection.Active() && Active)
+		{
+			m_ctlACTIVERUNNING.SetCheck(BST_CHECKED);
+		}
+		else
+		{
+			m_ctlACTIVERUNNING.SetCheck(BST_UNCHECKED);
 			continue;
 		}
 
@@ -793,6 +801,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_ACTIVE, m_ctlACTIVE);
+	DDX_Control(pDX, IDC_ACTIVERUNNING, m_ctlACTIVERUNNING);
 	DDX_Control(pDX, IDC_MACROACTIVE, m_ctlMACROACTIVE);
 
 	DDX_Control(pDX, IDC_IPCHECK, m_ctlIPCHECK);

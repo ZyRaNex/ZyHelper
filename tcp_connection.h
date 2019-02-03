@@ -71,6 +71,7 @@ public:
 	bool ElementAt(unsigned  i, unsigned j);
 	std::string content;
 	std::mutex tcpmutex;
+	bool Running;
 
 private:
 	

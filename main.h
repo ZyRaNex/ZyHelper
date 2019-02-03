@@ -21,6 +21,7 @@ class CDiabloCalcFancyDlg : public CDialog {
 public:
 	enum { IDD = IDD_DIALOG1 };
 	CButton m_ctlACTIVE;
+	CButton m_ctlACTIVERUNNING;
 	CButton m_ctlMACROACTIVE;
 
 	CButton	m_ctlIPCHECK;
