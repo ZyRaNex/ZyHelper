@@ -66,7 +66,8 @@ public:
 	bool CastVengeance() { return ElementAt(4, 5); };
 	bool CastRainOfVengeance() { return ElementAt(5, 5); };
 	bool CastPreparation() { return ElementAt(6, 5); };
-		
+	bool CastSkeleMages() { return ElementAt(7, 5);
+	};
 
 	bool ElementAt(unsigned  i, unsigned j);
 	std::string content;

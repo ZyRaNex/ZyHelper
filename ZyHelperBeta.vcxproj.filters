@@ -138,5 +138,8 @@
     <Image Include="SkillPictures\Vengeance.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
+    <Image Include="SkillPictures\p6_necro_raisedead.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
   </ItemGroup>
 </Project>
