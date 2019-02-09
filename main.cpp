@@ -285,6 +285,12 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 				input_simulator.SendKeyOrMouse(SkeleMageHotkey);
 				Sleep(100);
 			}
+			//devour
+			if (DevourCheck)
+			{
+				input_simulator.SendKeyOrMouse(DevourHotkey);
+				Sleep(39);
+			}
 		}
 
 		if (tcp_connection.ImWizard())
@@ -680,6 +686,8 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	else m_ctlPREPARATIONCHECK.SetCheck(BST_UNCHECKED);
 	if (checks[20] == '1') { m_ctlSKELEMAGECHECK.SetCheck(BST_CHECKED); }
 	else m_ctlSKELEMAGECHECK.SetCheck(BST_UNCHECKED);
+	if (checks[21] == '1') { m_ctlDEVOURCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlDEVOURCHECK.SetCheck(BST_UNCHECKED);
 
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
@@ -741,6 +749,8 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlPREPARATIONHOTKEY.SetWindowText(str);
 	str[0] = hotkeys[26];
 	m_ctlSKELEMAGEHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[27];
+	m_ctlDEVOURHOTKEY.SetWindowText(str);
 
 	return TRUE;
 }
@@ -778,6 +788,7 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_RAINOFVENGEANCECHECK, Update)
 	ON_BN_CLICKED(IDC_PREPARATIONCHECK, Update)
 	ON_BN_CLICKED(IDC_SKELEMAGECHECK, Update)
+	ON_BN_CLICKED(IDC_DEVOURCHECK, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -803,6 +814,7 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_RAINOFVENGEANCEHOTKEY, Update)
 	ON_EN_CHANGE(IDC_PREPARATIONHOTKEY, Update)
 	ON_EN_CHANGE(IDC_SKELEMAGEHOTKEY, Update)
+	ON_EN_CHANGE(IDC_DEVOURHOTKEY, Update)
 
 	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
 	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
@@ -839,6 +851,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RAINOFVENGEANCECHECK, m_ctlRAINOFVENGEANCECHECK);
 	DDX_Control(pDX, IDC_PREPARATIONCHECK, m_ctlPREPARATIONCHECK);
 	DDX_Control(pDX, IDC_SKELEMAGECHECK, m_ctlSKELEMAGECHECK);
+	DDX_Control(pDX, IDC_DEVOURCHECK, m_ctlDEVOURCHECK);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -867,6 +880,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RAINOFVENGEANCEHOTKEY, m_ctlRAINOFVENGEANCEHOTKEY);
 	DDX_Control(pDX, IDC_PREPARATIONHOTKEY, m_ctlPREPARATIONHOTKEY);
 	DDX_Control(pDX, IDC_SKELEMAGEHOTKEY, m_ctlSKELEMAGEHOTKEY);
+	DDX_Control(pDX, IDC_DEVOURHOTKEY, m_ctlDEVOURHOTKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
@@ -907,6 +921,7 @@ void CDiabloCalcFancyDlg::Update()
 	RainOfVengeanceCheck = m_ctlRAINOFVENGEANCECHECK.GetCheck();
 	PreparationCheck = m_ctlPREPARATIONCHECK.GetCheck();
 	SkeleMageCheck = m_ctlSKELEMAGECHECK.GetCheck();
+	DevourCheck = m_ctlDEVOURCHECK.GetCheck();
 
 	wiz_macro.BlackholeCheck = BlackholeCheck;
 
@@ -1261,6 +1276,18 @@ void CDiabloCalcFancyDlg::Update()
 		SkeleMageHotkey = ' ';
 	}
 
+	len = m_ctlDEVOURHOTKEY.LineLength(m_ctlDEVOURHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlDEVOURHOTKEY.GetLine(0, buffer, len);
+		DevourHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		DevourHotkey = ' ';
+	}
 
 	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
 	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
@@ -1315,6 +1342,8 @@ void CDiabloCalcFancyDlg::Update()
 	else checks += '0';
 	if (SkeleMageCheck) checks += '1';
 	else checks += '0';
+	if (DevourCheck) checks += '1';
+	else checks += '0';
 
 	hotkeys += IpHotkey;
 	hotkeys += WcHotkey;
@@ -1343,6 +1372,7 @@ void CDiabloCalcFancyDlg::Update()
 	hotkeys += RainOfVengeanceHotkey;
 	hotkeys += PreparationHotkey;
 	hotkeys += SkeleMageHotkey;
+	hotkeys += DevourHotkey;
 
 	std::wofstream file;
 	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);

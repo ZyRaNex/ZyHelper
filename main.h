@@ -45,6 +45,7 @@ public:
 	CButton m_ctlRAINOFVENGEANCECHECK;
 	CButton m_ctlPREPARATIONCHECK;
 	CButton m_ctlSKELEMAGECHECK;
+	CButton m_ctlDEVOURCHECK;
 
 	CEdit m_ctlIPHOTKEY;
 	CEdit m_ctlWCHOTKEY;
@@ -73,6 +74,7 @@ public:
 	CEdit m_ctlRAINOFVENGEANCEHOTKEY;
 	CEdit m_ctlPREPARATIONHOTKEY;
 	CEdit m_ctlSKELEMAGEHOTKEY;
+	CEdit m_ctlDEVOURHOTKEY;
 
 	CEdit m_ctlUPPERBOUND;
 	CEdit m_ctlLOWERBOUND;
@@ -126,8 +128,8 @@ public:
 	HANDLE hThread[5];
 	DWORD dwThreadID[5];
 
-	const std::wstring InitChecks = _T("111101000010110001010");
-	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R441");
+	const std::wstring InitChecks = _T("1111010000101100010101");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R4414");
 	int ChecksLength = InitChecks.size();
 	int HotkeysLength = InitHotkeys.size();
 	bool Active;
@@ -153,7 +155,7 @@ public:
 	bool RainOfVengeanceCheck;
 	bool PreparationCheck;
 	bool SkeleMageCheck;
-
+	bool DevourCheck;
 
 	wchar_t IpHotkey;
 	wchar_t WcHotkey;
@@ -182,6 +184,7 @@ public:
 	wchar_t RainOfVengeanceHotkey;
 	wchar_t PreparationHotkey;
 	wchar_t SkeleMageHotkey;
+	wchar_t DevourHotkey;
 
 	void Update();
 };
