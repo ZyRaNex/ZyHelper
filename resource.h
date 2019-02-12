@@ -28,6 +28,7 @@
 #define IDB_VENGEANCE                   131
 #define IDB_SKELEMAGE                   132
 #define IDB_DEVOUR                      133
+#define IDB_SIM                         134
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -109,14 +110,18 @@
 #define IDC_SKELEMAGEHOTKEY             1085
 #define IDC_DEVOUR                      1086
 #define IDC_DEVOURCHECK                 1087
-#define IDC_SKELEMAGEHOTKEY2            1088
 #define IDC_DEVOURHOTKEY                1088
+#define IDC_SIM                         1089
+#define IDC_SIMCHECK                    1090
+#define IDC_SIMHOTKEY                   1091
+#define IDC_SIMCHECK2                   1092
+#define IDC_SECONDSIM                   1092
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        134
+#define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101

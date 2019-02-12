@@ -46,6 +46,8 @@ public:
 	CButton m_ctlPREPARATIONCHECK;
 	CButton m_ctlSKELEMAGECHECK;
 	CButton m_ctlDEVOURCHECK;
+	CButton m_ctlSIMCHECK;
+	CButton m_ctlSECONDSIM;
 
 	CEdit m_ctlIPHOTKEY;
 	CEdit m_ctlWCHOTKEY;
@@ -75,7 +77,8 @@ public:
 	CEdit m_ctlPREPARATIONHOTKEY;
 	CEdit m_ctlSKELEMAGEHOTKEY;
 	CEdit m_ctlDEVOURHOTKEY;
-
+	CEdit m_ctlSIMHOTKEY;
+	
 	CEdit m_ctlUPPERBOUND;
 	CEdit m_ctlLOWERBOUND;
 	CEdit m_ctlTIME;
@@ -128,8 +131,8 @@ public:
 	HANDLE hThread[5];
 	DWORD dwThreadID[5];
 
-	const std::wstring InitChecks = _T("1111010000101100010101");
-	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R4414");
+	const std::wstring InitChecks = _T("111101000010110001010100");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R4414L");
 	int ChecksLength = InitChecks.size();
 	int HotkeysLength = InitHotkeys.size();
 	bool Active;
@@ -156,6 +159,8 @@ public:
 	bool PreparationCheck;
 	bool SkeleMageCheck;
 	bool DevourCheck;
+	bool SimCheck;
+	bool SecondSim;
 
 	wchar_t IpHotkey;
 	wchar_t WcHotkey;
@@ -185,6 +190,7 @@ public:
 	wchar_t PreparationHotkey;
 	wchar_t SkeleMageHotkey;
 	wchar_t DevourHotkey;
+	wchar_t SimHotkey;
 
 	void Update();
 };
