@@ -48,6 +48,8 @@ public:
 	CButton m_ctlDEVOURCHECK;
 	CButton m_ctlSIMCHECK;
 	CButton m_ctlSECONDSIM;
+	CButton m_ctlHEXING;
+	
 
 	CEdit m_ctlIPHOTKEY;
 	CEdit m_ctlWCHOTKEY;
@@ -111,11 +113,17 @@ public:
 		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
 		return This->WizMacroThread();
 	}
+	static DWORD WINAPI StaticHexingMacro(void* Param)
+	{
+		CDiabloCalcFancyDlg* This = (CDiabloCalcFancyDlg*)Param;
+		return This->HexingMacroThread();
+	}
 	DWORD StartTcpConnectionThread();
 	DWORD PrintThread();
 	DWORD DoLogicThread();
 	DWORD CoeReaderThread();
 	DWORD WizMacroThread();
+	DWORD HexingMacroThread();
 	~CDiabloCalcFancyDlg();
 
 protected:
@@ -128,10 +136,10 @@ public:
 	InputSimulator input_simulator;
 	WizMacro wiz_macro;
 
-	HANDLE hThread[5];
-	DWORD dwThreadID[5];
+	HANDLE hThread[6];
+	DWORD dwThreadID[6];
 
-	const std::wstring InitChecks = _T("111101000010110001010100");
+	const std::wstring InitChecks = _T("1111010000101100010101000");
 	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234RLR568R4414L");
 	int ChecksLength = InitChecks.size();
 	int HotkeysLength = InitHotkeys.size();
@@ -161,6 +169,7 @@ public:
 	bool DevourCheck;
 	bool SimCheck;
 	bool SecondSim;
+	bool Hexing;
 
 	wchar_t IpHotkey;
 	wchar_t WcHotkey;

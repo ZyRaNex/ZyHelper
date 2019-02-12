@@ -114,8 +114,9 @@
 #define IDC_SIM                         1089
 #define IDC_SIMCHECK                    1090
 #define IDC_SIMHOTKEY                   1091
-#define IDC_SIMCHECK2                   1092
 #define IDC_SECONDSIM                   1092
+#define IDC_SECONDSIM2                  1093
+#define IDC_HEXING                      1093
 
 // Next default values for new objects
 // 

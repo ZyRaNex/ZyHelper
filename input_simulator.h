@@ -23,7 +23,10 @@ public:
 	void SendKeyUp(wchar_t key);
 	void SendMouse(MouseClick Click);
 	void SendMouseWithoutMove(MouseClick Click);
+	void MoveMouse();
 	~InputSimulator();
+
+	bool MouseMoveState;
 };
 
 #endif  // INPUT_SIMULATOR_H_

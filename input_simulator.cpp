@@ -7,6 +7,7 @@
 
 InputSimulator::InputSimulator()
 {
+	MouseMoveState = false;
 }
 
 
@@ -64,6 +65,9 @@ int InputSimulator::CharToVK(wchar_t input)
 		break;
 	case 'f':
 		return 0x46;
+		break;
+	case 'u':
+		return 0x55;
 		break;
 	}
 	return 0;
@@ -184,20 +188,9 @@ void InputSimulator::SendMouse(MouseClick Click)
 
 	POINT CursorPos;
 	GetCursorPos(&CursorPos);
-
 	Sleep(1);
-
-	ip.type = INPUT_MOUSE;
-	ip.mi.dx = (700 + 1) * (65535 / GetSystemMetrics(SM_CXSCREEN));
-	ip.mi.dy = (500 + 1) * (65535 / GetSystemMetrics(SM_CYSCREEN));
-	ip.mi.mouseData = 0;
-	ip.mi.time = 0;
-	ip.mi.dwExtraInfo = 0;
-	ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-	SendInput(1, &ip, sizeof(INPUT));
-
+	SetCursorPos(700, 500);
 	Sleep(1);
-
 	ip.type = INPUT_MOUSE;
 	ip.mi.dx = 0;
 	ip.mi.dy = 0;
@@ -215,9 +208,7 @@ void InputSimulator::SendMouse(MouseClick Click)
 	}
 	SendInput(1, &ip, sizeof(INPUT));
 
-
 	Sleep(1);
-
 	ip.type = INPUT_MOUSE;
 	ip.mi.dx = 0;
 	ip.mi.dy = 0;
@@ -233,19 +224,8 @@ void InputSimulator::SendMouse(MouseClick Click)
 		ip.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
 	}
 	SendInput(1, &ip, sizeof(INPUT));
-	// Set up a generic keyboard event.
-
 	Sleep(1);
-
-	ip.type = INPUT_MOUSE;
-	ip.mi.dx = (CursorPos.x + 3) * (65535 / GetSystemMetrics(SM_CXSCREEN));
-	ip.mi.dy = (CursorPos.y + 5) * (65535 / GetSystemMetrics(SM_CYSCREEN));
-	ip.mi.mouseData = 0;
-	ip.mi.time = 0;
-	ip.mi.dwExtraInfo = 0;
-	ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
-	SendInput(1, &ip, sizeof(INPUT));
-
+	SetCursorPos(CursorPos.x, CursorPos.y);
 	Sleep(1);
 
 	if (Click == Left)//hold force stand still
@@ -311,6 +291,38 @@ void InputSimulator::SendMouseWithoutMove(MouseClick Click)
 	{
 		SendKeyUp(VK_SHIFT);
 	}
+}
+
+void InputSimulator::MoveMouse()
+{
+	INPUT ip;
+
+	ZeroMemory(&ip, sizeof(ip));
+
+	POINT CursorPos;
+	GetCursorPos(&CursorPos);
+
+	Sleep(1);
+
+	if (MouseMoveState)
+	{
+		SetCursorPos(820, 507);
+	}
+	else
+	{
+		SetCursorPos(1100, 507);
+	}
+	Sleep(10);
+
+	MouseMoveState = !MouseMoveState;
+	
+	wchar_t ForceMove = TEXT('u');
+	SendKey(ForceMove);
+	Sleep(1);
+
+	SetCursorPos(CursorPos.x, CursorPos.y);
+	Sleep(1);
+
 }
 
 InputSimulator::~InputSimulator()
