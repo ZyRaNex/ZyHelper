@@ -3,9 +3,7 @@ This programm automates button presses
 
 download at
 
-[ZyHelperBeta.exe](https://github.com/ZyRaNex/ZyRaNex.github.io/raw/master/ZyHelperBeta.exe)
-
-[ZyHelperBetaAdapter.cs](https://github.com/ZyRaNex/ZyRaNex.github.io/raw/master/ZyHelperBetaAdapter.cs)
+[ZyHelperBeta](https://github.com/ZyRaNex/ZyHelper/releases)
 
 # Install
 Make a new folder named "Zy" in *Your TurboHUD Path*\plugins\Zy and place the "ZyHelperBetaAdapter.cs" File into the folder.
