@@ -5,6 +5,7 @@
 
 #include <queue>
 #include <mutex>
+#include <windows.h>
 
 enum MouseClick {Left, Right};
 
@@ -27,6 +28,7 @@ public:
 	~InputSimulator();
 
 	bool MouseMoveState;
+	POINT LastCursorPos;
 };
 
 #endif  // INPUT_SIMULATOR_H_

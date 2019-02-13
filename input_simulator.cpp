@@ -8,6 +8,8 @@
 InputSimulator::InputSimulator()
 {
 	MouseMoveState = false;
+	LastCursorPos.x = 0;
+	LastCursorPos.y = 0;
 }
 
 
@@ -295,6 +297,8 @@ void InputSimulator::SendMouseWithoutMove(MouseClick Click)
 
 void InputSimulator::MoveMouse()
 {
+	if (GetAsyncKeyState(CharToVK('6'))) return;
+
 	INPUT ip;
 
 	ZeroMemory(&ip, sizeof(ip));
@@ -302,6 +306,15 @@ void InputSimulator::MoveMouse()
 	POINT CursorPos;
 	GetCursorPos(&CursorPos);
 
+	LONG dist1 = abs(CursorPos.x - 820) + abs(CursorPos.y - 507);
+	LONG dist2 = abs(CursorPos.x - 1100) + abs(CursorPos.y - 507);
+
+	if (dist1 <= 100 || dist2 <= 100)
+	{
+		CursorPos = LastCursorPos;
+	}
+
+	LastCursorPos = CursorPos;
 	Sleep(1);
 
 	if (MouseMoveState)
@@ -312,12 +325,39 @@ void InputSimulator::MoveMouse()
 	{
 		SetCursorPos(1100, 507);
 	}
-	Sleep(10);
 
+	//Sleep(100);
+	Sleep(10);
 	MouseMoveState = !MouseMoveState;
 	
 	wchar_t ForceMove = TEXT('u');
-	SendKey(ForceMove);
+	//SendKey(ForceMove);
+
+
+	//////////////////////////////////////////////////////////
+
+	ZeroMemory(&ip, sizeof(ip));
+
+	Sleep(1);
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = 0;
+	ip.mi.dy = 0;
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+		ip.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+	SendInput(1, &ip, sizeof(INPUT));
+
+	Sleep(1);
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = 0;
+	ip.mi.dy = 0;
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+		ip.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
+	SendInput(1, &ip, sizeof(INPUT));
+	////////////////////////////////////////////////
 	Sleep(1);
 
 	SetCursorPos(CursorPos.x, CursorPos.y);

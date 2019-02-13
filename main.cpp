@@ -284,6 +284,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			{
 				input_simulator.SendKeyOrMouseWithoutMove(SkeleMageHotkey);
 				Sleep(100);
+				if (Hexing)
+				{
+					input_simulator.MoveMouse();
+				}
 			}
 			//devour
 			if (DevourCheck)
