@@ -20,3 +20,5 @@ Press 6 to adjust the coe timer (once per rift floor and on death).
 Press 8 to toggle the macro on or off.
 
 These are the default keys but they can be changed.
+
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](X3F8VW4Q54LX4)
