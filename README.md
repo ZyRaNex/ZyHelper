@@ -21,4 +21,4 @@ Press 8 to toggle the macro on or off.
 
 These are the default keys but they can be changed.
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](X3F8VW4Q54LX4)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X3F8VW4Q54LX4)
