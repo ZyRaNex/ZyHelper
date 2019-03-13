@@ -206,7 +206,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		return;
 	}
 
-	if (BlackholeCheck)
+	if (BlackholeCheck && !ArchonCheck)
 	{
 		if(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
 		{
@@ -375,7 +375,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			input_simulator->SendKeyUp(ElectrocuteHotkey);
 		}
 	}
-	else if (ArchonCheck)/////////////////////DEBUG
+	else if (ArchonCheck)
 	{
 		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
 		{
@@ -384,7 +384,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
-				Sleep(2300);/////////////////////
+				Sleep(2300);
 				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 				Sleep(1250);
 				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
@@ -394,9 +394,8 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
-				Sleep(2300);/////////////////////
+				Sleep(2300);
 				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-				//Sleep(1250);
 				Sleep(1166);
 				
 				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
