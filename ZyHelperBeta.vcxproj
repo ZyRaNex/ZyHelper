@@ -148,14 +148,13 @@
     <ResourceCompile Include="ZyHelperBeta.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bitmap1.bmp" />
-    <Image Include="bitmap2.bmp" />
-    <Image Include="skillpictures\bitmap1.bmp" />
+    <Image Include="SkillPictures\ArcaneBlast.bmp" />
     <Image Include="SkillPictures\BlackHoleIcon.bmp" />
     <Image Include="SkillPictures\BoneArmorNIcon.bmp" />
     <Image Include="SkillPictures\Bottomless_Potion_of_Kulle-Aid.bmp" />
     <Image Include="SkillPictures\Breath_of_Heaven.bmp" />
     <Image Include="SkillPictures\Epiphany.bmp" />
+    <Image Include="SkillPictures\IconArchon.bmp" />
     <Image Include="SkillPictures\IconDisintegrate.bmp" />
     <Image Include="SkillPictures\IconElectrocute.bmp" />
     <Image Include="SkillPictures\IconLandoftheDead.bmp" />

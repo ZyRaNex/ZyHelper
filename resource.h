@@ -29,6 +29,8 @@
 #define IDB_SKELEMAGE                   132
 #define IDB_DEVOUR                      133
 #define IDB_SIM                         134
+#define IDB_ARCANEBLAST                 135
+#define IDB_ARCHON                      136
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -115,14 +117,20 @@
 #define IDC_SIMCHECK                    1090
 #define IDC_SIMHOTKEY                   1091
 #define IDC_SECONDSIM                   1092
-#define IDC_SECONDSIM2                  1093
 #define IDC_HEXING                      1093
+#define IDC_ARCHONECHECK                1094
+#define IDC_ARCHON                      1095
+#define IDC_ARCHONHOTKEY                1096
+#define IDC_ARCANEBLAST                 1097
+#define IDC_ARCANEBLASTCHECK            1098
+#define IDC_ARCHONHOTKEY2               1099
+#define IDC_ARCANEBLASTHOTKEY           1099
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        135
+#define _APS_NEXT_RESOURCE_VALUE        137
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101

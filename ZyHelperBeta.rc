@@ -96,7 +96,7 @@ BEGIN
     CONTROL         IDB_BONEARMOR,IDC_BONEARMOR,"Static",SS_BITMAP,61,99,13,12
     CONTROL         "",IDC_ACTIVERUNNING,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,0,9,16,10
     LTEXT           "Active",IDC_STATIC,0,0,21,8
-    LTEXT           "Version 1.2.11",IDC_STATIC,504,294,48,8
+    LTEXT           "Version 1.2.12",IDC_STATIC,504,294,48,8
     CONTROL         "",IDC_POTIONCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,171,18,16,10
     EDITTEXT        IDC_POTIONTHOTKEY,171,30,14,14,ES_AUTOHSCROLL
     CONTROL         IDB_POTION,IDC_SPRINT2,"Static",SS_BITMAP,171,3,13,12
@@ -159,6 +159,12 @@ BEGIN
     CONTROL         "",IDC_SECONDSIM,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,153,114,16,10
     LTEXT           "Sim",IDC_STATIC,153,105,12,8,0,WS_EX_TRANSPARENT
     CONTROL         "",IDC_HEXING,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,177,114,16,10
+    CONTROL         "",IDC_ARCHONECHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,204,162,16,10
+    CONTROL         IDB_ARCHON,IDC_ARCHON,"Static",SS_BITMAP,204,147,13,12
+    EDITTEXT        IDC_ARCHONHOTKEY,204,174,14,14,ES_AUTOHSCROLL
+    CONTROL         IDB_ARCANEBLAST,IDC_ARCANEBLAST,"Static",SS_BITMAP,228,147,13,12
+    CONTROL         "",IDC_ARCANEBLASTCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,228,162,16,10
+    EDITTEXT        IDC_ARCANEBLASTHOTKEY,228,174,14,14,ES_AUTOHSCROLL
 END
 
 
@@ -259,6 +265,10 @@ IDB_SKELEMAGE           BITMAP                  "SkillPictures\\p6_necro_raisede
 IDB_DEVOUR              BITMAP                  "SkillPictures\\p6_necro_devour.bmp"
 
 IDB_SIM                 BITMAP                  "SkillPictures\\p6_necro_simulacrum.bmp"
+
+IDB_ARCANEBLAST         BITMAP                  "SkillPictures\\ArcaneBlast.bmp"
+
+IDB_ARCHON              BITMAP                  "SkillPictures\\IconArchon.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////

@@ -335,6 +335,14 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 				input_simulator.SendKeyOrMouse(MagicWeaponHotkey);
 				Sleep(100);
 			}
+
+			//Magic Weapon
+			bool CastArcaneBlast = tcp_connection.CastArcaneBlast();
+			if (CastArcaneBlast && ArcaneBlastCheck)
+			{
+				input_simulator.SendKeyOrMouse(ArcaneBlastHotkey);
+				Sleep(100);
+			}
 		}
 
 		if (tcp_connection.ImDh())
@@ -611,7 +619,7 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 		WSADATA wsadata;
 		int error = WSAStartup(0x0202, &wsadata);
 		if (error == 1) return 1;
-		std::cout << "WSA started";
+		std::cout << "WSA started" << std::endl;
 		SOCKET logsocket;
 		sockaddr_in target;
 		target.sin_family = AF_INET;
@@ -770,7 +778,10 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	else m_ctlSECONDSIM.SetCheck(BST_UNCHECKED);
 	if (checks[24] == '1') { m_ctlHEXING.SetCheck(BST_CHECKED); }
 	else m_ctlHEXING.SetCheck(BST_UNCHECKED);
-
+	if (checks[25] == '1') { m_ctlARCHONCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlARCHONCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[26] == '1') { m_ctlARCANEBLASTCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlARCANEBLASTCHECK.SetCheck(BST_UNCHECKED);
 
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
@@ -836,7 +847,10 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlDEVOURHOTKEY.SetWindowText(str);
 	str[0] = hotkeys[28];
 	m_ctlSIMHOTKEY.SetWindowText(str);
-
+	str[0] = hotkeys[29];
+	m_ctlARCHONHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[30];
+	m_ctlARCANEBLASTHOTKEY.SetWindowText(str);
 	return TRUE;
 }
 
@@ -877,6 +891,8 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_SIMCHECK, Update)
 	ON_BN_CLICKED(IDC_SECONDSIM, Update)
 	ON_BN_CLICKED(IDC_HEXING, Update)
+	ON_BN_CLICKED(IDC_ARCHONECHECK, Update)
+	ON_BN_CLICKED(IDC_ARCANEBLASTCHECK, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -904,6 +920,8 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_SKELEMAGEHOTKEY, Update)
 	ON_EN_CHANGE(IDC_DEVOURHOTKEY, Update)
 	ON_EN_CHANGE(IDC_SIMHOTKEY, Update)
+	ON_EN_CHANGE(IDC_ARCHONHOTKEY, Update)
+	ON_EN_CHANGE(IDC_ARCANEBLASTHOTKEY, Update)
 
 	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
 	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
@@ -944,6 +962,8 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SIMCHECK, m_ctlSIMCHECK);
 	DDX_Control(pDX, IDC_SECONDSIM, m_ctlSECONDSIM);
 	DDX_Control(pDX, IDC_HEXING, m_ctlHEXING);
+	DDX_Control(pDX, IDC_ARCHONECHECK, m_ctlARCHONCHECK);
+	DDX_Control(pDX, IDC_ARCANEBLASTCHECK, m_ctlARCANEBLASTCHECK);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -974,6 +994,8 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SKELEMAGEHOTKEY, m_ctlSKELEMAGEHOTKEY);
 	DDX_Control(pDX, IDC_DEVOURHOTKEY, m_ctlDEVOURHOTKEY);
 	DDX_Control(pDX, IDC_SIMHOTKEY, m_ctlSIMHOTKEY);
+	DDX_Control(pDX, IDC_ARCHONHOTKEY, m_ctlARCHONHOTKEY);
+	DDX_Control(pDX, IDC_ARCANEBLASTHOTKEY, m_ctlARCANEBLASTHOTKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
@@ -1018,8 +1040,11 @@ void CDiabloCalcFancyDlg::Update()
 	SimCheck = m_ctlSIMCHECK.GetCheck();
 	SecondSim = m_ctlSECONDSIM.GetCheck();
 	Hexing = m_ctlHEXING.GetCheck();
+	ArchonCheck = m_ctlARCHONCHECK.GetCheck();
+	ArcaneBlastCheck = m_ctlARCANEBLASTCHECK.GetCheck();
 
 	wiz_macro.BlackholeCheck = BlackholeCheck;
+	wiz_macro.ArchonCheck = ArchonCheck;
 
 	len = m_ctlIPHOTKEY.LineLength(m_ctlIPHOTKEY.LineIndex(0));
 	if (len > 0)
@@ -1398,13 +1423,39 @@ void CDiabloCalcFancyDlg::Update()
 		SimHotkey = ' ';
 	}
 
+	len = m_ctlARCHONHOTKEY.LineLength(m_ctlARCHONHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlARCHONHOTKEY.GetLine(0, buffer, len);
+		ArchonHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ArchonHotkey = ' ';
+	}
+
+	len = m_ctlARCANEBLASTHOTKEY.LineLength(m_ctlARCANEBLASTHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlARCANEBLASTHOTKEY.GetLine(0, buffer, len);
+		ArcaneBlastHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ArcaneBlastHotkey = ' ';
+	}
+
 	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
 	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
 	wiz_macro.MeteorHotkey = MeteorHotkey;
 	wiz_macro.DisintegrateHotkey = DisintegrateHotkey;
 	wiz_macro.BlackholeHotkey = BlackholeHotkey;
 	wiz_macro.MacroHotkey = MacroHotkey;
-
+	wiz_macro.ArchonHotkey = ArchonHotkey;
 
 	std::wstring checks;
 	std::wstring hotkeys;
@@ -1459,7 +1510,10 @@ void CDiabloCalcFancyDlg::Update()
 	else checks += '0';
 	if (Hexing) checks += '1';
 	else checks += '0';
-
+	if (ArchonCheck) checks += '1';
+	else checks += '0';
+	if (ArcaneBlastCheck) checks += '1';
+	else checks += '0';
 
 	hotkeys += IpHotkey;
 	hotkeys += WcHotkey;
@@ -1490,6 +1544,8 @@ void CDiabloCalcFancyDlg::Update()
 	hotkeys += SkeleMageHotkey;
 	hotkeys += DevourHotkey;
 	hotkeys += SimHotkey;
+	hotkeys += ArchonHotkey;
+	hotkeys += ArcaneBlastHotkey;
 
 	std::wofstream file;
 	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);

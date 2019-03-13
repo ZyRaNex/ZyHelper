@@ -24,6 +24,7 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 	DWORD OldDistance = (UpperBound - LowerBound + 16000) % 16000;
 	DWORD Time = GetTickCount() % 16000;
 	DWORD Distance = 0;
+	int BoundDistance;
 
 	if (LowerBound == 32000)
 	{
@@ -34,9 +35,27 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		OldDistance = 100000;
 	}
 
-	
+
 	if (tcp_connection->ConventionLight())
 	{
+		BoundDistance = abs((int)UpperBound - (int)LowerBound);
+
+		if (BoundDistance > 8000)
+		{
+			TimeShift = (UpperBound + LowerBound + 16000) / 2;
+		}
+		else
+		{
+			TimeShift = (UpperBound + LowerBound) / 2;
+		}
+		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
+		if (AdjustedTime > (4000 + OldDistance))
+		{
+			UpperBound = (Time + 32000) % 16000;
+		}
+		//0-4000 lightning
+
+
 		Distance = (Time - LowerBound + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
@@ -52,6 +71,23 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 
 	if (tcp_connection->ConventionArcane())
 	{
+		BoundDistance = abs((int)UpperBound - (int)LowerBound);
+
+		if (BoundDistance > 8000)
+		{
+			TimeShift = (UpperBound + LowerBound + 16000) / 2;
+		}
+		else
+		{
+			TimeShift = (UpperBound + LowerBound) / 2;
+		}
+		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
+		if (AdjustedTime > (8000 + OldDistance) || AdjustedTime < (4000 - OldDistance))
+		{
+			UpperBound = (Time + 32000) % 16000;
+		}
+		//4000-8000 Arcane
+
 		Distance = (Time - LowerBound - 4000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
@@ -67,6 +103,22 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 
 	if (tcp_connection->ConventionCold())
 	{
+		BoundDistance = abs((int)UpperBound - (int)LowerBound);
+
+		if (BoundDistance > 8000)
+		{
+			TimeShift = (UpperBound + LowerBound + 16000) / 2;
+		}
+		else
+		{
+			TimeShift = (UpperBound + LowerBound) / 2;
+		}
+		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
+		if (AdjustedTime > (12000 + OldDistance) || AdjustedTime < (8000 - OldDistance))
+		{
+			UpperBound = (Time + 32000) % 16000;
+		}
+		//8000-12000 Cold
 
 		Distance = (Time - LowerBound - 8000 + 32000) % 16000;
 		if (Distance < OldDistance)
@@ -83,6 +135,23 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 
 	if (tcp_connection->ConventionFire())
 	{
+		BoundDistance = abs((int)UpperBound - (int)LowerBound);
+
+		if (BoundDistance > 8000)
+		{
+			TimeShift = (UpperBound + LowerBound + 16000) / 2;
+		}
+		else
+		{
+			TimeShift = (UpperBound + LowerBound) / 2;
+		}
+		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
+		if (AdjustedTime < (12000 - OldDistance))
+		{
+			UpperBound = (Time + 32000) % 16000;
+		}
+		//12000-16000 Cold
+
 		Distance = (Time - LowerBound - 12000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
@@ -96,7 +165,7 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		}
 	}
 
-	int BoundDistance = abs((int)UpperBound - (int)LowerBound);
+	BoundDistance = abs((int)UpperBound - (int)LowerBound);
 
 	if (BoundDistance > 8000)
 	{
@@ -304,6 +373,42 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			Sleep(400);
 			input_simulator->SendKeyUp(DisintegrateHotkey);
 			input_simulator->SendKeyUp(ElectrocuteHotkey);
+		}
+	}
+	else if (ArchonCheck)/////////////////////DEBUG
+	{
+		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
+		{
+			DWORD Convention = AdjustedTime;
+			if (Convention > 12500 && Convention < 14500)//occu
+			{
+				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
+				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				Sleep(2300);/////////////////////
+				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+				Sleep(1250);
+				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
+			}
+			
+			if (Convention > 3000 && Convention < 5000)
+			{
+				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
+				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				Sleep(2300);/////////////////////
+				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+				//Sleep(1250);
+				Sleep(1166);
+				
+				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
+				input_simulator->SendKeyOrMouseWithoutMove(ArchonHotkey);
+
+				for (int i = 0; i < 10; i++)
+				{
+					input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
+					input_simulator->SendKeyOrMouseWithoutMove(ArchonHotkey);
+					Sleep(10);
+				}
+			}
 		}
 	}
 	else

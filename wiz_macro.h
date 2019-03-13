@@ -26,8 +26,10 @@ public:
 	wchar_t DisintegrateHotkey;
 	wchar_t BlackholeHotkey;
 	wchar_t MacroHotkey;
+	wchar_t ArchonHotkey;
 
 	bool BlackholeCheck;
+	bool ArchonCheck;
 	bool MacroIsRunning;
 
 	bool DooingArcane;

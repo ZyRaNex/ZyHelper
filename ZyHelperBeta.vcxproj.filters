@@ -57,12 +57,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="bitmap1.bmp">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
-    <Image Include="bitmap2.bmp">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
     <Image Include="SkillPictures\IP.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
@@ -105,9 +99,6 @@
     <Image Include="SkillPictures\Bottomless_Potion_of_Kulle-Aid.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
-    <Image Include="skillpictures\bitmap1.bmp">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
     <Image Include="SkillPictures\BlackHoleIcon.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
@@ -145,6 +136,12 @@
       <Filter>Ressourcendateien</Filter>
     </Image>
     <Image Include="SkillPictures\p6_necro_simulacrum.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\ArcaneBlast.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\IconArchon.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
   </ItemGroup>
