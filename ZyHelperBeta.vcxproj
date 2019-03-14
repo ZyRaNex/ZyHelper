@@ -163,7 +163,6 @@
     <Image Include="SkillPictures\IconRainVengeance.bmp" />
     <Image Include="SkillPictures\IconWaveForce.bmp" />
     <Image Include="SkillPictures\Ignore_Pain.bmp" />
-    <Image Include="SkillPictures\IP.bmp" />
     <Image Include="SkillPictures\Magic_Weapon.bmp" />
     <Image Include="SkillPictures\Mantra_of_Conviction.bmp" />
     <Image Include="SkillPictures\Mantra_of_Healing.bmp" />

@@ -78,7 +78,7 @@ BEGIN
     EDITTEXT        IDC_BOHHOTKEY,109,78,14,14,ES_AUTOHSCROLL
     CONTROL         "",IDC_MANTRACONVICTIONCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,133,66,16,10
     EDITTEXT        IDC_MANTRACONVICTIONHOTKEY,133,78,14,14,ES_AUTOHSCROLL
-    CONTROL         IDB_IP,IDC_IP,"Static",SS_BITMAP,37,3,15,14,WS_EX_STATICEDGE
+    CONTROL         IDB_IP,IDC_IP,"Static",SS_BITMAP,37,3,15,14
     CONTROL         IDB_WC,IDC_WC,"Static",SS_BITMAP,61,3,13,12
     CONTROL         IDB_FALTER,IDC_FALTER,"Static",SS_BITMAP,85,3,13,12
     CONTROL         IDB_BERSERKER,IDC_BERSERKER,"Static",SS_BITMAP,109,3,13,12
@@ -214,7 +214,7 @@ END
 // Bitmap
 //
 
-IDB_IP                  BITMAP                  "C:\\Users\\Someone\\source\\repos\\ZyHelperBeta\\ZyHelperBeta\\SkillPictures\\Ignore_Pain.bmp"
+IDB_IP                  BITMAP                  "SkillPictures\\Ignore_Pain.bmp"
 
 IDB_SPRINT              BITMAP                  "SkillPictures\\Sprint.bmp"
 

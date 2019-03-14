@@ -57,9 +57,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="SkillPictures\IP.bmp">
-      <Filter>Ressourcendateien</Filter>
-    </Image>
     <Image Include="SkillPictures\Ignore_Pain.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
