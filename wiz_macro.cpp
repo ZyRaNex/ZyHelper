@@ -386,11 +386,11 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
 				Sleep(2300);
 				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-				Sleep(1250);
+				Sleep(1166);
 				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
 			}
 			
-			if (Convention > 3000 && Convention < 5000)
+			if (Convention > 3000 && Convention < 3400)
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
