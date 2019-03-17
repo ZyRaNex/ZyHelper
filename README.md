@@ -21,7 +21,7 @@ If its not checked there is no connction to TH. Check your firewall settings if 
 # How to use
 For non-wizard:
 
-Check the skills you want to cast and give it the right hotkeys. L = leftclick; R = rightclick
+Check the skills you want to cast and give it the right hotkeys. L = leftclick; R = rightclick.
 
 for Wizard:
 
@@ -33,11 +33,9 @@ Hold down 5 to shoot. If you have enough time the helper will shoot a meteor to 
 
 The toggle version of the macro does not work with Archon Macro, only with the old Macro. 
 
-If you check Archon and press the toggle key (8 by default) and have Archon checked it will just electrocute and do nothing else. 
-
 For the Archon macro you have to press electrocute yourself. This is so you can move into oculus easily.
 
-You can just hold down both buttons while shooting
+You can just hold down both buttons while shooting.
 
 On Necro:
 
