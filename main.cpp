@@ -385,6 +385,11 @@ DWORD CDiabloCalcFancyDlg::CoeReaderThread()
 	while (true)
 	{
 		Sleep(127);
+		HWND handle = ::GetForegroundWindow();
+		int capacity = ::GetWindowTextLength(handle) * 2;
+		wchar_t NewName[128];
+		::GetWindowText(handle, NewName, 128);
+		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 		if (!tcp_connection.IsReady())
 		{
 			Sleep(100);
@@ -430,7 +435,7 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 {
 	while (true)
 	{
-		Sleep(10);
+		Sleep(5);
 		HWND handle = ::GetForegroundWindow();
 		int capacity = ::GetWindowTextLength(handle) * 2;
 		wchar_t NewName[128];

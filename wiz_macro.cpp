@@ -49,8 +49,9 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 			TimeShift = (UpperBound + LowerBound) / 2;
 		}
 		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
-		if (AdjustedTime > (4000 + OldDistance))
+		if (AdjustedTime > (4000 + 1000))
 		{
+			DEBUG_MSG("11" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
 		}
 		//0-4000 lightning
@@ -59,12 +60,14 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("12" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
 		}
 
 		Distance = (UpperBound + 4000 - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("13" << std::endl);
 			LowerBound = (Time - 4000 + 32000) % 16000;
 		}
 	}
@@ -82,8 +85,9 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 			TimeShift = (UpperBound + LowerBound) / 2;
 		}
 		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
-		if (AdjustedTime > (8000 + OldDistance) || AdjustedTime < (4000 - OldDistance))
+		if (AdjustedTime > (8000 + 1000) || AdjustedTime < (4000 - 1000))
 		{
+			DEBUG_MSG("21" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
 		}
 		//4000-8000 Arcane
@@ -91,12 +95,14 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound - 4000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("22" << std::endl);
 			UpperBound = (Time - 4000 + 32000) % 16000;
 		}
 
 		Distance = (UpperBound + 8000 - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("23" << std::endl);
 			LowerBound = (Time - 8000 + 32000) % 16000;
 		}
 	}
@@ -114,8 +120,9 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 			TimeShift = (UpperBound + LowerBound) / 2;
 		}
 		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
-		if (AdjustedTime > (12000 + OldDistance) || AdjustedTime < (8000 - OldDistance))
+		if (AdjustedTime > (12000 + 1000) || AdjustedTime < (8000 - 1000))
 		{
+			DEBUG_MSG("31" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
 		}
 		//8000-12000 Cold
@@ -123,12 +130,14 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound - 8000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("32" << std::endl);
 			UpperBound = (Time - 8000 + 32000) % 16000;
 		}
 
 		Distance = (UpperBound + 12000 - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("33" << std::endl);
 			LowerBound = (Time - 12000 + 32000) % 16000;
 		}
 	}
@@ -146,8 +155,9 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 			TimeShift = (UpperBound + LowerBound) / 2;
 		}
 		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
-		if (AdjustedTime < (12000 - OldDistance))
+		if (AdjustedTime < (12000 - 1000))
 		{
+			DEBUG_MSG("41" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
 		}
 		//12000-16000 Cold
@@ -155,12 +165,14 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound - 12000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("42" << std::endl);
 			UpperBound = (Time - 12000 + 32000) % 16000;
 		}
 
 		Distance = (UpperBound - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
+			DEBUG_MSG("43" << std::endl);
 			LowerBound = (Time + 32000) % 16000;
 		}
 	}
@@ -380,7 +392,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
 		{
 			DWORD Convention = AdjustedTime;
-			if (Convention > 12500 && Convention < 14500)//occu
+			if (Convention > 11500 && Convention < 12500)//occu
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
@@ -390,7 +402,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
 			}
 			
-			if (Convention > 3000 && Convention < 3400)
+			if (Convention > 2000 && Convention < 2400)
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
