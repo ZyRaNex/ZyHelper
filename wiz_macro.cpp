@@ -49,7 +49,7 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 			TimeShift = (UpperBound + LowerBound) / 2;
 		}
 		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
-		if (AdjustedTime > (4000 + 1000))
+		if (AdjustedTime > (4000 + 1000) && AdjustedTime < (1600 - 1000))
 		{
 			DEBUG_MSG("11" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
@@ -60,19 +60,18 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("12" << std::endl);
+			DEBUG_MSG("12" << UpperBound << std::endl);
 			UpperBound = (Time + 32000) % 16000;
 		}
 
 		Distance = (UpperBound + 4000 - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("13" << std::endl);
+			DEBUG_MSG("13" << LowerBound << std::endl);
 			LowerBound = (Time - 4000 + 32000) % 16000;
 		}
 	}
-
-	if (tcp_connection->ConventionArcane())
+	else if (tcp_connection->ConventionArcane())
 	{
 		BoundDistance = abs((int)UpperBound - (int)LowerBound);
 
@@ -95,19 +94,18 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound - 4000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("22" << std::endl);
+			DEBUG_MSG("22" << UpperBound << std::endl);
 			UpperBound = (Time - 4000 + 32000) % 16000;
 		}
 
 		Distance = (UpperBound + 8000 - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("23" << std::endl);
+			DEBUG_MSG("23" << LowerBound << std::endl);
 			LowerBound = (Time - 8000 + 32000) % 16000;
 		}
 	}
-
-	if (tcp_connection->ConventionCold())
+	else if (tcp_connection->ConventionCold())
 	{
 		BoundDistance = abs((int)UpperBound - (int)LowerBound);
 
@@ -130,19 +128,18 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound - 8000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("32" << std::endl);
+			DEBUG_MSG("32" << UpperBound << std::endl);
 			UpperBound = (Time - 8000 + 32000) % 16000;
 		}
 
 		Distance = (UpperBound + 12000 - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("33" << std::endl);
+			DEBUG_MSG("33" << LowerBound << std::endl);
 			LowerBound = (Time - 12000 + 32000) % 16000;
 		}
 	}
-
-	if (tcp_connection->ConventionFire())
+	else if (tcp_connection->ConventionFire())
 	{
 		BoundDistance = abs((int)UpperBound - (int)LowerBound);
 
@@ -155,7 +152,7 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 			TimeShift = (UpperBound + LowerBound) / 2;
 		}
 		AdjustedTime = (GetTickCount() - TimeShift) % 16000;
-		if (AdjustedTime < (12000 - 1000))
+		if (AdjustedTime < (12000 - 1000) && AdjustedTime > (0 + 1000))
 		{
 			DEBUG_MSG("41" << std::endl);
 			UpperBound = (Time + 32000) % 16000;
@@ -165,14 +162,14 @@ void WizMacro::GetCoe(TCPConnection* tcp_connection)
 		Distance = (Time - LowerBound - 12000 + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("42" << std::endl);
+			DEBUG_MSG("42" << UpperBound << std::endl);
 			UpperBound = (Time - 12000 + 32000) % 16000;
 		}
 
 		Distance = (UpperBound - Time + 32000) % 16000;
 		if (Distance < OldDistance)
 		{
-			DEBUG_MSG("43" << std::endl);
+			DEBUG_MSG("43" << LowerBound << std::endl);
 			LowerBound = (Time + 32000) % 16000;
 		}
 	}
