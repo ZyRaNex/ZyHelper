@@ -141,5 +141,11 @@
     <Image Include="SkillPictures\IconArchon.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
+    <Image Include="SkillPictures\wizard_explosiveblast.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\p6_necro_bloodnova.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
   </ItemGroup>
 </Project>

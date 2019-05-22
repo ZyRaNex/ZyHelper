@@ -31,6 +31,8 @@
 #define IDB_SIM                         134
 #define IDB_ARCANEBLAST                 135
 #define IDB_ARCHON                      136
+#define IDB_EXPLOSIVEBLAST              137
+#define IDB_BLOODNOVA                   138
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -123,14 +125,20 @@
 #define IDC_ARCHONHOTKEY                1096
 #define IDC_ARCANEBLAST                 1097
 #define IDC_ARCANEBLASTCHECK            1098
-#define IDC_ARCHONHOTKEY2               1099
 #define IDC_ARCANEBLASTHOTKEY           1099
+#define IDC_EXPLOSIVEBLAST              1100
+#define IDC_EXPLOSIVEBLASTCHECK         1101
+#define IDC_EXPLOSIVEBLASTHOTKEY        1102
+#define IDC_BLOODNOVA                   1103
+#define IDC_BLOODNOVACHECK              1104
+#define IDC_SIMHOTKEY2                  1105
+#define IDC_BLOODNOVAHOTKEY             1105
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        139
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101

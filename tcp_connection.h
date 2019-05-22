@@ -70,7 +70,8 @@ public:
 	bool CastSkeleMages() { return ElementAt(7, 5); };
 
 	bool NeedToMove() { return ElementAt(1, 6); };
-	
+	bool CastExplosiveBlast() { return ElementAt(2, 6); };
+	bool CastBloodNova() { return ElementAt(3, 6); };
 
 	bool ElementAt(unsigned  i, unsigned j);
 	std::string content;

@@ -393,20 +393,26 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				input_simulator->SendKeyDown(ElectrocuteHotkey);
 				Sleep(2300);
+				input_simulator->SendKeyUp(ElectrocuteHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 				Sleep(1166);
 				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
+				Sleep(100);
+				input_simulator->SendKeyDown(DisintegrateHotkey);
 			}
 			
-			if (Convention > 2000 && Convention < 2400)
+			if (Convention > 2000 && Convention < 2800)
 			{
+				input_simulator->SendKeyUp(DisintegrateHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				input_simulator->SendKeyDown(ElectrocuteHotkey);
 				Sleep(2300);
+				input_simulator->SendKeyUp(ElectrocuteHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 				Sleep(1166);
-				
 				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(ArchonHotkey);
 
