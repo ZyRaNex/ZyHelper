@@ -35,7 +35,7 @@ DWORD CDiabloCalcFancyDlg::StartTcpConnectionThread()
 	tcp_connection.Listen();
 	DEBUG_MSG("tcp listen" << std::endl);
 	tcp_connection.Exit();
-	DEBUG_MSG("tcp start" << std::endl);
+	DEBUG_MSG("tcp exit" << std::endl);
 	Sleep(10);
 	return 0;
 }
@@ -227,8 +227,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 
 			//Mantra of healing
 			bool CastMantraHealing = tcp_connection.CastMantraHealing();
-			bool ShiftPressed = GetAsyncKeyState(VK_SHIFT);
-			bool SpacePressed = GetAsyncKeyState(VK_SPACE);
 			if (CastMantraHealing && MantraHealingCheck)
 			{
 				input_simulator.SendKeyOrMouseWithoutMove(MantraHealingHotkey);
@@ -299,10 +297,10 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 
 			//Similacrum
 			bool CastSim = tcp_connection.CastSim();
-			bool RiftJustStarted = tcp_connection.RiftJustStarted();
+			bool DontCastSim = tcp_connection.DontCastSim();
 			if (SecondSim)
 			{
-				if (CastSim && SimCheck && !RiftJustStarted)
+				if (CastSim && SimCheck && !DontCastSim)
 				{
 					input_simulator.SendKeyOrMouse(SimHotkey);
 					Sleep(100);
@@ -881,6 +879,23 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlEXPLOSIVEBLASTHOTKEY.SetWindowText(str);
 	str[0] = hotkeys[32];
 	m_ctlBLOODNOVAHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[33];
+	if (hotkeys[34] == (wchar_t)SpecialHotkey::Key)//Letter (a-z) or number (0-9)
+	{
+		m_ctlFORCESTANDSTILLHOTKEY.SetWindowText(str);
+	}
+	else if (hotkeys[34] == (wchar_t)SpecialHotkey::Shift)
+	{
+		m_ctlFORCESTANDSTILLHOTKEY.SetWindowText(L"Shift");
+	}
+	else if (hotkeys[34] == (wchar_t)SpecialHotkey::Alt)
+	{
+		m_ctlFORCESTANDSTILLHOTKEY.SetWindowText(L"Alt");
+	}
+	else if (hotkeys[34] == (wchar_t)SpecialHotkey::Space)
+	{
+		m_ctlFORCESTANDSTILLHOTKEY.SetWindowText(L"Space");
+	}
 	return TRUE;
 }
 
@@ -956,6 +971,7 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_ARCANEBLASTHOTKEY, Update)
 	ON_EN_CHANGE(IDC_EXPLOSIVEBLASTHOTKEY, Update)
 	ON_EN_CHANGE(IDC_BLOODNOVAHOTKEY, Update)
+	ON_EN_CHANGE(IDC_FORCESTANDSTILLHOTKEY, Update)
 
 	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
 	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
@@ -1034,6 +1050,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ARCANEBLASTHOTKEY, m_ctlARCANEBLASTHOTKEY);
 	DDX_Control(pDX, IDC_EXPLOSIVEBLASTHOTKEY, m_ctlEXPLOSIVEBLASTHOTKEY);
 	DDX_Control(pDX, IDC_BLOODNOVAHOTKEY, m_ctlBLOODNOVAHOTKEY);
+	DDX_Control(pDX, IDC_FORCESTANDSTILLHOTKEY, m_ctlFORCESTANDSTILLHOTKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
@@ -1523,6 +1540,46 @@ void CDiabloCalcFancyDlg::Update()
 	wiz_macro.MacroHotkey = MacroHotkey;
 	wiz_macro.ArchonHotkey = ArchonHotkey;
 
+
+	len = m_ctlFORCESTANDSTILLHOTKEY.LineLength(m_ctlFORCESTANDSTILLHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlFORCESTANDSTILLHOTKEY.GetLine(0, buffer, len);
+		buffer[len] = 0;
+		if (strText == L"Shift" || strText == L"shift")
+		{
+			ForceStandStillHotkey = '0';
+			ForceStandStillSpecialHotkey = (wchar_t)SpecialHotkey::Shift;
+			input_simulator.ForceStandStill = VK_SHIFT;
+		}
+		else if (strText == L"Alt" || strText == L"alt")
+		{
+			ForceStandStillHotkey = '0';
+			ForceStandStillSpecialHotkey = (wchar_t)SpecialHotkey::Alt;
+			input_simulator.ForceStandStill = VK_MENU;
+		}
+		else if (strText == L"Space" || strText == L"space")
+		{
+			ForceStandStillHotkey = '0';
+			ForceStandStillSpecialHotkey = (wchar_t)SpecialHotkey::Space;
+			input_simulator.ForceStandStill = VK_SPACE;
+		}
+		else
+		{
+			ForceStandStillHotkey = strText[0];
+			ForceStandStillSpecialHotkey = (wchar_t)SpecialHotkey::Key;
+			input_simulator.ForceStandStill = input_simulator.CharToVK(strText[0]);
+		}
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ForceStandStillHotkey = '0';
+		ForceStandStillSpecialHotkey = (wchar_t)SpecialHotkey::Shift;
+	}
+
+
 	std::wstring checks;
 	std::wstring hotkeys;
 
@@ -1618,6 +1675,8 @@ void CDiabloCalcFancyDlg::Update()
 	hotkeys += ArcaneBlastHotkey;
 	hotkeys += ExplosiveBlastHotkey;
 	hotkeys += BloodNovaHotkey;
+	hotkeys += ForceStandStillHotkey;
+	hotkeys += ForceStandStillSpecialHotkey;
 
 	std::wofstream file;
 	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);

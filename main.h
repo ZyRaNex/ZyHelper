@@ -87,6 +87,7 @@ public:
 	CEdit m_ctlARCANEBLASTHOTKEY;
 	CEdit m_ctlEXPLOSIVEBLASTHOTKEY;
 	CEdit m_ctlBLOODNOVAHOTKEY;
+	CEdit m_ctlFORCESTANDSTILLHOTKEY;
 
 	CEdit m_ctlUPPERBOUND;
 	CEdit m_ctlLOWERBOUND;
@@ -147,7 +148,10 @@ public:
 	DWORD dwThreadID[6];
 
 	const std::wstring InitChecks = _T("11110100001011000101010001111");
-	const std::wstring InitHotkeys = _T("R4L11R44211Rq1234LLR568R4414LR112");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1432LLR568R4414LR11201");
+
+	enum class SpecialHotkey { Key = L'0', Shift = L'1', Alt = L'2', Space = L'3'};
+
 	int ChecksLength = InitChecks.size();
 	int HotkeysLength = InitHotkeys.size();
 	bool Active;
@@ -215,6 +219,8 @@ public:
 	wchar_t ArcaneBlastHotkey;
 	wchar_t ExplosiveBlastHotkey;
 	wchar_t BloodNovaHotkey;
+	wchar_t ForceStandStillHotkey;
+	wchar_t ForceStandStillSpecialHotkey;
 	void Update();
 };
 

@@ -131,8 +131,9 @@
 #define IDC_EXPLOSIVEBLASTHOTKEY        1102
 #define IDC_BLOODNOVA                   1103
 #define IDC_BLOODNOVACHECK              1104
-#define IDC_SIMHOTKEY2                  1105
 #define IDC_BLOODNOVAHOTKEY             1105
+#define IDC_VENGEANCEHOTKEY2            1106
+#define IDC_FORCESTANDSTILLHOTKEY       1106
 
 // Next default values for new objects
 // 

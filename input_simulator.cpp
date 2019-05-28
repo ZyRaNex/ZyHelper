@@ -10,6 +10,7 @@ InputSimulator::InputSimulator()
 	MouseMoveState = false;
 	LastCursorPos.x = 0;
 	LastCursorPos.y = 0;
+	ForceStandStill = VK_SHIFT;
 }
 
 
@@ -17,6 +18,9 @@ int InputSimulator::CharToVK(wchar_t input)
 {
 	switch (input)
 	{
+	case '0':
+		return 0x30;
+		break;
 	case '1':
 		return 0x31;
 		break;
@@ -44,32 +48,83 @@ int InputSimulator::CharToVK(wchar_t input)
 	case '9':
 		return 0x39;
 		break;
-	case 'q':
-		return 0x51;
-		break;
-	case 'w':
-		return 0x57;
-		break;
-	case 'e':
-		return 0x45;
-		break;
-	case 'r':
-		return 0x52;
-		break;
 	case 'a':
 		return 0x41;
 		break;
-	case 's':
-		return 0x53;
+	case 'b':
+		return 0x42;
+		break;
+	case 'c':
+		return 0x43;
 		break;
 	case 'd':
 		return 0x44;
 		break;
+	case 'e':
+		return 0x45;
+		break;
 	case 'f':
 		return 0x46;
 		break;
+	case 'g':
+		return 0x47;
+		break;
+	case 'h':
+		return 0x48;
+		break;
+	case 'i':
+		return 0x49;
+		break;
+	case 'j':
+		return 0x4A;
+		break;
+	case 'k':
+		return 0x4B;
+		break;
+	case 'l':
+		return 0x4C;
+		break;
+	case 'm':
+		return 0x4D;
+		break;
+	case 'n':
+		return 0x4E;
+		break;
+	case 'o':
+		return 0x4F;
+		break;
+	case 'p':
+		return 0x50;
+		break;
+	case 'q':
+		return 0x51;
+		break;
+	case 'r':
+		return 0x52;
+		break;
+	case 's':
+		return 0x53;
+		break;
+	case 't':
+		return 0x54;
+		break;
 	case 'u':
 		return 0x55;
+		break;
+	case 'v':
+		return 0x56;
+		break;
+	case 'w':
+		return 0x57;
+		break;
+	case 'x':
+		return 0x58;
+		break;
+	case 'y':
+		return 0x59;
+		break;
+	case 'z':
+		return 0x5A;
 		break;
 	}
 	return 0;
@@ -183,13 +238,13 @@ void InputSimulator::SendMouse(MouseClick Click)
 
 	if (Click == Left)//hold force stand still
 	{
-		SendKeyDown(VK_SHIFT);
+		SendKeyDown(ForceStandStill);
 		Sleep(100);
 		PostMessage(handle, WM_LBUTTONDOWN, 1, (int)((500 << 16) | (700 & 0xFFFF)));
 		Sleep(1);
 		PostMessage(handle, WM_LBUTTONUP, 1, 0);
 		Sleep(100);
-		SendKeyUp(VK_SHIFT);
+		SendKeyUp(ForceStandStill);
 	}
 	else
 	{
@@ -205,7 +260,7 @@ void InputSimulator::SendMouseWithoutMove(MouseClick Click)
 
 	if (Click == Left)//hold force stand still
 	{
-		SendKeyDown(VK_SHIFT);
+		SendKeyDown(ForceStandStill);
 	}
 
 
@@ -254,7 +309,7 @@ void InputSimulator::SendMouseWithoutMove(MouseClick Click)
 
 	if (Click == Left)//hold force stand still
 	{
-		SendKeyUp(VK_SHIFT);
+		SendKeyUp(ForceStandStill);
 	}
 }
 

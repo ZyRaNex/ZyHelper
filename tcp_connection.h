@@ -47,7 +47,7 @@ public:
 
 	bool CastIp() { return ElementAt(1, 3); };
 	bool CastSim() { return ElementAt(2, 3); };
-	bool RiftJustStarted() { return ElementAt(3, 3); };
+	bool DontCastSim() { return ElementAt(3, 3); };
 	bool CastFalter() { return ElementAt(4, 3); };
 	bool CastBerserker() { return ElementAt(5, 3); };
 	bool CastSprint() { return ElementAt(6, 3); };

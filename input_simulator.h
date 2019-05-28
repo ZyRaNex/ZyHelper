@@ -29,6 +29,7 @@ public:
 
 	bool MouseMoveState;
 	POINT LastCursorPos;
+	int ForceStandStill;
 };
 
 #endif  // INPUT_SIMULATOR_H_
