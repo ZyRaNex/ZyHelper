@@ -7,6 +7,8 @@ download at
 
 ![ZyHelperBeta](https://i.imgur.com/Nn8sfdg.png)
 
+If you have questions ask on my discord ![ZyHelper](https://discord.gg/F8wcvzd)
+
 # Install
 Put the ZyHelperBetaAdapter.cs file into folder Zy in your TurboHUD plugins.
 
