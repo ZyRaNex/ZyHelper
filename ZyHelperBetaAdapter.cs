@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using Turbo.Plugins.Default;
 using System.Linq;
 using SharpDX.DirectInput;
@@ -89,6 +89,8 @@ namespace Turbo.Plugins.Zy
             float WizDistance = 0.0f;
             float MonkDistance = 0.0f;
             float ChargeBarbDistance = 0.0f;
+            float Rat1Distance = 0.0f;
+            float Rat2Distance = 0.0f;
             bool Active = false;
             bool FalterOnCooldown = false;
             bool BerserkerOnCooldown = false;
@@ -107,7 +109,7 @@ namespace Turbo.Plugins.Zy
             bool SprintBuffActive = false;
             bool WizardIngame = false;
             bool MonkIngame = false;
-            bool NecroIngame = false;
+            int NecrosIngame = 0;
             bool BarbIngame = false;
             bool RecastSweepingWind = false;
             bool BohOnCooldown = false;
@@ -136,12 +138,19 @@ namespace Turbo.Plugins.Zy
             bool EliteInRange = false;
             bool SimBuffActive = false;
             bool SimOnCooldown = false;
-            bool RiftJustStarted = false;
-            bool ChannelingRunningOut = false;
+            bool DontCastSim = false;
+            bool CastSimInChanneling = false;
             bool InARift = false;
             bool ImZnec = false;
             bool ArchonBuffActive = false;
             bool ArcaneBlastOnCooldown = false;
+            bool ExplosiveBlastOnCooldown = false;
+            bool BloodNovaOnCooldown = false;
+            bool Rat1Dead = false;
+            bool Rat2Dead = false;
+            double SimCD = 120.0d;
+            bool PartyIsBuffable = true;
+			bool ChannelingAfterDelay = false;
 
             bool CastIp = false;
             bool CastWc = false;
@@ -165,7 +174,8 @@ namespace Turbo.Plugins.Zy
             bool CastSim = false;
             bool ForceMove = false;
             bool CastArcaneBlast = false;
-
+            bool CastExplosiveBlast = false;
+			bool CastBloodNova = false;
 
             bool IpEquipped = false;
             bool WcEquipped = false;
@@ -187,13 +197,16 @@ namespace Turbo.Plugins.Zy
             bool SkeleMagesEquipped = false;
             bool SimEquipped = false;
             bool ArchonEquipped = false;
-
+            bool ExplosiveBlastEquippped = false;
+            bool BloodNovaEquipped = false;
 
             IWorldCoordinate MyPosition = Hud.Game.Players.First().FloorCoordinate;
             IWorldCoordinate WizPosition = Hud.Game.Players.First().FloorCoordinate;
             IWorldCoordinate MonkPosition = Hud.Game.Players.First().FloorCoordinate;
             IWorldCoordinate NecroPosition = Hud.Game.Players.First().FloorCoordinate;
             IWorldCoordinate ChargeBarbPosition = Hud.Game.Players.First().FloorCoordinate;
+            IWorldCoordinate Rat1Position = Hud.Game.Players.First().FloorCoordinate;
+            IWorldCoordinate Rat2Position = Hud.Game.Players.First().FloorCoordinate;
 
             BossIsSpawned = (Hud.Game.AliveMonsters.Count(m => m.SnoMonster.Priority == MonsterPriority.boss) > 0);
 
@@ -260,9 +273,12 @@ namespace Turbo.Plugins.Zy
                     }
                     if (skill.SnoPower.Sno == 78551)// Barbarian_Sprint
                     {
-                        SprintBuffActive = skill.BuffIsActive;
                         SprintOnCooldown = skill.IsOnCooldown;
                         SprintEquipped = true;
+						
+						var buff = skill.Buff;
+                        if ((buff == null) || (buff.IconCounts[0] <= 0)) continue;
+                        SprintBuffActive = buff.TimeLeftSeconds[0] > 2.0;
                     }
 
                     //monk
@@ -326,12 +342,25 @@ namespace Turbo.Plugins.Zy
                         {
                             ArchonBuffActive = buff.TimeLeftSeconds[2] > 0.1;
                         }
-
-                        var skill2 = player.Powers.SkillSlots[2];
-                        ArcaneBlastOnCooldown = skill2.IsOnCooldown;
                         ArchonEquipped = true;
                     }
-                    
+
+                    if (skill.SnoPower.Sno == 87525)//Wizard_ExplosiveBlast { get; } // 87525
+                    {
+                        ExplosiveBlastOnCooldown = skill.IsOnCooldown;
+                        ExplosiveBlastEquippped = true;
+                    }
+
+                    if (i == 2)
+                    {
+                        ArcaneBlastOnCooldown = skill.IsOnCooldown;
+                    }
+
+                    /*if (skill.SnoPower.Sno == 392885 || skill.SnoPower.Sno == 167355)//Wizard_ArchonArcaneBlastLightning Wizard_ArchonArcaneBlast
+                    {
+                        ArcaneBlastOnCooldown = skill.IsOnCooldown;
+                    }*/
+
 
                     //necro
                     if (skill.SnoPower.Sno == 466857)//Necromancer_BoneArmor
@@ -380,6 +409,11 @@ namespace Turbo.Plugins.Zy
                         SimBuffActive = buff.TimeLeftSeconds[0] > 0.0;
                     }
 
+                    if (skill.SnoPower.Sno == 462243)//Necromancer_DeathNova { get; } // 462243
+                    {
+                        BloodNovaOnCooldown = skill.IsOnCooldown;
+                        BloodNovaEquipped = true;
+                    }
 
                     //dh
                     if (skill.SnoPower.Sno == 302846)//DemonHunter_Vengeance { get; }
@@ -403,7 +437,8 @@ namespace Turbo.Plugins.Zy
                     }
                 }
             }
-        
+
+            int RatsFound = 0;
             foreach (var player in Hud.Game.Players)//others
             {
 
@@ -453,6 +488,27 @@ namespace Turbo.Plugins.Zy
                         WizPosition = player.FloorCoordinate;
                         WizardIngame = true;
                     }
+					
+					var LoadingBuff = player.Powers.GetBuff(212032);
+					if (!(LoadingBuff == null || !LoadingBuff.Active))
+					{
+						PartyIsBuffable = false;
+					}
+					var GhostedBuff = player.Powers.GetBuff(224639);
+					if (!(GhostedBuff == null || !GhostedBuff.Active))
+					{
+						PartyIsBuffable = false;
+					}
+					var InvulBuff = player.Powers.GetBuff(439438);
+					if (!(InvulBuff == null || !InvulBuff.Active))
+					{
+						PartyIsBuffable = false;
+					}
+					var UntargetableDuringBuff = player.Powers.GetBuff(30582);
+					if (!(UntargetableDuringBuff == null || !UntargetableDuringBuff.Active))
+					{
+						PartyIsBuffable = false;
+					}
                 }
                 if (player.HeroClassDefinition.HeroClass == HeroClass.Monk)
                 {
@@ -468,27 +524,58 @@ namespace Turbo.Plugins.Zy
                 }
                 if (player.HeroClassDefinition.HeroClass == HeroClass.Necromancer)
                 {
-                    if (player.IsMe)
+                    var EfficaciousToxin = player.Powers.GetBuff(403461);
+                    if (EfficaciousToxin == null || !EfficaciousToxin.Active)
                     {
-                        ImNecro = true;
-
-                        var EfficaciousToxin = player.Powers.GetBuff(403461);
-                        if (EfficaciousToxin == null || !EfficaciousToxin.Active)
+                        //rat
+                        if (player.IsMe)
                         {
-                            //rat
                             ImZnec = false;
+							ImNecro = true;
                         }
                         else
                         {
-                            //znec
-                            ImZnec = true;
+                            if (RatsFound == 0)
+                            {
+                                Rat1Dead = player.IsDead;
+                                Rat1Position = player.FloorCoordinate;
+                                RatsFound = 1;
+                            }
+                            else if (RatsFound == 1)
+                            {
+                                Rat2Dead = player.IsDead;
+                                Rat2Position = player.FloorCoordinate;
+                                RatsFound = 2;
+                            }
+                            NecroPosition = player.FloorCoordinate;
                         }
                     }
                     else
                     {
-                        NecroPosition = player.FloorCoordinate;
-                        NecroIngame = player.HasValidActor;
+                        //znec
+                        if (player.IsMe)
+                        {
+                            ImZnec = true;
+							ImNecro = true;
+                        }
                     }
+
+                    foreach (var i in _skillOrder)
+                    {
+                        var skill = player.Powers.SkillSlots[i];
+                        if (skill.SnoPower.Sno == 465350)//Necromancer_Simulacrum { get; }
+                        {
+                            var CurrentSimCD = skill.CalculateCooldown(120);
+                            if (CurrentSimCD < SimCD)
+                            {
+                                SimCD = CurrentSimCD;
+                            }
+                            break;
+                        }
+
+                    }
+
+                    NecrosIngame++;
                 }
                 if (player.HeroClassDefinition.HeroClass == HeroClass.DemonHunter)
                 {
@@ -523,11 +610,14 @@ namespace Turbo.Plugins.Zy
             MonkDistance = MonkPosition.XYDistanceTo(MyPosition);
             NecroDistance = NecroPosition.XYDistanceTo(MyPosition);
             ChargeBarbDistance = ChargeBarbPosition.XYDistanceTo(MyPosition);
+            Rat1Distance = Rat1Position.XYDistanceTo(MyPosition);
+            Rat2Distance = Rat2Position.XYDistanceTo(MyPosition);
 
             var Channelingbuff = Hud.Game.Me.Powers.GetBuff(266258);
             if ((Channelingbuff != null) && (Channelingbuff.IconCounts[0] > 0))
             {
-                ChannelingRunningOut = (Channelingbuff.TimeLeftSeconds[0] < 2.0d);
+                CastSimInChanneling = (Channelingbuff.TimeLeftSeconds[0] < 2.0d) || (Channelingbuff.TimeLeftSeconds[0] > 28.0d);
+                ChannelingAfterDelay = Channelingbuff.TimeLeftSeconds[0] < 28.0d;
             }
 
             var TargetedMonster = Hud.Game.SelectedMonster2 ?? Hud.Game.SelectedMonster1;
@@ -544,6 +634,7 @@ namespace Turbo.Plugins.Zy
 
 
             InARift = (Hud.Game.SpecialArea == SpecialArea.Rift || Hud.Game.SpecialArea == SpecialArea.GreaterRift);
+			
             Active = true;
             Active = Active && Hud.Game.IsInGame;
             Active = Active && !Hud.Game.IsLoading;
@@ -575,7 +666,7 @@ namespace Turbo.Plugins.Zy
             bool PotionIsOnCooldown = Cooldown <= 30 && Cooldown >= 0 ? true : false;
 
             bool WizInIpRange;
-            if (WizardIngame && MonkIngame)
+            if (WizardIngame && MonkIngame)//metas
             {
                 if ((WizPosition.XYDistanceTo(MonkPosition) > 50) || !MonkIngame)
                 {
@@ -586,26 +677,40 @@ namespace Turbo.Plugins.Zy
                     WizInIpRange = (Math.Max(WizDistance, MonkDistance) <= 45);
                 }
 
-                CastIp = !IPOnCooldown && IpEquipped && (!BossIsSpawned && WizInIpRange  ||
+                CastIp = !IPOnCooldown && IpEquipped && PartyIsBuffable && (!BossIsSpawned && WizInIpRange ||
                            BossIsSpawned && (NecroDistance <= 45));
-                CastFalter = FalterEquipped && !FalterOnCooldown && (!BossIsSpawned && (WizDistance <= 20)  ||
+                CastFalter = FalterEquipped && !FalterOnCooldown && (!BossIsSpawned && (WizDistance <= 20) ||
                            BossIsSpawned);
-                CastWc = WcEquipped && !WarCryOnCooldown && (!ChilanikBuff || NecroDistance <= 100);
+                CastWc = WcEquipped && !WarCryOnCooldown && PartyIsBuffable && (!ChilanikBuff || NecroDistance <= 100);
+            }
+            else if (NecrosIngame == 3)//rats
+            {
+                CastIp = !IPOnCooldown && IpEquipped && PartyIsBuffable;
+                if (!Rat1Dead)
+                {
+                    CastIp = CastIp && (Rat1Distance <= 45);
+                }
+                if (!Rat2Dead)
+                {
+                    CastIp = CastIp && (Rat2Distance <= 45);
+                }
+                CastFalter = FalterEquipped && !FalterOnCooldown;
+                CastWc = WcEquipped && !WarCryOnCooldown && PartyIsBuffable;
             }
             else
             {
-                CastIp = !IPOnCooldown && IpEquipped && (Hud.Game.NumberOfPlayersInGame == (Hud.Game.Players.Where(p => p.CentralXyDistanceToMe <= 45)).Count());
+                CastIp = !IPOnCooldown && IpEquipped && PartyIsBuffable && (Hud.Game.NumberOfPlayersInGame == (Hud.Game.Players.Where(p => p.CentralXyDistanceToMe <= 45)).Count());
                 CastFalter = FalterEquipped && !FalterOnCooldown;
-                CastWc = (WcEquipped && !WarCryOnCooldown && (!ChilanikBuff || (Hud.Game.NumberOfPlayersInGame == (Hud.Game.Players.Where(p => p.CentralXyDistanceToMe <= 45)).Count())));
+                CastWc = (WcEquipped && !WarCryOnCooldown && PartyIsBuffable && (!ChilanikBuff || (Hud.Game.NumberOfPlayersInGame == (Hud.Game.Players.Where(p => p.CentralXyDistanceToMe <= 45)).Count())));
             }
             
             
 
 
             CastBerserker = BerserkerEquipped && !BerserkerOnCooldown && !BerserkerBuffActive;
-            CastSprint = SprintEquipped && !SprintOnCooldown && Hud.Game.Me.Stats.ResourceCurFury >= (Hud.Game.Me.Stats.ResourceMaxFury / 2.0) && !SprintBuffActive;
+            CastSprint = SprintEquipped && !SprintOnCooldown && Hud.Game.Me.Stats.ResourceCurFury >= 20 && !SprintBuffActive;
             CastEpiphany = EpiphanyEquipped && !EpiphanyOnCooldown && !EpiphanyBuffActive;
-            CastMantraHealing = MantraHealingEquipped && !MantraOfHealingOnCooldown && Hud.Game.Me.Stats.ResourceCurSpirit >= (Hud.Game.Me.Stats.ResourceMaxSpirit / 2.0);
+            CastMantraHealing = MantraHealingEquipped && !MantraOfHealingOnCooldown && Hud.Game.Me.Stats.ResourceCurSpirit >= (0.3 * Hud.Game.Me.Stats.ResourceMaxSpirit) && (Range75Enemies >= 1);
             CastSweepingWind = SweepingWindEquipped && RecastSweepingWind && Hud.Game.Me.Stats.ResourceCurSpirit >= (Hud.Game.Me.Stats.ResourceMaxSpirit / 2.0);
             CastBoh = BohEquipped && !BohOnCooldown && ((Hud.Game.SpecialArea == SpecialArea.Rift) || BarbIngame && (ChargeBarbDistance <= 12) && BarbHasValidActor);
             CastMantraConviction = MantraConvictionEquipped && Hud.Game.Me.Stats.ResourceCurSpirit >= (Hud.Game.Me.Stats.ResourceMaxSpirit / 2.0);
@@ -614,19 +719,31 @@ namespace Turbo.Plugins.Zy
             //                  (!BoneArmorAlmostRunningOut && (Range25Enemies >= 5))) &&
             //                  !BoneArmorOnCooldown);
             CastBoneArmor = BoneArmorEquipped && (Range25Enemies >= 1) && !BoneArmorOnCooldown;
-            RiftJustStarted = (((Hud.Game.CurrentTimedEventEndTick - (double)Hud.Game.CurrentGameTick) / 60.0d) > 890.0d);
-            CastSim = InARift && SimEquipped && !SimOnCooldown && (!(Hud.Game.Me.Stats.ResourceMaxEssence > 450) || ChannelingRunningOut);//have sim because of reservoir
+			
+            DontCastSim = (((Hud.Game.CurrentTimedEventEndTick - (double)Hud.Game.CurrentGameTick) / 60.0d) > (900.0d - SimCD*0.4)) || ChannelingAfterDelay;
+			if(Hud.Game.SpecialArea == SpecialArea.Rift) DontCastSim = false;
+			
+            CastSim = InARift && SimEquipped && !SimOnCooldown && (!(Hud.Game.Me.Stats.ResourceMaxEssence > 450) || CastSimInChanneling);//have sim because of reservoir
             CastPotion = Hud.Game.Me.Defense.HealthCur <= (Hud.Game.Me.Defense.HealthMax * 0.35) && !PotionIsOnCooldown;
-            CastStormArmor = StormArmorEquipped && !StormArmorOnCooldown && !StormArmorBuffActive;
-            CastMagicWeapon = MagicWeaponEquipped && !MagicWeaponOnCooldown && !MagicWeaponBuffActive;
+            CastStormArmor = !ArchonBuffActive && StormArmorEquipped && !StormArmorOnCooldown && !StormArmorBuffActive;
+            CastMagicWeapon = !ArchonBuffActive && MagicWeaponEquipped && !MagicWeaponOnCooldown && !MagicWeaponBuffActive;
             CastVengeance = VengeanceEquipped && !VengeanceOnCooldown && !VengeanceBuffActive;
             CastRainOfVengeance = RainOfVengeanceEquipped && !RainOfVengeanceOnCooldown && !NatBuffActive;
             CastPreparation = PreparationEquipped && !PreparationOnCooldown && !(Hud.Game.Me.Stats.ResourceCurDiscipline >= (Hud.Game.Me.Stats.ResourceMaxDiscipline - 30));
             ForceMove = InARift && !ImZnec && (Hud.Game.Me.AnimationState == AcdAnimationState.Idle || Hud.Game.Me.AnimationState == AcdAnimationState.Casting);
             CastArcaneBlast = ArchonBuffActive && ArchonEquipped && !ArcaneBlastOnCooldown && (Range15Enemies > 0);
+            CastExplosiveBlast = !ArchonBuffActive && ExplosiveBlastEquippped && !ExplosiveBlastOnCooldown && Hud.Game.Me.Stats.ResourceCurArcane >= (Hud.Game.Me.Stats.ResourceMaxArcane / 3.0);
+            CastBloodNova = /*InARift && */BloodNovaEquipped && !BloodNovaOnCooldown && (Hud.Game.Me.Stats.ResourceCurEssence >= (Hud.Game.Me.Stats.ResourceMaxEssence / 3.0)) && (Range25Enemies >= 1);
 
-            CastSkeleMages = InARift && SkeleMagesEquipped && (Hud.Game.Me.Stats.ResourceCurEssence >= Hud.Game.Me.Stats.ResourceMaxEssence*0.95) && (EliteInRange && EliteTargeted || !EliteInRange && (NumberOfSkeleMages < 10));
-            Byte[] Bytes = new Byte[8];
+			if(BossIsSpawned || Hud.Game.SpecialArea == SpecialArea.Rift)
+			{
+				CastSkeleMages = InARift && SkeleMagesEquipped && (Hud.Game.Me.Stats.ResourceCurEssence >= (Hud.Game.Me.Stats.ResourceMaxEssence*0.95)) && (NumberOfSkeleMages < 10);
+            }
+			else
+			{
+				CastSkeleMages = InARift && SkeleMagesEquipped && (Hud.Game.Me.Stats.ResourceCurEssence >= (Hud.Game.Me.Stats.ResourceMaxEssence*0.95)) && (EliteInRange && EliteTargeted || (!EliteInRange) && (NumberOfSkeleMages < 10));
+			}
+			Byte[] Bytes = new Byte[8];
 
             Bytes[0] = Set(Bytes[0], 0, true);
             Bytes[0] = Set(Bytes[0], 1, Active);
@@ -658,7 +775,7 @@ namespace Turbo.Plugins.Zy
             Bytes[3] = Set(Bytes[3], 0, true);
             Bytes[3] = Set(Bytes[3], 1, CastIp);
             Bytes[3] = Set(Bytes[3], 2, CastSim);
-            Bytes[3] = Set(Bytes[3], 3, RiftJustStarted);
+            Bytes[3] = Set(Bytes[3], 3, DontCastSim);
             Bytes[3] = Set(Bytes[3], 4, CastFalter);
             Bytes[3] = Set(Bytes[3], 5, CastBerserker);
             Bytes[3] = Set(Bytes[3], 6, CastSprint);
@@ -684,6 +801,8 @@ namespace Turbo.Plugins.Zy
 
             Bytes[6] = Set(Bytes[6], 0, true);
             Bytes[6] = Set(Bytes[6], 1, ForceMove);
+            Bytes[6] = Set(Bytes[6], 2, CastExplosiveBlast);
+            Bytes[6] = Set(Bytes[6], 3, CastBloodNova);
 
             Bytes[7] = Set(Bytes[7], 0, true);
 
