@@ -5,7 +5,7 @@ download at
 
 [ZyHelperBeta](https://github.com/ZyRaNex/ZyHelper/releases)
 
-If you have questions ask on my discord ![Discord](https://discord.gg/F8wcvzd)
+If you have questions ask on my discord [Discord](https://discord.gg/F8wcvzd)
 
 ![ZyHelperBeta](https://i.imgur.com/HXtFrbW.png)
 
