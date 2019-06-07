@@ -2,7 +2,6 @@
 This programm automates button presses.
 
 download at
-
 [ZyHelperBeta](https://github.com/ZyRaNex/ZyHelper/releases)
 
 If you have questions ask on my discord [Discord](https://discord.gg/F8wcvzd)
