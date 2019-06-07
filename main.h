@@ -23,6 +23,7 @@ public:
 	CButton m_ctlACTIVE;
 	CButton m_ctlACTIVERUNNING;
 	CButton m_ctlMACROACTIVE;
+	CButton m_ctlPOSITIONSAVED;
 
 	CButton	m_ctlIPCHECK;
 	CButton m_ctlWCCHECK;
@@ -88,6 +89,7 @@ public:
 	CEdit m_ctlEXPLOSIVEBLASTHOTKEY;
 	CEdit m_ctlBLOODNOVAHOTKEY;
 	CEdit m_ctlFORCESTANDSTILLHOTKEY;
+	CEdit m_ctlPOSITIONHOTKEY;
 
 	CEdit m_ctlUPPERBOUND;
 	CEdit m_ctlLOWERBOUND;
@@ -148,7 +150,7 @@ public:
 	DWORD dwThreadID[6];
 
 	const std::wstring InitChecks = _T("11110100001011000101010001111");
-	const std::wstring InitHotkeys = _T("R4L11R44211Rq1432LLR568R4414LR11201");
+	const std::wstring InitHotkeys = _T("R4L11R44211Rq1432LLR598R4414LR112016");
 
 	enum class SpecialHotkey { Key = L'0', Shift = L'1', Alt = L'2', Space = L'3'};
 
@@ -221,6 +223,7 @@ public:
 	wchar_t BloodNovaHotkey;
 	wchar_t ForceStandStillHotkey;
 	wchar_t ForceStandStillSpecialHotkey;
+	wchar_t PositionHotkey;
 	void Update();
 };
 

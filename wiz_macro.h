@@ -36,6 +36,8 @@ public:
 	bool SavedBlackHole;
 
 	bool AutoMacro;
+	bool PositionSaved;
+	POINT SavedPosition;
 };
 
 #endif  // WIZ_MACRO_H_

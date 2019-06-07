@@ -341,6 +341,21 @@ void InputSimulator::MoveMouse()
 	MouseMoveState = !MouseMoveState;
 }
 
+void InputSimulator::MoveMouse(POINT p)
+{
+	INPUT ip;
+	ZeroMemory(&ip, sizeof(ip));
+
+	ip.type = INPUT_MOUSE;
+	ip.mi.dx = p.x * (65536 / GetSystemMetrics(SM_CXSCREEN));
+	ip.mi.dy = p.y * (65536 / GetSystemMetrics(SM_CYSCREEN));
+	ip.mi.mouseData = 0;
+	ip.mi.time = 0;
+	ip.mi.dwExtraInfo = 0;
+	ip.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+	SendInput(1, &ip, sizeof(INPUT));
+}
+
 InputSimulator::~InputSimulator()
 {
 }

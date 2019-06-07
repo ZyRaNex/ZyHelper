@@ -25,6 +25,7 @@ public:
 	void SendMouse(MouseClick Click);
 	void SendMouseWithoutMove(MouseClick Click);
 	void MoveMouse();
+	void MoveMouse(POINT p);
 	~InputSimulator();
 
 	bool MouseMoveState;
