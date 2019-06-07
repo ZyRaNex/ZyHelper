@@ -178,7 +178,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastIp = tcp_connection.CastIp();
 			if (CastIp && IpCheck)
 			{
-				input_simulator.SendKeyOrMouse(IpHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(IpHotkey);
 				Sleep(100);
 			}
 
@@ -186,7 +186,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastWc = tcp_connection.CastWc();
 			if (CastWc && WcCheck)
 			{
-				input_simulator.SendKeyOrMouse(WcHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(WcHotkey);
 				Sleep(100);
 			}
 
@@ -194,7 +194,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastFalter = tcp_connection.CastFalter();
 			if (CastFalter && FalterCheck)
 			{
-				input_simulator.SendKeyOrMouse(FalterHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(FalterHotkey);
 				Sleep(100);
 			}
 
@@ -202,7 +202,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastBerserker = tcp_connection.CastBerserker();
 			if (CastBerserker && BerserkerCheck)
 			{
-				input_simulator.SendKeyOrMouse(BerserkerHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(BerserkerHotkey);
 				Sleep(100);
 			}
 
@@ -210,7 +210,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastSprint = tcp_connection.CastSprint();
 			if (CastSprint && SprintCheck)
 			{
-				input_simulator.SendKeyOrMouse(SprintHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(SprintHotkey);
 				Sleep(100);
 			}
 		}
@@ -245,7 +245,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastBoh = tcp_connection.CastBoh();
 			if (CastBoh && BohCheck)
 			{
-				input_simulator.SendKeyOrMouse(BohHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(BohHotkey);
 				Sleep(100);
 			}
 
@@ -265,7 +265,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastLotd = tcp_connection.CastLotd();
 			if (CastLotd && LotdCheck)
 			{
-				input_simulator.SendKeyOrMouse(LotdHotkey);
+				input_simulator.SendKeyOrMouseWithoutMove(LotdHotkey);
 				Sleep(100);
 			}
 
@@ -279,14 +279,15 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 
 			//Skeletal Mages
 			bool CastSkeleMages = tcp_connection.CastSkeleMages();
+			bool InARift = tcp_connection.InARift();
 			if (CastSkeleMages && SkeleMageCheck)
 			{
 				input_simulator.SendKeyOrMouseWithoutMove(SkeleMageHotkey);
-				Sleep(100);
-				if (Hexing)
+				if (Hexing && InARift)
 				{
 					input_simulator.MoveMouse();
 				}
+				Sleep(100);
 			}
 			//devour
 			if (DevourCheck)
@@ -302,7 +303,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			{
 				if (CastSim && SimCheck && !DontCastSim)
 				{
-					input_simulator.SendKeyOrMouse(SimHotkey);
+					input_simulator.SendKeyOrMouseWithoutMove(SimHotkey);
 					Sleep(100);
 				}
 			}
@@ -310,7 +311,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			{
 				if (CastSim && SimCheck)
 				{
-					input_simulator.SendKeyOrMouse(SimHotkey);
+					input_simulator.SendKeyOrMouseWithoutMove(SimHotkey);
 					Sleep(100);
 				}
 			}
@@ -338,7 +339,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			bool CastMagicWeapon = tcp_connection.CastMagicWeapon();
 			if (CastMagicWeapon && MagicWeaponCheck)
 			{
-				input_simulator.SendKeyOrMouseWithoutMove(MagicWeaponHotkey);
+				input_simulator.SendKeyOrMouse(MagicWeaponHotkey);
 				Sleep(100);
 			}
 
@@ -518,7 +519,7 @@ DWORD CDiabloCalcFancyDlg::HexingMacroThread()
 			Sleep(1000);
 			continue;
 		}*/
-		if (!Hexing)
+		if (!Hexing || tcp_connection.InARift())
 		{
 			SwitchToThread();
 			Sleep(100);

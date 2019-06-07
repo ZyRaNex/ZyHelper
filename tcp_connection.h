@@ -45,6 +45,8 @@ public:
 	bool BlackholeBuffActive() { return ElementAt(5, 1); };
 	bool CastArcaneBlast() { return ElementAt(6, 1); };
 
+	bool InARift() { return ElementAt(1, 2); };
+
 	bool CastIp() { return ElementAt(1, 3); };
 	bool CastSim() { return ElementAt(2, 3); };
 	bool DontCastSim() { return ElementAt(3, 3); };

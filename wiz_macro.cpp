@@ -392,7 +392,10 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			if (Convention > 11500 && Convention < 12500)//occu
 			{
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
-				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				if (BlackholeCheck)
+				{
+					input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				}
 				input_simulator->SendKeyDown(ElectrocuteHotkey);
 				Sleep(2300);
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
@@ -407,7 +410,10 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			{
 				input_simulator->SendKeyUp(DisintegrateHotkey);
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
-				input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				if (BlackholeCheck)
+				{
+					input_simulator->SendKeyOrMouseWithoutMove(BlackholeHotkey);
+				}
 				input_simulator->SendKeyDown(ElectrocuteHotkey);
 				Sleep(2300);
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
