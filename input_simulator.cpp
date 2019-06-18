@@ -315,7 +315,7 @@ void InputSimulator::SendMouseWithoutMove(MouseClick Click)
 
 void InputSimulator::MoveMouse()
 {
-	if (GetAsyncKeyState(CharToVK('7'))) return;
+	if (GetAsyncKeyState(CharToVK('7')) < 0) return;
 
 	Sleep(1);
 	HWND handle = ::GetForegroundWindow();

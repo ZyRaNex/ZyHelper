@@ -33,6 +33,7 @@
 #define IDB_ARCHON                      136
 #define IDB_EXPLOSIVEBLAST              137
 #define IDB_BLOODNOVA                   138
+#define IDB_BLINDINGFLASH               139
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -135,12 +136,17 @@
 #define IDC_FORCESTANDSTILLHOTKEY       1106
 #define IDC_POSITIONHOTKEY              1107
 #define IDC_POSITIONSAVED               1108
+#define IDC_BLINDINGFLASH               1109
+#define IDC_BLINDINGFLASHCHECK          1110
+#define IDC_BLINDINGFLASHHOTKEY         1111
+#define IDC_MACROHOTKEY2                1112
+#define IDC_CHANNELHOTKEY               1112
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        139
+#define _APS_NEXT_RESOURCE_VALUE        140
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101

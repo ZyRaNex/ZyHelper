@@ -147,5 +147,8 @@
     <Image Include="SkillPictures\p6_necro_bloodnova.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
+    <Image Include="SkillPictures\monk_blindingflash.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
   </ItemGroup>
 </Project>

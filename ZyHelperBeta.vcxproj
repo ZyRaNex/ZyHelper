@@ -166,6 +166,7 @@
     <Image Include="SkillPictures\Magic_Weapon.bmp" />
     <Image Include="SkillPictures\Mantra_of_Conviction.bmp" />
     <Image Include="SkillPictures\Mantra_of_Healing.bmp" />
+    <Image Include="SkillPictures\monk_blindingflash.bmp" />
     <Image Include="SkillPictures\p6_necro_bloodnova.bmp" />
     <Image Include="SkillPictures\p6_necro_devour.bmp" />
     <Image Include="SkillPictures\p6_necro_raisedead.bmp" />

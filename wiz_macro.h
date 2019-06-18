@@ -27,6 +27,7 @@ public:
 	wchar_t BlackholeHotkey;
 	wchar_t MacroHotkey;
 	wchar_t ArchonHotkey;
+	wchar_t ChannelHotkey;
 
 	bool BlackholeCheck;
 	bool ArchonCheck;
@@ -37,7 +38,11 @@ public:
 
 	bool AutoMacro;
 	bool PositionSaved;
+	bool OutsideSaved;
+	bool Channeling;
+	bool Shooting;
 	POINT SavedPosition;
+	POINT Outside;
 };
 
 #endif  // WIZ_MACRO_H_

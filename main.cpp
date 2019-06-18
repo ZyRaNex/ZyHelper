@@ -100,11 +100,12 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 	DWORD ResetDuration = GetTickCount();
 	DWORD AutoMacroDuration = GetTickCount();
 	DWORD PositionDuration = GetTickCount();
+	DWORD OutsideDuration = GetTickCount();
 
 	while (true)
 	{
 		Sleep(10);
-		if (GetAsyncKeyState(VK_F10) && (GetTickCount() - 500 >= ActiveDuration))
+		if ((GetAsyncKeyState(VK_F10) < 0) && (GetTickCount() - 500 >= ActiveDuration))
 		{
 			ActiveDuration = GetTickCount();
 			Active = !Active;
@@ -114,7 +115,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 		}
 
-		if (GetAsyncKeyState(input_simulator.CharToVK(TimingKey)) && (GetTickCount() - 500 >= ResetDuration))
+		if ((GetAsyncKeyState(input_simulator.CharToVK(TimingKey)) < 0) && (GetTickCount() - 500 >= ResetDuration))
 		{
 			ResetDuration = GetTickCount();
 			wiz_macro.LowerBound = 32000;
@@ -122,7 +123,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			DEBUG_MSG("RESET" << std::endl);
 		}
 
-		if (GetAsyncKeyState(input_simulator.CharToVK(PositionHotkey)) && (GetTickCount() - 500 >= PositionDuration))
+		if ((GetAsyncKeyState(input_simulator.CharToVK(PositionHotkey)) < 0) && (GetTickCount() - 500 >= PositionDuration))
 		{
 			POINT p;
 			GetCursorPos(&p);
@@ -132,6 +133,17 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			wiz_macro.PositionSaved = true;
 			m_ctlPOSITIONSAVED.SetCheck(BST_CHECKED);
 			DEBUG_MSG("Position saved" << std::endl);
+		}
+		if ((GetAsyncKeyState(input_simulator.CharToVK('w')) < 0) && (GetTickCount() - 500 >= OutsideDuration))
+		{
+			POINT p;
+			GetCursorPos(&p);
+			::ScreenToClient(::GetForegroundWindow(), &p);
+			wiz_macro.Outside = p;
+			OutsideDuration = GetTickCount();
+			wiz_macro.OutsideSaved = true;
+			m_ctlPOSITIONSAVED.SetCheck(BST_CHECKED);
+			DEBUG_MSG("outside saved" << std::endl);
 		}
 		if (!wiz_macro.PositionSaved)
 		{
@@ -164,7 +176,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		::GetWindowText(handle, NewName, 128);
 		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
 
-		if (GetAsyncKeyState(input_simulator.CharToVK(ToggleKey)) && (GetTickCount() - 500 >= AutoMacroDuration))
+		if ((GetAsyncKeyState(input_simulator.CharToVK(ToggleKey)) < 0) && (GetTickCount() - 500 >= AutoMacroDuration))
 		{
 			AutoMacroDuration = GetTickCount();
 
@@ -238,6 +250,14 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			if (CastEpiphany && EpiphanyCheck)
 			{
 				input_simulator.SendKeyOrMouse(EpiphanyHotkey);
+				Sleep(100);
+			}
+
+			//Blinding Flash
+			bool CastBlindingFlash = tcp_connection.CastBlindingFlash();
+			if (CastBlindingFlash && BlindingFlashCheck)
+			{
+				input_simulator.SendKeyOrMouse(BlindingFlashHotkey);
 				Sleep(100);
 			}
 
@@ -831,7 +851,8 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	else m_ctlEXPLOSIVEBLASTCHECK.SetCheck(BST_UNCHECKED);
 	if (checks[28] == '1') { m_ctlBLOODNOVACHECK.SetCheck(BST_CHECKED); }
 	else m_ctlBLOODNOVACHECK.SetCheck(BST_UNCHECKED);
-
+	if (checks[29] == '1') { m_ctlBLINDINGFLASHCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlBLINDINGFLASHCHECK.SetCheck(BST_UNCHECKED);
 
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
@@ -924,6 +945,10 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	}
 	str[0] = hotkeys[35];
 	m_ctlPOSITIONHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[36];
+	m_ctlBLINDINGFLASHHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[37];
+	m_ctlCHANNELHOTKEY.SetWindowText(str);
 	return TRUE;
 }
 
@@ -968,6 +993,7 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_ARCANEBLASTCHECK, Update)
 	ON_BN_CLICKED(IDC_EXPLOSIVEBLASTCHECK, Update)
 	ON_BN_CLICKED(IDC_BLOODNOVACHECK, Update)
+	ON_BN_CLICKED(IDC_BLINDINGFLASHCHECK, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -1001,6 +1027,8 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_BLOODNOVAHOTKEY, Update)
 	ON_EN_CHANGE(IDC_FORCESTANDSTILLHOTKEY, Update)
 	ON_EN_CHANGE(IDC_POSITIONHOTKEY, Update)
+	ON_EN_CHANGE(IDC_BLINDINGFLASHHOTKEY, Update)
+	ON_EN_CHANGE(IDC_CHANNELHOTKEY, Update)
 
 	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
 	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
@@ -1046,6 +1074,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_ARCANEBLASTCHECK, m_ctlARCANEBLASTCHECK);
 	DDX_Control(pDX, IDC_EXPLOSIVEBLASTCHECK, m_ctlEXPLOSIVEBLASTCHECK);
 	DDX_Control(pDX, IDC_BLOODNOVACHECK, m_ctlBLOODNOVACHECK);
+	DDX_Control(pDX, IDC_BLINDINGFLASHCHECK, m_ctlBLINDINGFLASHCHECK);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -1082,6 +1111,8 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BLOODNOVAHOTKEY, m_ctlBLOODNOVAHOTKEY);
 	DDX_Control(pDX, IDC_FORCESTANDSTILLHOTKEY, m_ctlFORCESTANDSTILLHOTKEY);
 	DDX_Control(pDX, IDC_POSITIONHOTKEY, m_ctlPOSITIONHOTKEY);
+	DDX_Control(pDX, IDC_BLINDINGFLASHHOTKEY, m_ctlBLINDINGFLASHHOTKEY);
+	DDX_Control(pDX, IDC_CHANNELHOTKEY, m_ctlCHANNELHOTKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
@@ -1130,6 +1161,7 @@ void CDiabloCalcFancyDlg::Update()
 	ArcaneBlastCheck = m_ctlARCANEBLASTCHECK.GetCheck();
 	ExplosiveBlastCheck = m_ctlEXPLOSIVEBLASTCHECK.GetCheck();
 	BloodNovaCheck = m_ctlBLOODNOVACHECK.GetCheck();
+	BlindingFlashCheck = m_ctlBLINDINGFLASHCHECK.GetCheck();
 
 	wiz_macro.BlackholeCheck = BlackholeCheck;
 	wiz_macro.ArchonCheck = ArchonCheck;
@@ -1574,6 +1606,30 @@ void CDiabloCalcFancyDlg::Update()
 	{
 		PositionHotkey = ' ';
 	}
+	len = m_ctlBLINDINGFLASHHOTKEY.LineLength(m_ctlBLINDINGFLASHHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlBLINDINGFLASHHOTKEY.GetLine(0, buffer, len);
+		BlindingFlashHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		BlindingFlashHotkey = ' ';
+	}
+	len = m_ctlCHANNELHOTKEY.LineLength(m_ctlCHANNELHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlCHANNELHOTKEY.GetLine(0, buffer, len);
+		ChannelHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ChannelHotkey = ' ';
+	}
 
 	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
 	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
@@ -1582,7 +1638,7 @@ void CDiabloCalcFancyDlg::Update()
 	wiz_macro.BlackholeHotkey = BlackholeHotkey;
 	wiz_macro.MacroHotkey = MacroHotkey;
 	wiz_macro.ArchonHotkey = ArchonHotkey;
-
+	wiz_macro.ChannelHotkey = ChannelHotkey;
 
 	len = m_ctlFORCESTANDSTILLHOTKEY.LineLength(m_ctlFORCESTANDSTILLHOTKEY.LineIndex(0));
 	if (len > 0)
@@ -1684,6 +1740,8 @@ void CDiabloCalcFancyDlg::Update()
 	else checks += '0';
 	if (BloodNovaCheck) checks += '1';
 	else checks += '0';
+	if (BlindingFlashCheck) checks += '1';
+	else checks += '0';
 
 	hotkeys += IpHotkey;
 	hotkeys += WcHotkey;
@@ -1721,6 +1779,8 @@ void CDiabloCalcFancyDlg::Update()
 	hotkeys += ForceStandStillHotkey;
 	hotkeys += ForceStandStillSpecialHotkey;
 	hotkeys += PositionHotkey;
+	hotkeys += BlindingFlashHotkey;
+	hotkeys += ChannelHotkey;
 
 	std::wofstream file;
 	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);

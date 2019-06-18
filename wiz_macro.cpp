@@ -17,6 +17,9 @@ WizMacro::WizMacro()
 	DooingArcane = false;
 	SavedBlackHole = false;
 	AutoMacro = false;
+	OutsideSaved = false;
+	Channeling = false;
+	Shooting = false;
 }
 
 void WizMacro::GetCoe(TCPConnection* tcp_connection)
@@ -217,7 +220,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 
 	if (BlackholeCheck && !ArchonCheck)
 	{
-		if(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
+		if(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0)
 		{
 			if (!MacroIsRunning)//just started
 			{
@@ -270,7 +273,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
 
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -285,7 +288,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 			Sleep(400);
 			input_simulator->SendKeyUp(DisintegrateHotkey);
 
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -306,7 +309,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				Sleep(200);
 			}
 			Sleep(1500);
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -324,7 +327,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -341,7 +344,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -357,7 +360,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -373,7 +376,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);
-			if (!GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) && !AutoMacro)
+			if (!(GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0) && !AutoMacro)
 			{
 				Stop(input_simulator);
 				return;
@@ -386,11 +389,51 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 	}
 	else if (ArchonCheck)
 	{
-		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
+		DWORD Convention = AdjustedTime;
+
+		if (!Shooting)
 		{
-			DWORD Convention = AdjustedTime;
+			if (GetAsyncKeyState(input_simulator->CharToVK(ChannelHotkey)) < 0)//pressed
+			{
+				if (!Channeling)
+				{
+					input_simulator->SendKeyDown(DisintegrateHotkey);
+					Channeling = true;
+				}
+			}
+			else
+			{
+				if (Channeling)
+				{
+					input_simulator->SendKeyUp(DisintegrateHotkey);
+					Channeling = false;
+				}
+			}
+		}
+
+		if (Convention > 9000 && Convention < 10000)//out of archon
+		{
+			if (!Shooting)
+			{
+				if (GetAsyncKeyState(input_simulator->CharToVK(ChannelHotkey)) < 0)//pressed
+				{
+					input_simulator->SendKeyUp(DisintegrateHotkey);
+					input_simulator->SendKeyDown(DisintegrateHotkey);
+					Sleep(100);
+				}
+			}
+		}
+		
+		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0)
+		{
 			if (Convention > 11500 && Convention < 12500)//occu
 			{
+				Shooting = true;
+				if (Channeling)
+				{
+					input_simulator->SendKeyUp(DisintegrateHotkey);
+					Channeling = false;
+				}
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				if (BlackholeCheck)
 				{
@@ -399,16 +442,24 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				input_simulator->SendKeyDown(ElectrocuteHotkey);
 				Sleep(2300);
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
-				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
-				Sleep(1166);
-				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
-				Sleep(100);
+
+					input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+					Sleep(1166);
+
 				input_simulator->SendKeyDown(DisintegrateHotkey);
+				Channeling = true;
+				Sleep(200);
+				Shooting = false;
 			}
 			
 			if (Convention > 2000 && Convention < 2800)
 			{
-				input_simulator->SendKeyUp(DisintegrateHotkey);
+				Shooting = true;
+				if (Channeling)
+				{
+					input_simulator->SendKeyUp(DisintegrateHotkey);
+					Channeling = false;
+				}
 				input_simulator->SendKeyOrMouseWithoutMove(WaveOfForceHotkey);
 				if (BlackholeCheck)
 				{
@@ -417,7 +468,9 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				input_simulator->SendKeyDown(ElectrocuteHotkey);
 				Sleep(2300);
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
-				input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+
+					input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+
 				if (PositionSaved)
 				{
 					Sleep(50);
@@ -430,22 +483,21 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				{
 					Sleep(100);
 				}
-				Sleep(1166-100);
-				input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
-				input_simulator->SendKeyOrMouseWithoutMove(ArchonHotkey);
 
-				for (int i = 0; i < 10; i++)
-				{
-					input_simulator->SendKeyOrMouseWithoutMove(DisintegrateHotkey);
-					input_simulator->SendKeyOrMouseWithoutMove(ArchonHotkey);
-					Sleep(10);
-				}
+					Sleep(1166 - 100);
+
+				input_simulator->SendKeyDown(DisintegrateHotkey);
+				Sleep(DWORD(5.0 * (1000.0 / 60.0)));
+				input_simulator->SendKeyOrMouseWithoutMove(ArchonHotkey);
+				input_simulator->SendKeyUp(DisintegrateHotkey);
+				Sleep(200);
+				Shooting = false;
 			}
 		}
 	}
 	else
 	{
-		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)))
+		if (GetAsyncKeyState(input_simulator->CharToVK(MacroHotkey)) < 0)
 		{
 			input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 			Sleep(1200);

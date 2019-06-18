@@ -96,7 +96,7 @@ BEGIN
     CONTROL         IDB_BONEARMOR,IDC_BONEARMOR,"Static",SS_BITMAP,61,99,13,12
     CONTROL         "",IDC_ACTIVERUNNING,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,0,9,16,10
     LTEXT           "Active",IDC_STATIC,0,0,21,8
-    LTEXT           "Version 1.2.23",IDC_STATIC,504,294,48,8
+    LTEXT           "Version 1.2.24",IDC_STATIC,504,294,48,8
     CONTROL         "",IDC_POTIONCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,171,18,16,10
     EDITTEXT        IDC_POTIONTHOTKEY,171,30,14,14,ES_AUTOHSCROLL
     CONTROL         IDB_POTION,IDC_SPRINT2,"Static",SS_BITMAP,171,3,13,12
@@ -177,6 +177,11 @@ BEGIN
     LTEXT           "Save position key",IDC_STATIC,93,267,57,8
     CONTROL         "",IDC_POSITIONSAVED,"Button",BS_AUTOCHECKBOX | WS_DISABLED | WS_TABSTOP,153,282,16,10
     LTEXT           "Position Saved",IDC_STATIC,102,282,48,8
+    CONTROL         IDB_BLINDINGFLASH,IDC_BLINDINGFLASH,"Static",SS_BITMAP,156,51,13,12
+    CONTROL         "",IDC_BLINDINGFLASHCHECK,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,156,66,16,10
+    EDITTEXT        IDC_BLINDINGFLASHHOTKEY,156,78,14,14,ES_AUTOHSCROLL
+    LTEXT           "Channel key",IDC_STATIC,108,210,40,8
+    EDITTEXT        IDC_CHANNELHOTKEY,153,207,14,14,ES_AUTOHSCROLL
 END
 
 
@@ -285,6 +290,8 @@ IDB_ARCHON              BITMAP                  "SkillPictures\\IconArchon.bmp"
 IDB_EXPLOSIVEBLAST      BITMAP                  "SkillPictures\\wizard_explosiveblast.bmp"
 
 IDB_BLOODNOVA           BITMAP                  "SkillPictures\\p6_necro_bloodnova.bmp"
+
+IDB_BLINDINGFLASH       BITMAP                  "SkillPictures\\monk_blindingflash.bmp"
 
 
 /////////////////////////////////////////////////////////////////////////////
