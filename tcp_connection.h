@@ -48,6 +48,7 @@ public:
 	bool InARift() { return ElementAt(1, 2); };
 	bool DontCastLand() { return ElementAt(2, 2); };
 	bool CastBlindingFlash() { return ElementAt(3, 2); };
+	bool CastCommandSkeletons() { return ElementAt(4, 2); };
 
 	bool CastIp() { return ElementAt(1, 3); };
 	bool CastSim() { return ElementAt(2, 3); };

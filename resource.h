@@ -34,6 +34,8 @@
 #define IDB_EXPLOSIVEBLAST              137
 #define IDB_BLOODNOVA                   138
 #define IDB_BLINDINGFLASH               139
+#define IDB_COMMANDSKELETONS            140
+#define IDB_HEXINGPANTS                 141
 #define IDC_IPCHECK                     1007
 #define IDC_WCCHECK                     1008
 #define IDC_FALTERCHECK                 1009
@@ -139,14 +141,20 @@
 #define IDC_BLINDINGFLASH               1109
 #define IDC_BLINDINGFLASHCHECK          1110
 #define IDC_BLINDINGFLASHHOTKEY         1111
-#define IDC_MACROHOTKEY2                1112
 #define IDC_CHANNELHOTKEY               1112
+#define IDC_FORCEMOVEHOTKEY             1113
+#define IDC_HEXINGPANTS                 1114
+#define IDC_ARCANEBLAST2                1116
+#define IDC_COMMANDSKELETONS            1118
+#define IDC_COMMANDSKELETONSCHECK       1119
+#define IDC_SIMHOTKEY2                  1120
+#define IDC_COMMANDSKELETONSHOTKEY      1120
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        140
+#define _APS_NEXT_RESOURCE_VALUE        142
 #define _APS_NEXT_COMMAND_VALUE         40001
 #define _APS_NEXT_CONTROL_VALUE         1048
 #define _APS_NEXT_SYMED_VALUE           101

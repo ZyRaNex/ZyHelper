@@ -443,6 +443,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				Sleep(2300);
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
 
+
 					input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 					Sleep(1166);
 
@@ -476,7 +477,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 					Sleep(50);
 					input_simulator->MoveMouse(SavedPosition);
 					Sleep(50);
-					input_simulator->SendKey(input_simulator->CharToVK('u'));
+					input_simulator->SendKey(input_simulator->CharToVK(ForcemoveHotkey));
 					PositionSaved = false;
 				}
 				else

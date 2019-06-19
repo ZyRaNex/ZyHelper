@@ -28,6 +28,7 @@ public:
 	wchar_t MacroHotkey;
 	wchar_t ArchonHotkey;
 	wchar_t ChannelHotkey;
+	wchar_t ForcemoveHotkey;
 
 	bool BlackholeCheck;
 	bool ArchonCheck;

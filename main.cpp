@@ -10,7 +10,6 @@
 #include <stdio.h>
 #include <iostream>
 
-// Need to link with Ws2_32.lib, Mswsock.lib, and Advapi32.lib
 #pragma comment (lib, "Ws2_32.lib")
 #pragma comment (lib, "Mswsock.lib")
 #pragma comment (lib, "AdvApi32.lib")
@@ -142,7 +141,6 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			wiz_macro.Outside = p;
 			OutsideDuration = GetTickCount();
 			wiz_macro.OutsideSaved = true;
-			m_ctlPOSITIONSAVED.SetCheck(BST_CHECKED);
 			DEBUG_MSG("outside saved" << std::endl);
 		}
 		if (!wiz_macro.PositionSaved)
@@ -370,6 +368,14 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 				input_simulator.SendKeyOrMouseWithoutMove(BloodNovaHotkey);
 				Sleep(100);
 			}
+
+			// commandskeletons
+			bool CastCommandSkeletons = tcp_connection.CastCommandSkeletons();
+			if (CastCommandSkeletons && CommandSkeletonsCheck)
+			{
+				input_simulator.SendKeyOrMouseWithoutMove(CommandSkeletonsHotkey);
+				if(!DevourCheck) Sleep(100);
+			}
 		}
 		if (tcp_connection.ImWizard())
 		{
@@ -558,12 +564,12 @@ DWORD CDiabloCalcFancyDlg::HexingMacroThread()
 			Sleep(100);
 			continue;
 		}
-		/*if (!tcp_connection.ImNecro())
+		if (!tcp_connection.ImNecro())
 		{
 			SwitchToThread();
 			Sleep(1000);
 			continue;
-		}*/
+		}
 		if (!Hexing || !tcp_connection.InARift())
 		{
 			SwitchToThread();
@@ -853,6 +859,8 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	else m_ctlBLOODNOVACHECK.SetCheck(BST_UNCHECKED);
 	if (checks[29] == '1') { m_ctlBLINDINGFLASHCHECK.SetCheck(BST_CHECKED); }
 	else m_ctlBLINDINGFLASHCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[30] == '1') { m_ctlCOMMANDSKELETONSCHECK.SetCheck(BST_CHECKED); }
+	else m_ctlCOMMANDSKELETONSCHECK.SetCheck(BST_UNCHECKED);
 
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
@@ -949,6 +957,10 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	m_ctlBLINDINGFLASHHOTKEY.SetWindowText(str);
 	str[0] = hotkeys[37];
 	m_ctlCHANNELHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[38];
+	m_ctlCOMMANDSKELETONSHOTKEY.SetWindowText(str);
+	str[0] = hotkeys[39];
+	m_ctlFORCEMOVEHOTKEY.SetWindowText(str);
 	return TRUE;
 }
 
@@ -994,6 +1006,7 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_EXPLOSIVEBLASTCHECK, Update)
 	ON_BN_CLICKED(IDC_BLOODNOVACHECK, Update)
 	ON_BN_CLICKED(IDC_BLINDINGFLASHCHECK, Update)
+	ON_BN_CLICKED(IDC_COMMANDSKELETONSCHECK, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -1029,10 +1042,12 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_EN_CHANGE(IDC_POSITIONHOTKEY, Update)
 	ON_EN_CHANGE(IDC_BLINDINGFLASHHOTKEY, Update)
 	ON_EN_CHANGE(IDC_CHANNELHOTKEY, Update)
+	ON_EN_CHANGE(IDC_COMMANDSKELETONSHOTKEY, Update)
 
 	ON_EN_CHANGE(IDC_MACROHOTKEY, Update)
 	ON_EN_CHANGE(IDC_TIMINGKEY, Update)
 	ON_EN_CHANGE(IDC_TOGGLEKEY, Update)
+	ON_EN_CHANGE(IDC_FORCEMOVEHOTKEY, Update)
 
 END_MESSAGE_MAP()
 
@@ -1075,6 +1090,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_EXPLOSIVEBLASTCHECK, m_ctlEXPLOSIVEBLASTCHECK);
 	DDX_Control(pDX, IDC_BLOODNOVACHECK, m_ctlBLOODNOVACHECK);
 	DDX_Control(pDX, IDC_BLINDINGFLASHCHECK, m_ctlBLINDINGFLASHCHECK);
+	DDX_Control(pDX, IDC_COMMANDSKELETONSCHECK, m_ctlCOMMANDSKELETONSCHECK);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -1113,12 +1129,13 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_POSITIONHOTKEY, m_ctlPOSITIONHOTKEY);
 	DDX_Control(pDX, IDC_BLINDINGFLASHHOTKEY, m_ctlBLINDINGFLASHHOTKEY);
 	DDX_Control(pDX, IDC_CHANNELHOTKEY, m_ctlCHANNELHOTKEY);
+	DDX_Control(pDX, IDC_COMMANDSKELETONSHOTKEY, m_ctlCOMMANDSKELETONSHOTKEY);
 
 	DDX_Control(pDX, IDC_UPPERBOUND, m_ctlUPPERBOUND);
 	DDX_Control(pDX, IDC_LOWERBOUND, m_ctlLOWERBOUND);
 	DDX_Control(pDX, IDC_TIME, m_ctlTIME);
 	DDX_Control(pDX, IDC_COE, m_ctlCOE);
-
+	DDX_Control(pDX, IDC_FORCEMOVEHOTKEY, m_ctlFORCEMOVEHOTKEY);
 }
 
 void CDiabloCalcFancyDlg::Update()
@@ -1162,6 +1179,7 @@ void CDiabloCalcFancyDlg::Update()
 	ExplosiveBlastCheck = m_ctlEXPLOSIVEBLASTCHECK.GetCheck();
 	BloodNovaCheck = m_ctlBLOODNOVACHECK.GetCheck();
 	BlindingFlashCheck = m_ctlBLINDINGFLASHCHECK.GetCheck();
+	CommandSkeletonsCheck = m_ctlCOMMANDSKELETONSCHECK.GetCheck();
 
 	wiz_macro.BlackholeCheck = BlackholeCheck;
 	wiz_macro.ArchonCheck = ArchonCheck;
@@ -1630,6 +1648,30 @@ void CDiabloCalcFancyDlg::Update()
 	{
 		ChannelHotkey = ' ';
 	}
+	len = m_ctlCOMMANDSKELETONSHOTKEY.LineLength(m_ctlCOMMANDSKELETONSHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlCOMMANDSKELETONSHOTKEY.GetLine(0, buffer, len);
+		CommandSkeletonsHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		CommandSkeletonsHotkey = ' ';
+	}
+	len = m_ctlFORCEMOVEHOTKEY.LineLength(m_ctlFORCEMOVEHOTKEY.LineIndex(0));
+	if (len > 0)
+	{
+		buffer = strText.GetBuffer(len);
+		m_ctlFORCEMOVEHOTKEY.GetLine(0, buffer, len);
+		ForcemoveHotkey = strText[0];
+		strText.ReleaseBuffer(len);
+	}
+	else
+	{
+		ForcemoveHotkey = ' ';
+	}
 
 	wiz_macro.WaveOfForceHotkey = WaveOfForceHotkey;
 	wiz_macro.ElectrocuteHotkey = ElectrocuteHotkey;
@@ -1639,6 +1681,7 @@ void CDiabloCalcFancyDlg::Update()
 	wiz_macro.MacroHotkey = MacroHotkey;
 	wiz_macro.ArchonHotkey = ArchonHotkey;
 	wiz_macro.ChannelHotkey = ChannelHotkey;
+	wiz_macro.ForcemoveHotkey = ForcemoveHotkey;
 
 	len = m_ctlFORCESTANDSTILLHOTKEY.LineLength(m_ctlFORCESTANDSTILLHOTKEY.LineIndex(0));
 	if (len > 0)
@@ -1742,6 +1785,8 @@ void CDiabloCalcFancyDlg::Update()
 	else checks += '0';
 	if (BlindingFlashCheck) checks += '1';
 	else checks += '0';
+	if (CommandSkeletonsCheck) checks += '1';
+	else checks += '0';
 
 	hotkeys += IpHotkey;
 	hotkeys += WcHotkey;
@@ -1781,6 +1826,8 @@ void CDiabloCalcFancyDlg::Update()
 	hotkeys += PositionHotkey;
 	hotkeys += BlindingFlashHotkey;
 	hotkeys += ChannelHotkey;
+	hotkeys += CommandSkeletonsHotkey;
+	hotkeys += ForcemoveHotkey;
 
 	std::wofstream file;
 	file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);

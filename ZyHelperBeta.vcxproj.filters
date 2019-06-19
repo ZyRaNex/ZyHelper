@@ -150,5 +150,11 @@
     <Image Include="SkillPictures\monk_blindingflash.bmp">
       <Filter>Ressourcendateien</Filter>
     </Image>
+    <Image Include="SkillPictures\p6_necro_commandskeletons.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
+    <Image Include="SkillPictures\unique_pants_101_x1_demonhunter_male.bmp">
+      <Filter>Ressourcendateien</Filter>
+    </Image>
   </ItemGroup>
 </Project>

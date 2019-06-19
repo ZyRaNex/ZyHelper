@@ -168,6 +168,7 @@
     <Image Include="SkillPictures\Mantra_of_Healing.bmp" />
     <Image Include="SkillPictures\monk_blindingflash.bmp" />
     <Image Include="SkillPictures\p6_necro_bloodnova.bmp" />
+    <Image Include="SkillPictures\p6_necro_commandskeletons.bmp" />
     <Image Include="SkillPictures\p6_necro_devour.bmp" />
     <Image Include="SkillPictures\p6_necro_raisedead.bmp" />
     <Image Include="SkillPictures\p6_necro_simulacrum.bmp" />
@@ -175,6 +176,7 @@
     <Image Include="SkillPictures\Storm_Armor2.bmp" />
     <Image Include="SkillPictures\Sweeping_Wind.bmp" />
     <Image Include="SkillPictures\Threatening_Shout.bmp" />
+    <Image Include="SkillPictures\unique_pants_101_x1_demonhunter_male.bmp" />
     <Image Include="SkillPictures\Vengeance.bmp" />
     <Image Include="SkillPictures\War_Cry.bmp" />
     <Image Include="SkillPictures\wizard_explosiveblast.bmp" />
