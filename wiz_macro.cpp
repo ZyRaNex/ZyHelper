@@ -444,8 +444,11 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
 
 
+
 					input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
 					Sleep(1166);
+
+
 
 				input_simulator->SendKeyDown(DisintegrateHotkey);
 				Channeling = true;
@@ -470,7 +473,9 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				Sleep(2300);
 				input_simulator->SendKeyUp(ElectrocuteHotkey);
 
+
 					input_simulator->SendKeyOrMouseWithoutMove(MeteorHotkey);
+
 
 				if (PositionSaved)
 				{
@@ -484,6 +489,7 @@ void WizMacro::DoMacro(InputSimulator* input_simulator, TCPConnection* tcp_conne
 				{
 					Sleep(100);
 				}
+
 
 					Sleep(1166 - 100);
 

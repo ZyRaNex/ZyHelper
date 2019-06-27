@@ -126,7 +126,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		{
 			POINT p;
 			GetCursorPos(&p);
-			::ScreenToClient(::GetForegroundWindow(), &p);
+			::ScreenToClient(::FindWindow(NULL, _T("Diablo III")), &p);
 			wiz_macro.SavedPosition = p;
 			PositionDuration = GetTickCount();
 			wiz_macro.PositionSaved = true;
@@ -137,7 +137,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 		{
 			POINT p;
 			GetCursorPos(&p);
-			::ScreenToClient(::GetForegroundWindow(), &p);
+			::ScreenToClient(::FindWindow(NULL, _T("Diablo III")), &p);
 			wiz_macro.Outside = p;
 			OutsideDuration = GetTickCount();
 			wiz_macro.OutsideSaved = true;
@@ -168,11 +168,14 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			continue;
 		}
 
-		HWND handle = ::GetForegroundWindow();
-		int capacity = ::GetWindowTextLength(handle) * 2;
-		wchar_t NewName[128];
-		::GetWindowText(handle, NewName, 128);
-		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		if (Foreground)
+		{
+			HWND handle = ::GetForegroundWindow();
+			int capacity = ::GetWindowTextLength(handle) * 2;
+			wchar_t NewName[128];
+			::GetWindowText(handle, NewName, 128);
+			if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		}
 
 		if ((GetAsyncKeyState(input_simulator.CharToVK(ToggleKey)) < 0) && (GetTickCount() - 500 >= AutoMacroDuration))
 		{
@@ -264,7 +267,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			if (CastMantraHealing && MantraHealingCheck)
 			{
 				input_simulator.SendKeyOrMouseWithoutMove(MantraHealingHotkey);
-				Sleep(100);
+				Sleep(50-10);
 			}
 
 			//Sweeping Wind
@@ -338,7 +341,7 @@ DWORD CDiabloCalcFancyDlg::DoLogicThread()
 			if (DevourCheck)
 			{
 				input_simulator.SendKeyOrMouseWithoutMove(DevourHotkey);
-				Sleep(39);
+				Sleep(39-10);
 			}
 
 			//Similacrum
@@ -451,11 +454,14 @@ DWORD CDiabloCalcFancyDlg::CoeReaderThread()
 	while (true)
 	{
 		Sleep(127);
-		HWND handle = ::GetForegroundWindow();
-		int capacity = ::GetWindowTextLength(handle) * 2;
-		wchar_t NewName[128];
-		::GetWindowText(handle, NewName, 128);
-		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		if (Foreground)
+		{
+			HWND handle = ::GetForegroundWindow();
+			int capacity = ::GetWindowTextLength(handle) * 2;
+			wchar_t NewName[128];
+			::GetWindowText(handle, NewName, 128);
+			if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		}
 		if (!tcp_connection.IsReady())
 		{
 			Sleep(100);
@@ -501,12 +507,15 @@ DWORD CDiabloCalcFancyDlg::WizMacroThread()
 {
 	while (true)
 	{
-		Sleep(5);
-		HWND handle = ::GetForegroundWindow();
-		int capacity = ::GetWindowTextLength(handle) * 2;
-		wchar_t NewName[128];
-		::GetWindowText(handle, NewName, 128);
-		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		Sleep(1);
+		if (Foreground)
+		{
+			HWND handle = ::GetForegroundWindow();
+			int capacity = ::GetWindowTextLength(handle) * 2;
+			wchar_t NewName[128];
+			::GetWindowText(handle, NewName, 128);
+			if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		}
 		
 		if (!tcp_connection.IsReady())
 		{
@@ -546,12 +555,14 @@ DWORD CDiabloCalcFancyDlg::HexingMacroThread()
 	while (true)
 	{
 		Sleep(10);
-		HWND handle = ::GetForegroundWindow();
-		int capacity = ::GetWindowTextLength(handle) * 2;
-		wchar_t NewName[128];
-		::GetWindowText(handle, NewName, 128);
-		if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
-
+		if (Foreground)
+		{
+			HWND handle = ::GetForegroundWindow();
+			int capacity = ::GetWindowTextLength(handle) * 2;
+			wchar_t NewName[128];
+			::GetWindowText(handle, NewName, 128);
+			if (wcscmp(NewName, _T("Diablo III")) != 0) continue;
+		}
 		if (!tcp_connection.IsReady())
 		{
 			SwitchToThread();
@@ -769,33 +780,58 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
  	if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
 	{
 		DEBUG_MSG("couldnt read config file" << std::endl);
-		file.clear();
-		file.open(_T("config.cfg"), std::ios_base::out);
-
-		DEBUG_MSG("creating new config file" << std::endl);
-		file << InitChecks << std::endl;
-		file << InitHotkeys << std::endl;
-
-		file.close();
-		file.open(_T("config.cfg"), std::ios_base::out | std::ios_base::in);
-		if (!file.is_open())//file exists
+		DEBUG_MSG("Trying to fix it" << std::endl);
+		if (checks.size() < ChecksLength || hotkeys.size() < HotkeysLength)
 		{
-			DEBUG_MSG("couldnt create file" << std::endl);
+			for (int pos = checks.size(); checks.size() < ChecksLength; pos++)
+			{
+				checks += InitChecks[pos];
+			}
+			for (int pos = hotkeys.size(); hotkeys.size() < HotkeysLength; pos++)
+			{
+				hotkeys += InitHotkeys[pos];
+			}
 		}
-
-		if (file.is_open())
-		{
-			file.seekg(0);
-			getline(file, checks);
-			getline(file, hotkeys);
-			file.close();
-		}
-
 		if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
 		{
-			DEBUG_MSG("still wrong" << std::endl);
-			::MessageBox(NULL, _T("couldnt read config"),
-				_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+			DEBUG_MSG("didnt work" << std::endl);
+			file.clear();
+			file.open(_T("config.cfg"), std::ios_base::out);
+
+			DEBUG_MSG("creating new config file" << std::endl);
+			file << InitChecks << std::endl;
+			file << InitHotkeys << std::endl;
+
+			file.close();
+			file.open(_T("config.cfg"), std::ios_base::out | std::ios_base::in);
+			if (!file.is_open())//file exists
+			{
+				DEBUG_MSG("couldnt create file" << std::endl);
+			}
+
+			if (file.is_open())
+			{
+				file.seekg(0);
+				getline(file, checks);
+				getline(file, hotkeys);
+				file.close();
+			}
+
+			if (checks.size() != ChecksLength || hotkeys.size() != HotkeysLength)
+			{
+				DEBUG_MSG("still wrong" << std::endl);
+				::MessageBox(NULL, _T("couldnt read config"),
+					_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
+			}
+		}
+		else
+		{
+			DEBUG_MSG("it worked" << std::endl);
+			std::wofstream file;
+			file.open(_T("config.cfg"), std::wofstream::out | std::wofstream::trunc);
+			file << checks << std::endl;
+			file << hotkeys << std::endl;
+			file.close();
 		}
 	}
 
@@ -861,6 +897,8 @@ BOOL CDiabloCalcFancyDlg::OnInitDialog()
 	else m_ctlBLINDINGFLASHCHECK.SetCheck(BST_UNCHECKED);
 	if (checks[30] == '1') { m_ctlCOMMANDSKELETONSCHECK.SetCheck(BST_CHECKED); }
 	else m_ctlCOMMANDSKELETONSCHECK.SetCheck(BST_UNCHECKED);
+	if (checks[31] == '1') { m_ctlFOREGROUND.SetCheck(BST_CHECKED); }
+	else m_ctlFOREGROUND.SetCheck(BST_UNCHECKED);
 
 	m_ctlMACROACTIVE.SetCheck(BST_UNCHECKED);
 
@@ -1007,6 +1045,7 @@ BEGIN_MESSAGE_MAP(CDiabloCalcFancyDlg, CDialog)
 	ON_BN_CLICKED(IDC_BLOODNOVACHECK, Update)
 	ON_BN_CLICKED(IDC_BLINDINGFLASHCHECK, Update)
 	ON_BN_CLICKED(IDC_COMMANDSKELETONSCHECK, Update)
+	ON_BN_CLICKED(IDC_FOREGROUND, Update)
 
 	ON_EN_CHANGE(IDC_IPHOTKEY, Update)
 	ON_EN_CHANGE(IDC_WCHOTKEY, Update)
@@ -1091,6 +1130,7 @@ void CDiabloCalcFancyDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_BLOODNOVACHECK, m_ctlBLOODNOVACHECK);
 	DDX_Control(pDX, IDC_BLINDINGFLASHCHECK, m_ctlBLINDINGFLASHCHECK);
 	DDX_Control(pDX, IDC_COMMANDSKELETONSCHECK, m_ctlCOMMANDSKELETONSCHECK);
+	DDX_Control(pDX, IDC_FOREGROUND, m_ctlFOREGROUND);
 
 	DDX_Control(pDX, IDC_IPHOTKEY, m_ctlIPHOTKEY);
 	DDX_Control(pDX, IDC_WCHOTKEY, m_ctlWCHOTKEY);
@@ -1180,6 +1220,7 @@ void CDiabloCalcFancyDlg::Update()
 	BloodNovaCheck = m_ctlBLOODNOVACHECK.GetCheck();
 	BlindingFlashCheck = m_ctlBLINDINGFLASHCHECK.GetCheck();
 	CommandSkeletonsCheck = m_ctlCOMMANDSKELETONSCHECK.GetCheck();
+	Foreground = m_ctlFOREGROUND.GetCheck();
 
 	wiz_macro.BlackholeCheck = BlackholeCheck;
 	wiz_macro.ArchonCheck = ArchonCheck;
@@ -1786,6 +1827,8 @@ void CDiabloCalcFancyDlg::Update()
 	if (BlindingFlashCheck) checks += '1';
 	else checks += '0';
 	if (CommandSkeletonsCheck) checks += '1';
+	else checks += '0';
+	if (Foreground) checks += '1';
 	else checks += '0';
 
 	hotkeys += IpHotkey;

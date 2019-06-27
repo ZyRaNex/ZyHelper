@@ -2,6 +2,7 @@
 
 #include <Windows.h>
 #include <queue>
+#include <Tchar.h>
 
 #include "Debug.h"
 
@@ -164,7 +165,7 @@ void InputSimulator::SendKeyOrMouseWithoutMove(wchar_t input)
 
 void InputSimulator::SendKey(int key)
 {
-	INPUT ip;
+	/*INPUT ip;
 	ip.type = INPUT_KEYBOARD;
 	ip.ki.wScan = 0; // hardware scan code for key
 	ip.ki.time = 0;
@@ -175,7 +176,12 @@ void InputSimulator::SendKey(int key)
 	SendInput(1, &ip, sizeof(INPUT));
 
 	ip.ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(1, &ip, sizeof(INPUT));
+	SendInput(1, &ip, sizeof(INPUT));*/
+
+	HWND handle = FindWindow(NULL, _T("Diablo III"));
+
+	PostMessage(handle, WM_KEYDOWN, key, 0);
+	PostMessage(handle, WM_KEYUP, key, 0);
 }
 
 void InputSimulator::SendKey(wchar_t key)
@@ -234,23 +240,27 @@ void SendKeyUp(int key)
 
 void InputSimulator::SendMouse(MouseClick Click)
 {
-	HWND handle = ::GetForegroundWindow();
-
+	HWND hwnd = FindWindow(NULL, _T("Diablo III"));
+	Sleep(1);
+	RECT rc;
+	GetWindowRect(hwnd, &rc);
+	double ScalingX = abs((double)rc.right - (double)rc.left) / 1920.0;
+	double ScalingY = abs((double)rc.top - (double)rc.bottom) / 1080.0;
 	if (Click == Left)//hold force stand still
 	{
 		SendKeyDown(ForceStandStill);
 		Sleep(100);
-		PostMessage(handle, WM_LBUTTONDOWN, 1, (int)((500 << 16) | (700 & 0xFFFF)));
+		PostMessage(hwnd, WM_LBUTTONDOWN, 1, (int)(((int)(ScalingY * 500) << 16) | ((int)(ScalingX * 700) & 0xFFFF)));
 		Sleep(1);
-		PostMessage(handle, WM_LBUTTONUP, 1, 0);
+		PostMessage(hwnd, WM_LBUTTONUP, 1, 0);
 		Sleep(100);
 		SendKeyUp(ForceStandStill);
 	}
 	else
 	{
-		PostMessage(handle, WM_RBUTTONDOWN, 1, (int)((500 << 16) | (700 & 0xFFFF)));
+		PostMessage(hwnd, WM_RBUTTONDOWN, 1, (int)(((int)(ScalingY * 500) << 16) | ((int)(ScalingX * 700) & 0xFFFF)));
 		Sleep(1);
-		PostMessage(handle, WM_RBUTTONUP, 1, 0);
+		PostMessage(hwnd, WM_RBUTTONUP, 1, 0);
 	}
 }
 
@@ -318,20 +328,25 @@ void InputSimulator::MoveMouse()
 	if (GetAsyncKeyState(CharToVK('7')) < 0) return;
 
 	Sleep(1);
-	HWND handle = ::GetForegroundWindow();
+	HWND hwnd = FindWindow(NULL, _T("Diablo III"));
+	RECT rc;
+	GetWindowRect(hwnd, &rc);
+
+	double ScalingX = abs((double)rc.right - (double)rc.left) / 1920.0;
+	double ScalingY = abs((double)rc.top - (double)rc.bottom) / 1080.0;
 	if (MouseMoveState)
 	{
 		Sleep(10);
-		PostMessage(handle, WM_MBUTTONDOWN, 1, (int)((507 << 16) | (820 & 0xFFFF)));
-		PostMessage(handle, WM_MBUTTONUP, 1, 0);
+		PostMessage(hwnd, WM_MBUTTONDOWN, 1, (int)(((int)(ScalingY * 507) << 16) | ((int)(ScalingX * (961 - 10)) & 0xFFFF)));
+		PostMessage(hwnd, WM_MBUTTONUP, 1, 0);
 		Sleep(10);
 		//SetCursorPos(820, 507);
 	}
 	else
 	{
 		Sleep(10);
-		PostMessage(handle, WM_MBUTTONDOWN, 1, (int)((507 << 16) | (1100 & 0xFFFF)));
-		PostMessage(handle, WM_MBUTTONUP, 1, 0);
+		PostMessage(hwnd, WM_MBUTTONDOWN, 1, (int)(((int)(ScalingY * 507) << 16) | ((int)(ScalingX * (961 + 10)) & 0xFFFF)));
+		PostMessage(hwnd, WM_MBUTTONUP, 1, 0);
 		Sleep(10);
 		//SetCursorPos(1100, 507);
 	}

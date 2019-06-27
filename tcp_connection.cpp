@@ -77,7 +77,7 @@ int TCPConnection::Listen()
 		connectedSocket = accept(acceptSocket, NULL, NULL);
 		if (connectedSocket == INVALID_SOCKET)
 		{
-			MessageBox(NULL, _T("FError couldnt accept connection"),
+			MessageBox(NULL, _T("Error couldnt accept connection"),
 				_T("ERROR"), MB_OK | MB_ICONEXCLAMATION);
 			return 1;
 		}

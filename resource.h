@@ -144,10 +144,10 @@
 #define IDC_CHANNELHOTKEY               1112
 #define IDC_FORCEMOVEHOTKEY             1113
 #define IDC_HEXINGPANTS                 1114
-#define IDC_ARCANEBLAST2                1116
+#define IDC_STORMARMORCHECK2            1115
+#define IDC_FOREGROUND                  1115
 #define IDC_COMMANDSKELETONS            1118
 #define IDC_COMMANDSKELETONSCHECK       1119
-#define IDC_SIMHOTKEY2                  1120
 #define IDC_COMMANDSKELETONSHOTKEY      1120
 
 // Next default values for new objects

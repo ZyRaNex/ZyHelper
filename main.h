@@ -56,6 +56,7 @@ public:
 	CButton m_ctlBLOODNOVACHECK;
 	CButton m_ctlBLINDINGFLASHCHECK;
 	CButton m_ctlCOMMANDSKELETONSCHECK;
+	CButton m_ctlFOREGROUND;
 
 	CEdit m_ctlIPHOTKEY;
 	CEdit m_ctlWCHOTKEY;
@@ -155,13 +156,13 @@ public:
 	HANDLE hThread[6];
 	DWORD dwThreadID[6];
 
-	const std::wstring InitChecks = _T("1111010000101100010101000111110");
+	const std::wstring InitChecks = _T("11111111111111011111111001111111");
 	const std::wstring InitHotkeys = _T("R4L11R44211Rq1432LLR598R4414LR112016102u");
 
 	enum class SpecialHotkey { Key = L'0', Shift = L'1', Alt = L'2', Space = L'3'};
 
-	int ChecksLength = InitChecks.size();
-	int HotkeysLength = InitHotkeys.size();
+	unsigned int ChecksLength = InitChecks.size();
+	unsigned int HotkeysLength = InitHotkeys.size();
 	bool Active;
 
 	bool IpCheck;
@@ -195,6 +196,7 @@ public:
 	bool BloodNovaCheck;
 	bool BlindingFlashCheck;
 	bool CommandSkeletonsCheck;
+	bool Foreground;
 
 	wchar_t IpHotkey;
 	wchar_t WcHotkey;
