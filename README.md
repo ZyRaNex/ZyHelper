@@ -15,15 +15,15 @@ Start Zyhelper then start TurboHUD (You always have to start them in this order)
 
 # How to use:
 
-Per skill there are 2 Boxes:
-The Enabled Checkbox which enables/disables the skill.
-Note that the skill wont get casted if its not equipped.
-The Hotkey Field which contains the hotkey thats going to get pressed by the program.
-Here '1-9' 'a-z' mean their respective letters, while 'R' / 'L' mean the left / right mouse button.
-For force stand still the additional hotkeys "shift", "alt" and "space" work.
-The Nacro has some additional features:
-'Second Sim' makes sim and land cast after 10-20 seconds so there is always a sim active if you play in a party.
-Hexing Pants makes you move around while idle to always keep them up. For this you need Forcemove bound to Mouse3 (pressing the mousewheel).
+Per skill there are 2 Boxes:\
+The Enabled Checkbox which enables/disables the skill.\
+Note that the skill wont get casted if its not equipped.\
+The Hotkey Field which contains the hotkey thats going to get pressed by the program.\
+Here '1-9' 'a-z' mean their respective letters, while 'R' / 'L' mean the left / right mouse button.\
+For force stand still the additional hotkeys "shift", "alt" and "space" work.\
+The Nacro has some additional features:\
+'Second Sim' makes sim and land cast after 10-20 seconds so there is always a sim active if you play in a party.\
+Hexing Pants makes you move around while idle to always keep them up. For this you need Forcemove bound to Mouse3 (pressing the mousewheel).\
 
 # Wiz macro:
 
