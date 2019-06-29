@@ -9,41 +9,68 @@ If you have questions ask on my discord [Discord](https://discord.gg/F8wcvzd)
 ![ZyHelperBeta](https://i.imgur.com/HXtFrbW.png)
 
 # Install
-Put the ZyHelperBetaAdapter.cs file into folder Zy in your TurboHUD plugins.
+Put the ZyHelperBetaAdapter.cs file into \th\plugins\Zy in your TurboHUD folder and the .exe somewhere else.
 
-Put the .exe file somewhere.
+Start Zyhelper then start TurboHUD (You always have to start them in this order).
 
-Start Zyhelper then start TurboHUD. You always have to start them in this order (otherwise the helper might not work).
+# How to use:
 
-If that does not just work, check if Helper and THUD are connected, by looking at the second checkbox under "Active".
+Per skill there are 2 Boxes:
 
-If its not checked there is no connction to TH. Check your firewall settings if it blocks THUD or Zyhelper (ZyHelper uses a TCP/IP connection to communicate with THUD).
+The Enabled Checkbox which enables/disables the skill.
 
-# How to use
-For non-wizard:
+Note that the skill wont get casted if its not equipped.
 
-Check the skills you want to cast and give it the right hotkeys. L = leftclick; R = rightclick.
+The Hotkey Field which contains the hotkey thats going to get pressed by the program.
 
-for Wizard:
+Here '1-9' 'a-z' mean their respective letters, while 'R' / 'L' mean the left / right mouse button.
 
-Check Archon if you want Archon Macro (Bazooka), Check Blackhole if you want old Blackhole Macro (Season 15 style). 
+For force stand still the additional hotkeys "shift", "alt" and "space" work.
 
-For Archon Star Pact do NOT check Black Hole, but put in the right hotkeys.
+The Nacro has some additional features:
 
-Hold down 5 to shoot. If you have enough time the helper will shoot a meteor to spawn an occulus. If there is not enough time, it will go straight to the Archon Impact.
+'Second Sim' makes sim and land cast after 10-20 seconds so there is always a sim active if you play in a party.
 
-The toggle version of the macro does not work with Archon Macro, only with the old Macro. 
+Hexing Pants makes you move around while idle to always keep them up. For this you need Forcemove bound to Mouse3 (pressing the mousewheel).
 
-For the Archon macro you have to press electrocute yourself. This is so you can move into oculus easily.
+# Wiz macro:
 
-You can just hold down both buttons while shooting.
+There are 3 hotkeys you need to use:
 
-On Necro:
 
-If there is an elite within 70 yards Mages only autocast if you actually target the elite. 
+- Macro button:
 
-SecondSim casts simulacrum 10s into the rift.
+It presses electrocute -> meteor -> channel -> archon.
+
+So, if you want to shoot meteors, you hold down this button.
+
+
+- Channelling button:
+This one presses Ray of Frost in a way that it doesn't fuck up the macro.
+
+So, if you want to channel to generate / proc zodiac, you hold this button.
+
+But for example, if you get wormholed, you can release this button, walk back and the resume holding it.
+
+
+So, in a normal rotation, you start holding the channeling key and the macro key when you're almost out of archon, then it should do the macro till you're back in Archon.
+
+If you get wormholed and have enough cdr to miss some zodiac procs, you let go of the channelling hotkey while still holding the macro key, move back into the pull and then resume holding the channelling key.
+
+
+- Oculus button:
+When you spawn an oculus with the first meteor you can save the position of the oculus by pressing the oculus key while pointing at it.
+
+if you have done that, the macro will walk into the oculus after shooting the arcane meteor.
+
+For this to work you need to set the 'Force move hotkey' to your forcemove key.
+
+# othere stuff 
+
+The source code is open source under the Apache License 2.0 at [ZyHelperBeta](https://github.com/ZyRaNex/ZyHelper)
 
 Press F10 to pause the helper entirely (turns off all autocasts and disables the mage macro). You can press F10 again to resume.
+
+You can donate if you want at:
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=X3F8VW4Q54LX4)
