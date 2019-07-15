@@ -1,3 +1,8 @@
+# Inportant update
+The newest Thud version 19.7.12.0 added "more anti-macro protection for plugins" causing Zyhelper to no longer function. 
+This clearly states that KillerJohn is against any form of automation of Diablo and since it is his framework i will stop working on ZyHelper.
+This means that once the version 19.7.12.0 becomes a forced update ZyHelper will no longer work.
+
 # ZyHelper
 This programm automates button presses. \
 Download at
